@@ -1,0 +1,316 @@
+/* foodcont styling */
+.foodcontainer {
+  width: 100%;
+  height: calc(100% - 45px);
+  display: flex;
+  padding-top: 15px;
+}
+
+.foodcontainer .left-side {
+  width: calc(100% - 30%);
+  overflow-y: scroll;
+  padding-left: 20px;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.foodcontainer .left-side::-webkit-scrollbar {
+  display: none;
+}
+
+
+.foodcontainer .left-side .cards {
+  background: #252837;
+  padding: 10px;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.4);
+  margin-top: 20px;
+  border-radius: 10px;
+}
+
+.foodcontainer .left-side .cards .all {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 30px;
+}
+
+.foodcontainer .left-side .cards .all .varieties {
+  display: flex;
+  align-items: center;
+}
+
+.varieties .var-btn {
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+  border: 2px solid #302958;
+  padding: 5px 15px;
+  border-radius: 10px;
+  margin: 0px 5px;
+}
+
+.varieties .var-btn:hover, .varieties .var-btn:focus {
+  background: #F17E6C;
+  border: none;
+  color: white
+}
+
+
+
+/* foodbox styling */
+.foodcontainer .left-side .cards main {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.foodcontainer .left-side .cards main .details {
+  background: #1F1D2B;
+  border-radius: 10px;
+  /* max-width: 260px; */
+  max-width: 220px;
+  padding-bottom: 20px;
+  margin: 20px 10px;
+  overflow: hidden;
+}
+
+.foodcontainer .left-side .cards main .details .details-img {
+  max-width: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.foodcontainer .left-side .cards main .details .food-name {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 20px;
+  margin-top: 10px;
+}
+
+.foodcontainer .left-side .cards main .details .food-name h2 {
+  color: #e9e9ec;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.foodcontainer .left-side .cards main .details .food-details {
+  padding: 5px 10px;
+  text-align: left;
+  margin: 10px;
+}
+.foodcontainer .left-side .cards main .details .food-details p {
+  font-size: 12px;
+  font-weight: bold;
+  color: #a5a4a9;
+}
+
+.foodcontainer .left-side .cards main .details .cart-btn {
+  padding: 5px 20px;
+}
+
+.foodcontainer .left-side .cards main .details .cart-btn .btn {
+  text-decoration: none;
+  font-size: 12px;
+  color: #fff;
+  background: linear-gradient(#F17E6C, #fa7c69);
+  padding: 7px 10px;
+  border-radius: 5px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+
+.foodcontainer .left-side .cards main .details .cart-btn .btn:hover {
+  background: none;
+  color: #F17E6C;;
+  border: 1px solid #F17E6C;;
+  transition: 0.5s ease-in-out;
+}
+
+
+/* PaymentSect styling */
+.foodcontainer .right-side {
+  width: calc(100% - 70%);
+  padding: 0px 10px;
+  padding-left: 20px;
+  padding: 15px;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.foodcontainer .right-side .payment {
+  background: #1F1D2B;
+  border-radius: 20px;
+  padding: 10px 20px;
+}
+
+.foodcontainer .right-side .payment .name {
+  color: white;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  min-width: 270px;
+  margin-left: 7px;
+}
+
+.foodcontainer .right-side .payment .price {
+  width: 100%;
+  padding: 5px 1px;
+}
+
+.foodcontainer .right-side .payment .price article {
+  margin: 8px 0;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  color: #adabb8;
+  background: #1F1D2B;
+  border-radius: 5px;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.4);
+}
+
+
+.foodcontainer .right-side .payment .price article .pay {
+  display: flex;
+  justify-content: space-between;
+  /* justify-content: space-around; */
+  flex-direction: row;
+  min-width: 240px;
+  padding: 5px 5px;
+  min-width: 300px;
+  align-items: center;
+}
+
+.foodcontainer .right-side .payment .price article .pay .order-input {
+  padding: 10px 15px;
+  background: #252837;
+  color: white;
+  border-radius: 7px;
+  border: none;
+}
+
+.foodcontainer .right-side .payment .price article .qty-box{
+  padding: 7px 10px;
+  width: 40px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #252837;
+  color: white;
+  border-radius: 7px;
+}
+
+.foodcontainer .right-side .payment .price article .trash-box {
+  padding: 8px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: none;
+  color: #F17E6C;
+  border: 1px solid #F17E6C;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+
+.foodcontainer .right-side .payment .price article .trash-box:hover {
+  color: red;
+  border: 1px solid red;
+}
+
+.foodcontainer .right-side .payment .price article div{
+  display: flex;
+  flex-direction: column;
+  max-width: 100px;
+}
+
+.foodcontainer .right-side .payment .price figure {
+  margin: 8px 0;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: #adabb8;
+  background: #1F1D2B;
+  border-radius: 5px;
+  min-width: 230px;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.4);
+} 
+
+.foodcontainer .right-side .payment .price figure:last-child {
+  padding: 15px 10px 15px 10px;
+  width: full-width;
+}
+
+.foodcontainer .right-side .payment .price figure:last-child .last .space {
+  margin-bottom: 10px;
+}
+
+.foodcontainer .right-side .payment .price figure:last-child .last p {
+  font-weight: bold;
+}
+
+
+
+@media screen and (max-width: 525px) {
+  .foodcontainer {
+    flex-direction: column;
+    height: auto;
+  }
+  .foodcontainer .left-side {
+    width: 100%;
+  }
+
+  .foodcontainer .left-side .cards main .details {
+    max-width: 325px;
+  }
+
+  .foodcontainer .left-side .cards .all .varieties {
+    overflow-x: scroll;
+  }
+
+  .foodcontainer .right-side {
+    width: 100%;
+    padding: unset;
+  }
+}
+
+@media only screen and (min-width: 525px) and (max-width: 950px) {
+  .foodcontainer {
+    height: calc(100% - 25px);
+  }
+  .foodcontainer .left-side {
+    width: calc(100% - 30%);
+  }
+
+  .foodcontainer .right-side {
+    width: calc(100% - 60%);
+  }
+
+  .foodcontainer .left-side .cards main .details {
+    max-width: 230px;
+    margin: 20px 5px;
+  }
+
+  .foodcontainer .left-side .cards .all {
+    padding: 0;
+  }
+
+  .foodcontainer .right-side .payment .price {
+    padding: 0;
+  }
+}
+
+
+
+
+
+
+
