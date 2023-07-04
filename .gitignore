@@ -1,7 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
+node_modules
 /.pnp
 .pnp.js
 
@@ -21,3 +21,15 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Ignore the entire virtual environment directory
+.venv/
+
+# Also ignore all Python compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# And ignore all .env files (often used for secrets and environment variables)
+.env
