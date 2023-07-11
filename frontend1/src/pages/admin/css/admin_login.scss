@@ -4,23 +4,23 @@ $accent-color: #3C3718;
 $secondary-color: #E6F7D1;
 $main-color: #294e8a;
 
-body {
+.admin_login_body {
   background: $secondary-color;
   margin: 0;
 }
 
-* {
+.font_login {
   font-family: 'Julius Sans One', sans-serif;
   letter-spacing: 3px;
 }
 
-div {
+.container_login {
   display: flex;
   justify-content: center;
 }
 
-form {
-  display: flex;
+.form_login {
+  // display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: start;
@@ -33,10 +33,10 @@ form {
   box-shadow: 0px 5px 15px 2px $main-color;
 }
 
-h1 {
-  color: $accent-color;
-  margin: 30px 0 50px 0;
-}
+// h1 {
+//   color: $accent-color;
+//   margin: 30px 0 50px 0;
+// }
 
 @mixin default-view {
   padding: 0 15px;
@@ -47,7 +47,7 @@ h1 {
   font-weight: bold;
 }
 
-input {
+.input_login {
   @include default-view;
   background: $secondary-color;
   border: 10px solid $secondary-color;
@@ -61,7 +61,7 @@ input {
   }
 }
 
-button {
+.button_login {
   @include default-view;
   background: $accent-color;
   margin: 40px 15px 20px 15px;

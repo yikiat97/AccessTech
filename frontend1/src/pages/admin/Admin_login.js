@@ -26,23 +26,25 @@ function Admin_login() {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <h1 style={{color:"white"}}>Log in</h1>
+    <div className='container_login '>
+      <form class="form_login " onSubmit={handleSubmit}>
+        <h1 className='font_login' style={{color:"white"}}>Log in</h1>
         <img src={logo} alt="Logo" />
         <input 
+          className='input_login font_login'
           type="Username" 
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
         <input 
+          className='input_login font_login'
           type="password" 
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit">Next</button>
+        <button className='font_login button_login' type="submit">Next</button>
         {/* <a href="#">Forgot your password?</a> */}
       </form>
     </div>
