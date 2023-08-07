@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import "./css/admin_login.css";
 import logo from '../../assets/logo/logo.png'; // adjust the path as needed
 import SideNavBar from '../../Components/admin/SideNavBar'
+import AdminCRUDuser from '../../Components/admin/Admin_CRUD_user'
 
 
 
@@ -16,6 +17,7 @@ function Admin_homapage() {
   return (
     <div>
       <SideNavBar></SideNavBar>
+      <AdminCRUDuser></AdminCRUDuser>
     </div>
   );
 }

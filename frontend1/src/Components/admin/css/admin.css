@@ -1,34 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
-/* $text-color: #7d84ab;
-$secondary-text-color: #dee2ec;
 
-$bg-color: #0c1e35;
-$secondary-bg-color: #0b1a2c;
-
-$border-color: rgba(#535d7d, 0.3); */
-.text{
-  color:#7d84ab;
-  font-weight: 600;
-  font-size: 20px;
-  font-family: 'Poppins', sans-serif;
+.sidebar {
+  width: 300px;
+  height: 100%;
+  /* background-color: #4b7fce7f; */
+  position: fixed;
+  left: 0;
+  top: 0;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
-.menu-title {
-  color:#f3f3f3;
+
+
+.sidebarList {
+  list-style: none;
+  padding: 20px 0;
 }
+
+.sidebarListItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;  /* adjust as needed */
+  padding: 20px;
+  color: black;
+  text-align: left;
   
-  .menu-item {
-    color:#f8f8f8; /* light blue with a bit of gray */
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    font-weight: 300;
-  }
-  
-  .menu-submenu {
-    color: #86c5da; /* light blue */
-  }
-  
-  .header {
-    color: #1ebbd7; /* light blue */
-  }
-  
+}
+
+.sidebarListItem a {
+  text-decoration: none;
+  color: rgb(0, 0, 0);
+}
+
+.sidebarListItem:hover {
+  background-color: #4b7fce7f;
+  cursor: pointer;
+}
+
+.icon{
+  display: flex;
+  gap: 20px;  /* adjust as needed */
+}
+.text_sidebar{
+font-size: 20px;
+font-family: 'Roboto', sans-serif;
+font-weight: 500;
+}
+
+.active_link {
+  background-color: #4b7fce7f;
+}

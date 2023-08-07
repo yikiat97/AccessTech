@@ -3,8 +3,9 @@ from flask_cors import CORS
 from flask_swagger_ui import get_swaggerui_blueprint
 
 from .extensions import db, migrate
-from .routes.order import main
+from .routes.order import order
 from .routes.user import user
+from .routes.ingredient import ingredient_inventory
 
 from dotenv import load_dotenv
 import os
@@ -21,8 +22,9 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
 
-    app.register_blueprint(main)
+    app.register_blueprint(order)
     app.register_blueprint(user)
+    app.register_blueprint(ingredient_inventory)
 
     SWAGGER_URL = '/api/docs'  # URL for exposing Swagger UI (without trailing '/')
     API_URL = '/static/swagger.json'  # Our API url (can of course be a local resource)

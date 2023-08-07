@@ -27,8 +27,8 @@ CREATE TABLE IF NOT EXISTS ingredients (
     ingredients_qty FLOAT
 );
 
-DROP TABLE IF EXISTS receipe;
-CREATE TABLE IF NOT EXISTS receipe(
+DROP TABLE IF EXISTS recipes;
+CREATE TABLE IF NOT EXISTS recipes(
     dish_id INT,
     ingredients_id INT,
     ingredient_qty_needed INT,
