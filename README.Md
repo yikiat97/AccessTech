@@ -2,8 +2,10 @@
 1. To run frontend, cd to frontend folder npm start
 
 ## Frontend Set up
-1. cd frontend
+1. cd frontend1
 2. npm i
+3. npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion
+4. npm install react-icons --save
 3. npm start
 
 ## Backend Set up
