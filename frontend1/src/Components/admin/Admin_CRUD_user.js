@@ -1,48 +1,27 @@
-import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
-import Paper from "@mui/material/Paper";
-import Button from '@mui/material/Button';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditNoteIcon from '@mui/icons-material/EditNote';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-
-const theme = createTheme({
-  components: {
-    MuiDataGrid: {
-      styleOverrides: {
-        columnHeader: {
-          backgroundColor: '#4b7fce7f', // Replace with the desired color
-        },
-      },
-    },
-  },
-});
+import React from 'react';
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Button,
+  IconButton,
+  Box,
+  VStack,
+  useColorModeValue,
+  Heading
+} from '@chakra-ui/react';
+import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 
 const columns = [
-  { field: 'id', headerName: 'ID', width: 70 },
-  { field: 'Username', headerName: 'Username',width: 200 },
-  { field: 'Password', headerName: 'Password',width: 200},
-  { field: 'Role', headerName: 'Role',width: 200},
-  {
-    field: 'update', 
-    headerName: 'Update',
-    width: 200,
-    renderCell: (params) => (
-      <Button startIcon={<EditNoteIcon />} variant="contained" color="primary">
-        Update
-      </Button>
-    ),
-  },
-  {
-    field: 'delete', 
-    headerName: 'Delete',
-    width: 200,
-    renderCell: (params) => (
-      <Button startIcon={<DeleteIcon />} variant="contained" color="error">
-        Delete
-      </Button>
-    ),
-  },
+  { field: 'id', headerName: 'ID' },
+  { field: 'Username', headerName: 'Username' },
+  { field: 'Password', headerName: 'Password' },
+  { field: 'Role', headerName: 'Role' },
+  { field: 'update', headerName: 'Update' },
+  { field: 'delete', headerName: 'Delete' },
 ];
 
 const rows = [
@@ -53,23 +32,50 @@ const rows = [
 ];
 
 export default function DataTable() {
+  const headerBg = useColorModeValue('#4b7fce7f', 'gray.700');
+
   return (
-    <ThemeProvider theme={theme}>
-      <div style={{ height: 400, width: '100%' ,marginLeft:"300px"}}>
-        <Paper elevation={3} sx={{ marginRight: "15%", marginLeft: "5%", marginTop: "5%" ,position: "fixed", width:"60%"}}>
-          <DataGrid 
-            rows={rows}
-            columns={columns}
-            disableSelectionOnClick
-            initialState={{
-              pagination: {
-                paginationModel: { page: 0, pageSize: 5 },
-              },
-            }}
-            pageSizeOptions={[5, 10]}
-          />
-        </Paper>
-      </div>
-    </ThemeProvider>
+    <VStack spacing={4} p={5} position="fixed" top={50} marginLeft="250px" width="60%" marginRight="15%">
+      <Heading>User Management</Heading>
+      <Box boxShadow="xl" p={5} bg={useColorModeValue('white', 'gray.700')} w="full">
+        <Table size="md">
+          <Thead bg={headerBg}>
+            <Tr>
+              {columns.map((column) => (
+                <Th key={column.field}>{column.headerName}</Th>
+              ))}
+            </Tr>
+          </Thead>
+          <Tbody>
+            {rows.map((row) => (
+              <Tr key={row.id}>
+                <Td>{row.id}</Td>
+                <Td>{row.Username}</Td>
+                <Td>{row.Password}</Td>
+                <Td>{row.Role}</Td>
+                <Td>
+                  <Button 
+                    leftIcon={<EditIcon />} 
+                    variant="outline" 
+                    colorScheme="blue" 
+                    aria-label="Update"
+                  > Edit 
+                  </Button>
+                </Td>
+                <Td>
+                  <Button 
+                      leftIcon={<DeleteIcon />} 
+                      variant="outline" 
+                      colorScheme="red" 
+                      aria-label="Delete"
+                  > Delete
+                  </Button>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </Box>
+    </VStack>
   );
 }

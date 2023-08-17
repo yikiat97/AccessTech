@@ -1,15 +1,21 @@
-import * as React from "react";
-import { useState } from "react";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import Button from "@mui/material/Button";
+import React, { useState } from "react";
+import {
+  Box,
+  Text,
+  Input,
+  VStack,
+  HStack,
+  FormControl,
+  FormLabel,
+  Select,
+  Button,
+  Alert,
+  AlertIcon,
+  useToast,
+  Grid,
+  GridItem
+} from "@chakra-ui/react";
+
 
 export default function Admin_add_ingredients() {
   const [qty_type_value, set_qty_type_value] = useState("");
@@ -73,108 +79,63 @@ export default function Admin_add_ingredients() {
   }
 
   return (
-    <React.Fragment>
-      <Paper elevation={3} sx={{ marginRight: "15%", marginLeft: "15%" }}>
-        <Box sx={{ padding: 5 }}>
-          <Typography variant="h6" gutterBottom sx={{ paddingBottom: 5 }}>
-           <h3>Add new ingredient</h3> 
-          </Typography>
-          <Grid container spacing={3}>
+    <Box 
+      borderWidth="1px" 
+      borderRadius="lg" 
+      padding={5} 
+      marginX={{base: "2%", md: "15%"}}
+    >
+      <VStack spacing={5} alignItems="start" size='4150px'>
+        <Text fontSize="xl" fontWeight="bold">Add new ingredient</Text>
+        
+        <HStack width="100%" spacing={8}>
+          <FormLabel fontSize="lg" width="20%">Ingredient Name</FormLabel>
+          <Input 
+            type="text"
+            isRequired
+            isInvalid={error.name}
+            value={Ingredient_Name_value}
+            onChange={handleIngredientNameChange}
+            placeholder="Ingredient Name"
+            width="80%"
+          />
+        </HStack>
 
-            <Grid item xs={12} sm={2}>
-              <InputLabel
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  fontWeight: 700
-                }}
-              >
-                Ingredient Name
-              </InputLabel>
-            </Grid>      
-            <Grid item xs={12} sm={10}>
-        <TextField
-          required
-          error={error.name}
-          id="Ingredient Name"
-          name="Ingredient Name"
-          label="Ingredient Name"
-          fullWidth
-          size="small"
-          autoComplete="off"
-          variant="outlined"
-          onChange={handleIngredientNameChange}
-          value={Ingredient_Name_value}
-        />
-      </Grid>
+        <HStack width="100%" spacing={8}>
+          <FormLabel fontSize="lg" width="20%">Qty</FormLabel>
+          <Input 
+            type="number"
+            isRequired
+            isInvalid={error.qty}
+            value={qty_value}
+            onChange={handleQtyValueChange}
+            placeholder="Qty"
+            width="30%"
+          />
 
-      <Grid item xs={12} sm={2}>
-              <InputLabel
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  fontWeight: 700
-                }}
-              >
-                Qty
-              </InputLabel>
-            </Grid>      
-      <Grid item xs={12} sm={4}>
-        <TextField
-          type="Number"
-          required
-          error={error.qty}
-          id="Qty"
-          name="Qty"
-          label="Qty"
-          fullWidth
-          size="small"
-          autoComplete="off"
-          variant="outlined"
-          onChange={handleQtyValueChange}
-          value={qty_value}
-        />
-      </Grid>
-
-      <Grid item xs={12} sm={2}>
-              <InputLabel
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  fontWeight: 700
-                }}
-              >
-                Qty Type
-              </InputLabel>
-            </Grid>      
-      <Grid item xs={12} sm={4}>
-        <FormControl fullWidth size="small" error={error.type}>
-          <InputLabel required id=" Qty Type"> Qty Type</InputLabel>
-          <Select
-            labelId="Qty Type"
-            id="Qty Type"
+          <FormLabel fontSize="lg" width="20%">Qty Type</FormLabel>
+          <Select 
+            width="30%"
             value={qty_type_value}
-            label="qty_type"
             onChange={handleQtyTypeChange}
+            isInvalid={error.type}
           >
             {qty_type.map((item) => (
-              <MenuItem value={item}>{item}</MenuItem>
+              <option key={item} value={item}>{item}</option>
             ))}
           </Select>
-        </FormControl>
-      </Grid>
+        </HStack>
 
-            <Grid item xs={12} sm={6} />
-            <Grid item xs={12} sm={4} />
-            <Grid item xs={12} sm={2}>
-              <Button variant="contained" onClick={submitButton} sx={{ color: "white" }}>
-                Save
-              </Button>
-            </Grid>
-         
-          </Grid>
-        </Box>
-      </Paper>
-    </React.Fragment>
+        <HStack width="100%" justifyContent="flex-end">
+          <Button 
+            colorScheme="blue" 
+            onClick={submitButton}
+          >
+            Save
+          </Button>
+        </HStack>
+      </VStack>
+    </Box>
   );
 }
+

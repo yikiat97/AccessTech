@@ -1,60 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import "./css/admin_login.css";
-import SideNavBar from '../../Components/admin/SideNavBar'
-import AdminAddIngredients from '../../Components/admin/Admin_add_ingredients'
-import AdminUpdateMenu from '../../Components/admin/Admin_update_menu'
+import SideNavBar from '../../Components/admin/SideNavBar';
+import AdminAddIngredients from '../../Components/admin/Admin_add_ingredients';
+import AdminUpdateMenu from '../../Components/admin/Admin_update_menu';
 
-import PropTypes from 'prop-types';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-
-import AddBoxIcon from '@mui/icons-material/AddBox';
-import EditNoteIcon from '@mui/icons-material/EditNote';
-
-
-
-function CustomTabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-CustomTabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
-
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  };
-}
-
+import { Box, Tabs, TabList, Tab, TabPanels, TabPanel, Icon, VStack, Divider } from '@chakra-ui/react';
+import { AddIcon, EditIcon } from '@chakra-ui/icons';
 
 function Admin_orderpage() {
-
   const [value, setValue] = React.useState(0);
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+  const handleChange = (index) => {
+    setValue(index);
   };
 
   // const [username, setUsername] = useState('');
@@ -70,54 +27,37 @@ function Admin_orderpage() {
       body: JSON.stringify({
         "username": "admin1",
         "password": "password"
-    }),
+      }),
     });
-    
+
     const data = await response.json();
     console.log(data); // it will log the response to console
   };
 
   return (
     <div className='container_order_container '>
-     <div><SideNavBar></SideNavBar></div>
-
-     <div style={{marginLeft:"350px",marginTop:"65px"}}>
-      <Box sx={{ width: '100%' }}>
-
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab icon={<AddBoxIcon />} label="Add new ingredients" {...a11yProps(0)} />
-          <Tab icon={<EditNoteIcon />} label="Update ingredients" {...a11yProps(1)} />
-          {/* <Tab label="Item Three" {...a11yProps(2)} /> */}
+      <div><SideNavBar /></div>
+      <div style={{ marginLeft: "150px", marginTop: "65px" , top:0, position:"fixed"}}>
+      <VStack spacing={4} ml="350px" mt="65px" w="100%">
+        <Tabs index={value} onChange={handleChange}>
+          <TabList borderBottom="1px" borderColor="gray.300">
+            <Tab><Icon as={AddIcon} /> Add new ingredients</Tab>
+            <Tab><Icon as={EditIcon} /> Update ingredients</Tab>
+          </TabList>
+          <Divider />
+          <TabPanels>
+            <TabPanel p={3}>
+              <AdminAddIngredients />
+            </TabPanel>
+            <TabPanel p={3}>
+              <AdminUpdateMenu />
+            </TabPanel>
+          </TabPanels>
         </Tabs>
-      </Box>
-
-      <CustomTabPanel value={value} index={0}>
-        <AdminAddIngredients/>
-      </CustomTabPanel>
-      
-      <CustomTabPanel value={value} index={1}>
-        <AdminUpdateMenu/>
-      </CustomTabPanel>
-      {/* <CustomTabPanel value={value} index={2}>
-        Item Three
-      </CustomTabPanel> */}
-
-    </Box>
-    </div>
-     
+      </VStack>
+      </div>
     </div>
   );
 }
 
 export default Admin_orderpage;
-
-
-
-
-
-
-
-
-
-
