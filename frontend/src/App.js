@@ -6,8 +6,8 @@ import AdminLogin from "./pages/admin/Admin_login";
 import AdminHomepage from "./pages/admin/Admin_homepage";
 import AdminOrderpage from "./pages/admin/Admin_orderpage";
 import AdminIngredientpage from "./pages/admin/Admin_ingredientpage";
-import Customer_homepage from "./pages/admin/Customer_homepage";
-import Shopping_cart from "./pages/admin/Shopping_cart";
+import Customer_homepage from "./pages/ordering/Customer_homepage";
+import Shopping_cart from "./pages/ordering/Shopping_cart";
 
 
 

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import NavigationBar from '../../Components/admin/NavBar';
-import { categories } from '../../Components/admin/data/categories'
-import { menuList } from '../../Components/admin/data/menulist'
-import CategoryItems from '../../Components/admin/CategoryItems';
-import MenuCards from '../../Components/admin/MenuCard';
+import NavigationBar from '../../Components/ordering/NavBar';
+import { categories } from '../../Components/ordering/data/categories'
+import { menuList } from '../../Components/ordering/data/menulist'
+import CategoryItems from '../../Components/ordering/CategoryItems';
+import MenuCards from '../../Components/ordering/MenuCard';
 
 
 
