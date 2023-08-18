@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import CartItem from '../../../../frontend/src/Components/ordering/CartItem.js';
+import CartItem from '../../Components/ordering/Order_CartItem.js';
 import { Box, AbsoluteCenter, Divider, SimpleGrid } from '@chakra-ui/react';
 
 

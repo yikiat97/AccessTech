@@ -6,8 +6,7 @@ import AdminLogin from "./pages/admin/Admin_login";
 import AdminHomepage from "./pages/admin/Admin_homepage";
 import AdminOrderpage from "./pages/admin/Admin_orderpage";
 import AdminIngredientpage from "./pages/admin/Admin_ingredientpage";
-import Customer_homepage from "./pages/ordering/Customer_homepage";
-import Shopping_cart from "./pages/ordering/Shopping_cart";
+
 
 
 
@@ -27,10 +26,6 @@ function App() {
       </Routes>
       <Routes>
         <Route path="/AccessTech/AdminIngredientpage" element={<AdminIngredientpage />} />
-      </Routes>
-      <Routes>
-        <Route path="/AccessTech/customermenu" element={<Customer_homepage />} />
-        <Route path="/AccessTech/customercart" element={<Shopping_cart />} />
       </Routes>
      </Router>
     </div>

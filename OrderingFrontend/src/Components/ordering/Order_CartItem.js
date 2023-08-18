@@ -1,5 +1,4 @@
 import React from 'react';
-import '../admin/css/customer.css'; 
 import { Box, Image, Stack, Heading, Text, Button, Card, CardBody, CardFooter, useNumberInput } from '@chakra-ui/react';
 import food from '../../assets/foodImage/afri.jpg'
 import { NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper, HStack, Input, InputGroup, InputLeftElement, InputLeftAddon, InputRightElement } from '@chakra-ui/react';

@@ -1,5 +1,5 @@
 import React from 'react';
-import '../admin/css/customer.css'; 
+import '../ordering/css/customer.css'; 
 import logo from '../../assets/logo/logo.png';
 import { IconButton, Flex } from '@chakra-ui/react'
 import { FaShoppingBasket } from 'react-icons/fa';
@@ -14,9 +14,12 @@ const NavigationBar = () => {
       <nav className="navbar">
         <img style={{width:"100px", height:"100px" }} src={logo} alt="Fortitude Logo" />
         <IconButton className="cart" aria-label='Search database' icon={<FaShoppingBasket /> } as={Link} to="/Accesstech/customercart" />
-      
+         
+         {/*cart and the button is a wip*/}
+         
         
       </nav>
+      
 
     </Flex>
 
