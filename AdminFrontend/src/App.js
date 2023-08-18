@@ -6,7 +6,7 @@ import AdminLogin from "./pages/admin/Admin_login";
 import AdminHomepage from "./pages/admin/Admin_homepage";
 import AdminOrderpage from "./pages/admin/Admin_orderpage";
 import AdminIngredientpage from "./pages/admin/Admin_ingredientpage";
-
+import AdminManagementPage from "./pages/admin/Admin_management";
 
 
 
@@ -26,6 +26,9 @@ function App() {
       </Routes>
       <Routes>
         <Route path="/AccessTech/AdminIngredientpage" element={<AdminIngredientpage />} />
+      </Routes>
+      <Routes>
+        <Route path="/AccessTech/AdminManagement" element={<AdminManagementPage />} />
       </Routes>
      </Router>
     </div>
