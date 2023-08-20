@@ -1,117 +1,138 @@
 export const menuList={
     items :[
         {
-            name : "Grilled Chicken Rendang Rice",
-            category : "Rice",
-            price : "$7.20",
-            description : "Lovin that McGrill",
-            description2 : "Jasmine Rice infused with Pandan Leaves and Lemongrass, served alongside with egg, seasonal greens, marinated patty, all topped with our flavourful sauce."
+            dish_name : "Grilled Chicken Rendang Rice",
+            dish_type : "Rice",
+            price : 7.20,
+            small_desc : "Lovin that McGrill",
+            description : "Jasmine Rice infused with Pandan Leaves and Lemongrass, served alongside with egg, seasonal greens, marinated patty, all topped with our flavourful sauce.",
+            id : "1"
+            
         },
         {
-            name : "Crispy Chicken Rendang Rice",
-            category : "Rice",
-            price : "$7.20",
-            description : "The most irresistable crunch",
-            description2 : "Jasmine Rice infused with Pandan Leaves and Lemongrass, served alongside with egg, seasonal greens, marinated patty, all topped with our flavourful sauce."
+            dish_name : "Crispy Chicken Rendang Rice",
+            dish_type : "Rice",
+            price : 7.20,
+            small_desc : "The most irresistable crunch",
+            description : "Jasmine Rice infused with Pandan Leaves and Lemongrass, served alongside with egg, seasonal greens, marinated patty, all topped with our flavourful sauce.",
+            id : "2"
 
         },
         {
-            name : "Grilled 5 Spices Chicken Rice",
-            category : "Rice",
-            price : "$7.20",
-            description : "Fantastic 5!",
-            description2 : "Jasmine Rice infused with Pandan Leaves and Lemongrass, served alongside with egg, seasonal greens, marinated patty, all topped with our flavourful sauce."
+            dish_name : "Grilled 5 Spices Chicken Rice",
+            dish_type : "Rice",
+            price : 7.20,
+            small_desc : "Fantastic 5!",
+            description : "Jasmine Rice infused with Pandan Leaves and Lemongrass, served alongside with egg, seasonal greens, marinated patty, all topped with our flavourful sauce.",
+            id : "3"
 
         },
         {
-            name : "Chicken Katsu Rice",
-            category : "Rice",
-            price : "$7.20",
-            description : "Classic Japanese Dish",
-            description2 : "Jasmine Rice infused with Pandan Leaves and Lemongrass, served alongside with egg, seasonal greens, marinated patty, all topped with our flavourful sauce."
+            dish_name : "Chicken Katsu Rice",
+            dish_type : "Rice",
+            price : 7.20,
+            small_desc : "Classic Japanese Dish",
+            description : "Jasmine Rice infused with Pandan Leaves and Lemongrass, served alongside with egg, seasonal greens, marinated patty, all topped with our flavourful sauce.",
+            id : "4"
 
         },
         {
-            name : "Meatless Chicken Rendang Rice",
-            category : "Rice",
-            price : "$7.20",
-            description : "It's not real chicken",
-            description2 : "Jasmine Rice infused with Pandan Leaves and Lemongrass, served alongside with egg, seasonal greens, marinated patty, all topped with our flavourful sauce."
+            dish_name : "Meatless Chicken Rendang Rice",
+            dish_type : "Rice",
+            price : 7.20,
+            small_desc : "It's not real chicken",
+            description : "Jasmine Rice infused with Pandan Leaves and Lemongrass, served alongside with egg, seasonal greens, marinated patty, all topped with our flavourful sauce.",
+            id : "5"
 
 
         },
         {
-            name : "Grilled Chicken Rendang Noodles",
-            category : "Noodles",
-            price : "$7.20",
-            description : "Lovin that McGrill",
-            description2 : "Taiwan Scallion noodles, served alongside with egg, marinated patty, all topped with our flavourful sauce."
+            dish_name : "Grilled Chicken Rendang Noodles",
+            dish_type : "Noodles",
+            price : 7.20,
+            small_desc : "Lovin that McGrill",
+            description : "Taiwan Scallion noodles, served alongside with egg, marinated patty, all topped with our flavourful sauce.",
+            id : "6"
         },
         {
-            name : "Crispy Chicken Rendang Noodles",
-            category : "Noodles",
-            price : "$7.20",
-            description : "The most irresistable crunch",
-            description2 : "Taiwan Scallion noodles, served alongside with egg, marinated patty, all topped with our flavourful sauce."
+            dish_name : "Crispy Chicken Rendang Noodles",
+            dish_type : "Noodles",
+            price : 7.20,
+            small_desc : "The most irresistable crunch",
+            description : "Taiwan Scallion noodles, served alongside with egg, marinated patty, all topped with our flavourful sauce.",
+            id : "7"
 
         },
         {
-            name : "Grilled 5 Spices Chicken Noodles",
-            category : "Noodles",
-            price : "$7.20",
-            description : "Fantastic 5!",
-            description2 : "Taiwan Scallion noodles, served alongside with egg, marinated patty, all topped with our flavourful sauce."
+            dish_name : "Grilled 5 Spices Chicken Noodles",
+            dish_type : "Noodles",
+            price : 7.20,
+            small_desc : "Fantastic 5!",
+            description : "Taiwan Scallion noodles, served alongside with egg, marinated patty, all topped with our flavourful sauce.",
+            id : "8"
 
         },
         {
-            name : "Chicken Katsu Noodles",
-            category : "Noodles",
-            price : "$7.20",
-            description : "Classic Japanese Dish",
-            description2 : "Taiwan Scallion noodles, served alongside with egg, marinated patty, all topped with our flavourful sauce."
+            dish_name : "Chicken Katsu Noodles",
+            dish_type : "Noodles",
+            price : 7.20,
+            small_desc : "Classic Japanese Dish",
+            description : "Taiwan Scallion noodles, served alongside with egg, marinated patty, all topped with our flavourful sauce.",
+            id : "9"
 
         },
         {
-            name : "Meatless Chicken Rendang Noodles",
-            category : "Noodles",
-            price : "$7.20",
-            description : "It's not real chicken",
-            description2 : "Taiwan Scallion noodles, served alongside with egg, marinated patty, all topped with our flavourful sauce."
+            dish_name : "Meatless Chicken Rendang Noodles",
+            dish_type : "Noodles",
+            price : 7.20,
+            small_desc : "It's not real chicken",
+            description : "Taiwan Scallion noodles, served alongside with egg, marinated patty, all topped with our flavourful sauce.",
+            id : "10"
 
         },
         {
-            name : "Packet Pokka Drink",
-            category : "Beverages",
-            price : "$0.50",
-            description : ""
+            dish_name : "Packet Pokka Drink",
+            dish_type : "Beverages",
+            price : 0.50,
+            small_desc: "",
+            description : "",
+            id : "11"
 
         },
         {
-            name : "Nanyang Coffee Black",
-            category : "Beverages",
-            price : "$2.00",
-            description : ""
+            dish_name : "Nanyang Coffee Black",
+            dish_type : "Beverages",
+            price : 2.00,
+            small_desc: "",
+            description : "",
+            id: "12"
 
         },
         {
-            name : "Nanyang Coffee with Milk",
-            category : "Beverages",
-            price : "$2.50",
-            description : ""
+            dish_name : "Nanyang Coffee with Milk",
+            dish_type : "Beverages",
+            price : 2.50,
+            small_desc: "",
+            description : "",
+            id : "13"
 
         },
         {
-            name : "Latte Macchiato",
-            category : "Beverages",
-            price : "$3.50",
-            description : ""
+            dish_name : "Latte Macchiato",
+            dish_type : "Beverages",
+            price : 3.50,
+            small_desc : "",
+            description : "",
+            id : "14"
 
         },
         {
-            name : "Cappucino",
-            category : "Beverages",
-            price : "$3.50",
-            description : ""
+            dish_name : "Cappucino",
+            dish_type : "Beverages",
+            price : 3.50,
+            small_desc: "",
+            description : "",
+            id : "15"
 
         }
         

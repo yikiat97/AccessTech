@@ -3,8 +3,8 @@ import './App.css';
 import { ChakraProvider } from '@chakra-ui/react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import Customer_homepage from "./pages/ordering/Order_menu";
-import Shopping_cart from "./pages/ordering/Order_Shopping_Cart";
+import CustomerHomepage from "./pages/ordering/Order_menu";
+import ShoppingCart from "./pages/ordering/Order_Shopping_Cart";
 
 
 
@@ -14,8 +14,8 @@ function App() {
     <div className="App">
      <Router>
       <Routes>
-        <Route path="/AccessTech/customermenu" element={<Customer_homepage />} />
-        <Route path="/AccessTech/customercart" element={<Shopping_cart />} />
+        <Route path="/AccessTech/customermenu" element={<CustomerHomepage />} />
+        <Route path="/AccessTech/customercart" element={<ShoppingCart />} />
       </Routes>
      </Router>
     </div>

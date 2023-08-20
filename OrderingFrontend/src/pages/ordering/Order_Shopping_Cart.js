@@ -4,7 +4,7 @@ import { Box, AbsoluteCenter, Divider, SimpleGrid } from '@chakra-ui/react';
 
 
 
-function Shopping_cart(){
+function ShoppingCart(){
     return(
         <>
         <Box position='relative' padding='10'>
@@ -24,4 +24,4 @@ function Shopping_cart(){
     );
 }
 
-export default Shopping_cart;
+export default ShoppingCart;
