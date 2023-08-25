@@ -7,12 +7,42 @@ import AdminUpdateMenu from '../../Components/admin/Admin_update_menu';
 import { Box, Tabs, TabList, Tab, TabPanels, TabPanel, Icon, VStack, Divider } from '@chakra-ui/react';
 import { AddIcon, EditIcon } from '@chakra-ui/icons';
 
-function Admin_orderpage() {
-  const [value, setValue] = React.useState(0);
 
-  const handleChange = (index) => {
-    setValue(index);
-  };
+const ItemIngredientsForm = () =>{
+    const [value, setValue] = React.useState(0);
+
+    const handleChange = (index) => {
+      setValue(index);
+    }; 
+
+
+    return (
+
+      <div className="overlay">
+        <div className="centerContent">           
+          <Tabs index={value} onChange={handleChange}>
+            <TabList borderBottom="1px" borderColor="gray.300">
+              <Tab><Icon as={AddIcon} /> Add new ingredients</Tab>
+              <Tab><Icon as={EditIcon} /> Update ingredients</Tab>
+            </TabList>
+            <Divider />
+            <TabPanels>
+              <TabPanel p={3}>
+                <AdminAddIngredients />
+              </TabPanel>
+              <TabPanel p={3}>
+                <AdminUpdateMenu />
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+          </div>
+      </div>
+
+    )
+}
+
+function Admin_orderpage() {
+
 
   // const [username, setUsername] = useState('');
   // const [password, setPassword] = useState('');
@@ -36,26 +66,7 @@ function Admin_orderpage() {
 
   return (
     <div className='container_order_container '>
-      <div><SideNavBar /></div>
-      <div style={{ marginLeft: "150px", marginTop: "65px" , top:0, position:"fixed"}}>
-      <VStack spacing={4} ml="350px" mt="65px" w="100%">
-        <Tabs index={value} onChange={handleChange}>
-          <TabList borderBottom="1px" borderColor="gray.300">
-            <Tab><Icon as={AddIcon} /> Add new ingredients</Tab>
-            <Tab><Icon as={EditIcon} /> Update ingredients</Tab>
-          </TabList>
-          <Divider />
-          <TabPanels>
-            <TabPanel p={3}>
-              <AdminAddIngredients />
-            </TabPanel>
-            <TabPanel p={3}>
-              <AdminUpdateMenu />
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
-      </VStack>
-      </div>
+      <SideNavBar children={<ItemIngredientsForm/>}/>
     </div>
   );
 }
