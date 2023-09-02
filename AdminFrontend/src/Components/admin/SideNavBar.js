@@ -32,15 +32,16 @@ import {
   FiSettings,
   FiBell,
   FiChevronDown,
+  FiCoffee
 } from 'react-icons/fi'
 import { IconType } from 'react-icons'
-
 const LinkItems = [
-  { name: 'User Management', icon: FiUser, url: '/AccessTech/AdminHomepage'},
+  { name: 'User Management', icon: FiUser, url: '/AccessTech/AdminManagement'},
   { name: 'Item Menu', icon: FiBookOpen , url: '/AccessTech/AdminOrderpage'},
   { name: 'Ingredients', icon: FiBook , url: '/AccessTech/AdminIngredientpage'},
-  { name: 'Transaction', icon: FiStar , url: '/AccessTech/AdminIngredientpage'},
-  { name: 'Discount', icon: FiPercent , url: '/AccessTech/AdminIngredientpage'},
+  { name: 'Transaction', icon: FiStar , url: '/AccessTech/AdminTransactionpage'},
+  { name: 'Discount', icon: FiPercent , url: '/AccessTech/AdminDiscountpage'},
+  { name: 'Ticket', icon: FiCoffee , url: '/AccessTech/AdminTicketingpage'},
 ]
 
 const SidebarContent = ({ onClose, ...rest }) => {
@@ -56,7 +57,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
       {...rest}>
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
         <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-          <img style={{width:"100%", height:"60px"}} src={logo} alt="Logo" />
+          <img style={{}} src={logo}/>
         </Text>
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
@@ -124,13 +125,6 @@ const MobileNav = ({ onOpen, ...rest }) => {
         icon={<FiMenu />}
       />
 
-      <Text
-        display={{ base: 'flex', md: 'none' }}
-        fontSize="2xl"
-        fontFamily="monospace"
-        fontWeight="bold">
-        Logo
-      </Text>
 
       {/* <HStack spacing={{ base: '0', md: '6' }}>
         <IconButton size="lg" variant="ghost" aria-label="open menu" icon={<FiBell />} />
@@ -175,9 +169,8 @@ const MobileNav = ({ onOpen, ...rest }) => {
   )
 }
 
-const SidebarWithHeader = () => {
+const SidebarWithHeader = ({children}) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-
   return (
     <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
       <SidebarContent onClose={() => onClose} display={{ base: 'none', md: 'block' }} />
@@ -196,6 +189,7 @@ const SidebarWithHeader = () => {
       <MobileNav onOpen={onOpen} />
       <Box ml={{ base: 0, md: 60 }} p="4">
         {/* Content */}
+        {children}
       </Box>
     </Box>
   )

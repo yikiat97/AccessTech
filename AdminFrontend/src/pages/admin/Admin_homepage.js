@@ -78,6 +78,20 @@ function AdminHomePage() {
                 </Card>          
               </Link>
             </Box>
+            <Box>
+              <Link to="/your-route">
+                <Card maxW='md' bg="#E0DCDC">
+                  <CardHeader>
+                    <Avatar src='https://bit.ly/broken-link' />
+                  </CardHeader>
+                  <CardBody>
+                    <Text>
+                      Discount Management 
+                    </Text>
+                  </CardBody>
+                </Card>          
+              </Link>
+            </Box>
           </SimpleGrid>
         </div>
       </div>

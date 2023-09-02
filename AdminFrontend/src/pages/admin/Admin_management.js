@@ -10,6 +10,8 @@ import { Link } from 'react-router-dom';
 import { Table,Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react';
 import '../../css/adminHomePage.css';
 import {EditIcon,DeleteIcon} from '@chakra-ui/icons'
+import DataTable from '../../Components/admin/Admin_CRUD_user';
+
 const hardcodedData = [
   { name: 'John Doe', age: 25, location: 'New York' },
   { name: 'Jane Smith', age: 32, location: 'Los Angeles' },
@@ -18,40 +20,50 @@ const hardcodedData = [
   { name: 'Michael Lee', age: 35, location: 'San Francisco' },
 ];
 
+const AdminManagementTable = () => {
+  return (
+    <div className="overlay">
+      <div className="centerContent">
+        <Table variant="striped" size="md" border="1px" borderColor="gray.200">
+          <Thead>
+            <Tr>
+              <Th>ID</Th>
+              <Th>Username</Th>
+              <Th>Password</Th>
+              <Th>Role</Th>
+              <Th></Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {hardcodedData.map((item, index) => (
+              <Tr key={index}>
+                <Td>{item.name}</Td>
+                <Td>{item.age}</Td>
+                <Td>{item.location}</Td>
+                <Td></Td>
+                <Td>
+                  <Button colorScheme="blue" m={2}>
+                    <EditIcon />
+                    Update
+                  </Button>
+                  <Button colorScheme="red" m={2}>
+                    <DeleteIcon />
+                    Delete
+                  </Button>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </div>
+    </div>
+  );
+};
+
 function AdminManagementPage() {
-
-
   return (
     <div className="container" style={{ backgroundImage: `url(${backgroundImage})` }}>
-      <div className="overlay">
-        <div className="centerContent">
-          <Table variant="striped" size='md' border='1px' borderColor='gray.200'>
-            <Thead>
-              <Tr>
-                <Th>ID</Th>
-                <Th>Username</Th>
-                <Th>Password</Th>
-                <Th>Role</Th>
-                <Th></Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {hardcodedData.map((item, index) => (
-                <Tr key={index}>
-                  <Td>{item.name}</Td>
-                  <Td>{item.age}</Td>
-                  <Td>{item.location}</Td>
-                  <Td></Td>
-                  <Td>
-                    <Button colorScheme='blue' m={2}><EditIcon href="test"></EditIcon>Update</Button>      
-                    <Button colorScheme='red' m={2}><DeleteIcon></DeleteIcon>Delete</Button>
-                  </Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
-        </div>
-      </div>
+      <SideNavBar children={<AdminManagementTable />} />
     </div>
   );
 }
