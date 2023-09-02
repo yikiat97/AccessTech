@@ -30,7 +30,7 @@ const MealItemForm = (props) => {
         toast({
           title: "Item successfully added to cart!",
           status: "success",
-          duration: 5000, // 5 seconds
+          duration: 4000, // 5 seconds
           isClosable: false,
       });
 

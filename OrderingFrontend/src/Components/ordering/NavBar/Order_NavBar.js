@@ -1,6 +1,6 @@
 import React from 'react';
 import './css/Order_NavBar.css'; 
-import logo from '../../../assets/logo/logo.png';
+import logo from '../../../assets/logo/KC_Logo.png';
 import { Flex } from '@chakra-ui/react'
 import HeaderCartButton from "./HeaderCartButton";
 

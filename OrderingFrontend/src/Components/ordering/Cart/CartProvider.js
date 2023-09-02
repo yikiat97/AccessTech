@@ -1,5 +1,6 @@
-import CartContext from "./cart-context.js";
+import React, { useContext } from "react";
 import { useReducer } from "react";
+import CartContext from "./cart-context";
 
 const defaultCartState = {
   items: [],
@@ -54,6 +55,22 @@ const cartReducer = (state, action) => {
       totalAmount: updatedTotalAmount,
     };
   }
+  if (action.type === "UPDATE_SPECIAL_INSTRUCTIONS") {
+    const updatedItems = state.items.map((item) => {
+      if (item.id === action.id) {
+        return {
+          ...item,
+          specialInstructions: action.specialInstructions,
+        };
+      }
+      return item;
+    });
+
+    return {
+      ...state,
+      items: updatedItems,
+    };
+  }
 
   if (action.type === "CLEARALL") {
     return {
@@ -65,14 +82,18 @@ const cartReducer = (state, action) => {
   return defaultCartState;
 };
 
-const CartProvider = (props) => {
+export const CartProvider = (props) => {
   const [cartState, dispatchCartAction] = useReducer(
     cartReducer,
     defaultCartState
   );
 
-  const addItemToCartHandler = (item) => {
-    dispatchCartAction({ type: "ADD", item: item });
+  const addItemToCartHandler = (item, specialRequests) => {
+    if (specialRequests && specialRequests.length > 0 && item.dish_type === "RICE") {
+      dispatchCartAction({ type: "ADD_WITH_OPTIONS", item: item, specialRequests: specialRequests });
+    } else {
+      dispatchCartAction({ type: "ADD", item: item });
+    }
   };
 
   const removeItemFromCartHandler = (id) => {
@@ -83,13 +104,23 @@ const CartProvider = (props) => {
     dispatchCartAction({ type: "CLEARALL" });
   };
 
+  const updateSpecialInstructionsHandler = (id, specialInstructions) => {
+    dispatchCartAction({
+      type: "UPDATE_SPECIAL_INSTRUCTIONS",
+      id: id,
+      specialInstructions: specialInstructions,
+    });
+  };
+
   const cartContext = {
     items: cartState.items,
     totalAmount: cartState.totalAmount,
     addItem: addItemToCartHandler,
     removeItem: removeItemFromCartHandler,
     clearAll: clearAllItemsFromCartHandler,
+    updateSpecialInstructions: updateSpecialInstructionsHandler,
   };
+
   return (
     <CartContext.Provider value={cartContext}>
       {props.children}
