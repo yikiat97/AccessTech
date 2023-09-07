@@ -1,0 +1,49 @@
+.cart-items {
+    list-style: none;
+    max-height: 16rem;
+    overflow: auto;
+  }
+
+  .total {
+    font-weight: bold;
+    font-size: 1.5rem;
+    padding-top: 20px;
+    padding-bottom: 10px;
+  
+  }
+
+  .voucher{
+    font-weight: bold;
+    font-size: 1.5rem;
+   
+
+  }
+  
+  .actions {
+    text-align: right;
+  }
+  
+  .actions button {
+    font: inherit;
+    cursor: pointer;
+    border: 1px solid #ac5d5d;
+    background-color: #ac5d5d;
+    color:white;
+    padding: 0.5rem 2rem;
+    border-radius: 25px;
+    margin-left: 1rem;
+  }
+  
+  .actions button:hover,
+  .actions button:active {
+    border-color: white;
+   
+  }
+  
+  .actions .button--alt {
+    background-color: #5f8a52;
+    border: 1px solid #5f8a52;
+    color:white;
+  }
+ 
+  
