@@ -5,22 +5,22 @@ import Modal from "./CartModal";
 import classes from "./css/Cart.module.css";
 import CartItem from "./CartItem";
 import CartContext from "./cart-context";
+import { calculateUpdatedPrice } from './cart-utils';
 
 
 const Cart = (props) => {
   const cartCtx = useContext(CartContext);
-
   const [editedSpecialInstructions, setEditedSpecialInstructions] = useState({});
 
   const [voucherCode, setVoucherCode] = useState(""); 
   const [isVoucherValid, setIsVoucherValid] = useState(null);
-  
-  const totalAmount = `$${cartCtx.totalAmount.toFixed(2)}`;
-  
-  const hasItems = cartCtx.items.length > 0;
 
-  const cartItemRemoveHandler = (id) => {
-    cartCtx.removeItem(id);
+  const hasItems = Array.isArray(cartCtx.items) && cartCtx.items.length > 0;
+  const totalAmount = hasItems ? `$${Number(cartCtx.totalAmount).toFixed(2)}` : '$0.00';
+
+
+  const cartItemRemoveHandler = (unique_id) => {
+    cartCtx.removeItem(unique_id);
   };
 
   const cartItemAddHandler = (item) => {
@@ -32,11 +32,14 @@ const Cart = (props) => {
     cartCtx.clearAll();
     
   };
-
-  const cartItemEditHandler = (id, specialRequests) => {
-    setEditedSpecialInstructions({ id, specialRequests });
+  
+  const cartItemEditHandler = (unique_id, specialInstructions) => {
+    const updatedPrice = calculateUpdatedPrice(cartCtx.items, unique_id, specialInstructions);
+    cartCtx.updateSpecialInstructions(unique_id, specialInstructions, updatedPrice);
+    setEditedSpecialInstructions({ unique_id, specialInstructions });
   };
-
+  
+   
   const voucherCodeChangeHandler = (event) => {
     const newVoucherCode = event.target.value;
     setVoucherCode(newVoucherCode);
@@ -54,15 +57,18 @@ const Cart = (props) => {
   const cartItems = (
     <ul className={classes["cart-items"]}>
     {cartCtx.items.map((item) => (
-      <li key={item.id}>
+      <li key={item.unique_id}>
         <CartItem
           name={<strong>{item.name}</strong>}
           amount={item.amount}
-          price={`$${item.price}`}
-          onRemove={cartItemRemoveHandler.bind(null, item.id)}
+          price={`${item.price}0`}
+          cartItems={cartCtx.items}
+          dish_id={item.dish_id}
+          unique_id={item.unique_id}
+          onRemove={cartItemRemoveHandler.bind(null, item.unique_id)}
           onAdd={cartItemAddHandler.bind(null, item)}
-          onEdit={cartItemEditHandler.bind(null, item.id)}
-          specialRequests={item.specialRequests} 
+          onEdit={(updateInfo) => cartItemEditHandler(item.unique_id, updateInfo.updatedSpecialRequests, updateInfo.updatedPrice)}
+          specialInstructions={item.specialInstructions} 
 
         />      
       </li>
@@ -75,7 +81,7 @@ const Cart = (props) => {
       { 
         <>
           {cartItems}
-          {cartCtx.totalAmount > 0 && ( 
+          {hasItems && cartCtx.totalAmount > 0 && ( 
            <div className={classes.voucher}>
            <Flex align="center" justify="space-between">
              <span>Voucher: </span>
@@ -123,6 +129,9 @@ const Cart = (props) => {
             <Link to={{
               pathname: "/AccessTech/customerorder",
               search: `?totalAmount=${encodeURIComponent(totalAmount)}`  
+              }}
+              onClick={() => { sessionStorage.setItem('orderDetails', JSON.stringify(cartCtx.items)); 
+              sessionStorage.setItem('lastOrderPage', props.userType);
               }}>
               <button className={classes["button--alt"]} onClick={props.onClose}>
                 Order

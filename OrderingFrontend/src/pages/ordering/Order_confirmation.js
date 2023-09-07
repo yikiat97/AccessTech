@@ -1,15 +1,37 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useLottie } from "lottie-react";
-import { Box, Button, Text, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter } from '@chakra-ui/react';
+import { Link, List, ListItem, Box, Button, Text, Modal, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter } from '@chakra-ui/react';
 import paymentGraphic from '../../Components/ordering/OrderConfirmation/lotties/payment.json'
-import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import CartContext from "../../Components/ordering/Cart/cart-context";
 
 function OrderConfirmationPage(props) {
-
     const [isModalOpen, setIsModalOpen] = useState(false);
     const cartCtx = useContext(CartContext);
+
+    useEffect(() => {
+      const savedOrderDetails = JSON.parse(sessionStorage.getItem('orderDetails'));
+      if (savedOrderDetails) {
+        cartCtx.items = [...savedOrderDetails];
+      }
+    }, []);
+
+
+    const orderAgainHandler = () => {
+      const lastOrderPage = sessionStorage.getItem('lastOrderPage'); 
+      console.log("Last Order Page:", lastOrderPage); 
+      sessionStorage.removeItem('savedOrderDetails');
+      sessionStorage.removeItem('lastOrderPage');
+      
+      if (lastOrderPage === 'student') {  
+        console.log("Navigating to student menu");  
+        window.location.href = '/AccessTech/studentmenu'; 
+      } else if (lastOrderPage === 'public') {
+        console.log("Navigating to public menu");
+        window.location.href = '/AccessTech/publicmenu'; 
+      } 
+      };
+
     const renderModalContent = () => {
         return (
           <ModalContent>
@@ -17,7 +39,7 @@ function OrderConfirmationPage(props) {
             <ModalCloseButton />
             <ModalBody>
             {cartCtx.items.map((item, index) => (
-               <Box key={item.id} marginBottom="10px">
+               <Box key={item.unique_id} marginBottom="10px">
                <Box
                  border="1px solid lightgrey"
                  borderRadius="10px"
@@ -30,16 +52,15 @@ function OrderConfirmationPage(props) {
                  <Box>
                    <Text padding='1' fontSize='lg' fontWeight='bold'>{`${index + 1}. ${item.name}`}</Text>
                    <Text mt='2'fontWeight='bold'>Price (per item): </Text> 
-                   <Text fontWeight='bold' color='green'> ${item.price}</Text>
-                   {item.specialRequests && item.specialRequests.length > 0 && (
+                   <Text fontWeight='bold' color='green'> ${item.price}0</Text>
+                   {item.specialInstructions && item.specialInstructions.length > 0 && (
                     <Text mt='2' fontWeight='bold'>Special Instructions: </Text>
-                   )}
-                   <ul>
-                        {item.specialRequests.map((instruction, i) => (
-                        <li key={i}>{instruction}</li>
+                   )}     
+                   <List>
+                        {item.specialInstructions.map((instruction, i) => (
+                          <ListItem key={i}>{instruction.special_comments}(${instruction.special_comments_price}0)</ListItem>
                         ))}
-                    </ul>
-                  
+                  </List>               
                  </Box>
                  <Box as='span' fontSize='2xl' color='teal'>
                    x {item.amount}
@@ -94,8 +115,10 @@ function OrderConfirmationPage(props) {
                         <Box top='5%'>
                             <Text fontSize={'xl'} style={{color:'grey'}} textAlign='center'>
                                 <Text fontWeight='bold' fontSize='4xl' style={{color:'green'}}>{totalAmount}</Text>
-                                Payment Confirmed!
+                                Payment Confirmed! <br></br>
+                                Please do not leave this page.
                             </Text>
+                            
                         </Box>
                         <Button top='8%' right='1%' size='lg' colorScheme='blue' onClick={handleViewOrderDetails}>
                             View Order Details
@@ -104,13 +127,12 @@ function OrderConfirmationPage(props) {
                             {renderModalContent()}
                         </Modal>
                     <Link to="/AccessTech/customermenu">
-                        <Button top='8%' left='1%' size='lg' colorScheme='green' onClick={orderHandler}>
+                        <Button top='8%' left='1%' size='lg' colorScheme='green' onClick={orderAgainHandler}>
                             Order Again
-                        </Button>
+                        </Button> 
                     </Link>
                     </Box> 
-                </Box>
-                
+                </Box>      
             </Box>
         
     );

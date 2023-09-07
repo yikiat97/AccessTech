@@ -68,7 +68,7 @@ const MealItemForm = (props) => {
                 <button className={classes.increment} type="button" onClick={handleIncrement}>+</button>
             </div>
 
-            <button>Add to Cart</button>
+            <button className={classes.addToCart}>Add to Cart</button>
             {!amountIsValid && <p>Please enter a valid amount (1-10).</p>}
         </form>
     );

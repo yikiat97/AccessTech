@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import NavigationBar from '../../Components/ordering/NavBar/Order_NavBar';
-import { categories } from '../../Components/ordering/dummydata/categories'
 import CategoryItems from '../../Components/ordering/Order_CategoryItems';
 import Cart from "../../Components/ordering/Cart/Cart";
-// import CartProvider from "../../Components/ordering/Cart/CartProvider";
 
 
 
@@ -19,9 +17,9 @@ function CustomerHomepage(){
 
     return(
         <>
-            {cartIsShown && <Cart onClose={hideCartHandler} />}
+            {cartIsShown && <Cart userType="student" onClose={hideCartHandler} />}
           <NavigationBar onShowCart={showCartHandler} onClose={hideCartHandler} ></NavigationBar>
-          <CategoryItems uniqueCategory={categories.categories} ></CategoryItems>
+          <CategoryItems userType="student"></CategoryItems>
        
         </>
         
