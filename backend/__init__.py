@@ -6,6 +6,8 @@ from .extensions import db, migrate
 from .routes.order import order
 from .routes.user import user
 from .routes.ingredient import ingredient_inventory
+from .routes.transaction import transaction
+
 
 from dotenv import load_dotenv
 import os
@@ -25,6 +27,8 @@ def create_app():
     app.register_blueprint(order)
     app.register_blueprint(user)
     app.register_blueprint(ingredient_inventory)
+    app.register_blueprint(transaction)
+    
 
     SWAGGER_URL = '/api/docs'  # URL for exposing Swagger UI (without trailing '/')
     API_URL = '/static/swagger.json'  # Our API url (can of course be a local resource)

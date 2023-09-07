@@ -5,6 +5,7 @@ from ..models.dish import dishes
 from ..models.recipe import recipes
 from ..models.ingredient import ingredients
 from ..models.special_comments import special_comments
+from ..models.discount import Discount
 
 from ..services.admin.inventoryManagement import calculate_qty
 from dotenv import load_dotenv
@@ -263,5 +264,127 @@ def get_special_comments(dish_id):
         return jsonify(comments_list)
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+    
+
+
+
+@order.route('/order/get_all_special_comments', methods=['GET'])
+def get_all_special_comments():
+    try:
+        # Query for all special comments
+        comments = special_comments.query.all()
+        
+        # Convert the results to a list of dictionaries for JSON serialization
+        comments_list = [{"special_comments_id": comment.special_comments_id, 
+                          "special_comments": comment.special_comments,
+                          "special_comments_price": comment.special_comments_price,
+                          "dish_id": comment.dish_id} for comment in comments]
+        
+        return jsonify(comments_list)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
+@order.route('/order/delete_special_comment/<int:comment_id>', methods=['DELETE'])
+def delete_special_comment(comment_id):
+    try:
+        # Find the special comment by its ID
+        comment = special_comments.query.get(comment_id)
+        
+        # If the comment doesn't exist, return an error
+        if not comment:
+            return jsonify({"error": "Special comment not found"}), 404
+        
+        # Delete the comment from the database
+        db.session.delete(comment)
+        db.session.commit()
+        
+        return jsonify({"message": "Special comment deleted successfully!"})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 400
+
+
+####################################### Discount Table ##############################################################
+
+@order.route('/admin/get_all_discounts', methods=['GET'])
+def get_all_discounts():
+    try:
+        # Query for all discounts
+        discounts = Discount.query.all()
+
+        # Convert the results to a list of dictionaries for JSON serialization
+        discounts_list = [{
+            "discount_id": discount.discount_id, 
+            "discount_name": discount.discount_name,
+            "code": discount.code,
+            "discount_status": discount.discount_status,
+            "discount_percent": discount.discount_percent
+        } for discount in discounts]
+        
+        return jsonify(discounts_list)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
+
+
+
+@order.route('/admin/add_discount', methods=['POST'])
+def add_discount():
+    try:
+        # Extract data from the request
+        data = request.json
+        discount_name = data.get('discount_name')
+        code = data.get('code')
+        discount_status = data.get('discount_status')
+        discount_percent = data.get('discount_percent')
+        
+        # Create a new Discount instance
+        new_discount = Discount(
+            discount_name=discount_name,
+            code=code,
+            discount_status=discount_status,
+            discount_percent=discount_percent
+        )
+        
+        # Add to the session and commit
+        db.session.add(new_discount)
+        db.session.commit()
+
+        # Return a success message along with the ID of the created discount
+        return jsonify({"message": "Discount added successfully!", "discount_id": new_discount.discount_id}), 201
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+    
+
+
+@order.route('/admin/delete_discount/<int:discount_id>', methods=['DELETE'])
+def delete_discount(discount_id):
+    try:
+        # Fetch the discount by its ID
+        discount = Discount.query.get(discount_id)
+
+        # Check if the discount exists
+        if not discount:
+            return jsonify({"error": "Discount not found!"}), 404
+
+        # Delete the discount and commit the changes
+        db.session.delete(discount)
+        db.session.commit()
+
+        return jsonify({"message": f"Discount with ID {discount_id} deleted successfully!"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
+
+
+
+
+
+
 
 

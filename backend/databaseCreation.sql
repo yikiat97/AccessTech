@@ -52,6 +52,7 @@ CREATE TABLE IF NOT EXISTS discount (
     discount_id SERIAL PRIMARY KEY,
     discount_name VARCHAR(50),
     code VARCHAR(50),
+    discount_status VARCHAR(50),
     discount_percent FLOAT
 );
 
@@ -59,7 +60,8 @@ DROP TABLE IF EXISTS invoice CASCADE;;
 CREATE TABLE IF NOT EXISTS invoice (
     invoice_id SERIAL PRIMARY KEY,
     date_time timestamp,
-    total_price FLOAT
+    total_price FLOAT,
+    queue_num INT,
     invoice_status VARCHAR(50)
 );
 
