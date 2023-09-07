@@ -8,38 +8,43 @@ import AdminOrderpage from "./pages/admin/Admin_orderpage";
 import AdminIngredientpage from "./pages/admin/Admin_ingredientpage";
 import AdminManagementPage from "./pages/admin/Admin_management";
 import AdminTransactionpage from './pages/admin/Admin_transaction';
-import AdminTicketingPage from './pages/admin/Admin_ticketing';
+import AdminTicketingPage from './pages/admin/Admin_ticketingOverview';
 import AdminDiscountpage from './pages/admin/Admin_discount';
+import AdminSandwichTicketing from './pages/admin/Admin_ticketingSandwich';
+
 function App() {
   return (
     <ChakraProvider>
     <div className="App">
-     <Router>
-      <Routes>
-        <Route path="/AccessTech/admin" element={<AdminLogin />} />
-      </Routes>
-      <Routes>
-        <Route path="/AccessTech/AdminHomepage" element={<AdminHomepage />} />
-      </Routes>
-      <Routes>
-        <Route path="/AccessTech/AdminOrderpage" element={<AdminOrderpage />} />
-      </Routes>
-      <Routes>
-        <Route path="/AccessTech/AdminIngredientpage" element={<AdminIngredientpage />} />
-      </Routes>
-      <Routes>
-        <Route path="/AccessTech/AdminTransactionpage" element={<AdminTransactionpage />} />
-      </Routes>
-      <Routes>
-        <Route path="/AccessTech/AdminTicketingpage" element={<AdminTicketingPage />} />
-      </Routes>
-      <Routes>
-        <Route path="/AccessTech/AdminDiscountpage" element={<AdminDiscountpage />} />
-      </Routes>
-      <Routes>
-        <Route path="/AccessTech/AdminManagement" element={<AdminManagementPage />} />
-      </Routes>
-     </Router>
+      <Router>
+        <Routes>
+          <Route path="/AccessTech/admin" element={<AdminLogin />} />
+        </Routes>
+        <Routes>
+          <Route path="/AccessTech/AdminHomepage" element={<AdminHomepage />} />
+        </Routes>
+        <Routes>
+          <Route path="/AccessTech/AdminOrderpage" element={<AdminOrderpage />} />
+        </Routes>
+        <Routes>
+          <Route path="/AccessTech/AdminIngredientpage" element={<AdminIngredientpage />} />
+        </Routes>
+        <Routes>
+          <Route path="/AccessTech/AdminTransactionpage" element={<AdminTransactionpage />} />
+        </Routes>
+        <Routes>
+          <Route path="/AccessTech/AdminTicketingpage" element={<AdminTicketingPage />} />
+        </Routes>
+        <Routes>
+          <Route path="/AccessTech/AdminDiscountpage" element={<AdminDiscountpage />} />
+        </Routes>
+        <Routes>
+          <Route path="/AccessTech/AdminManagement" element={<AdminManagementPage />} />
+        </Routes>
+        <Routes>
+          <Route path="/AccessTech/SandwichTicketingPage" element={<AdminSandwichTicketing />} />
+        </Routes>
+      </Router>
     </div>
     </ChakraProvider>
   );

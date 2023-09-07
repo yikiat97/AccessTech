@@ -35,6 +35,8 @@ import {
   FiCoffee
 } from 'react-icons/fi'
 import { IconType } from 'react-icons'
+import { useColorMode } from '@chakra-ui/react';
+
 const LinkItems = [
   { name: 'User Management', icon: FiUser, url: '/AccessTech/AdminManagement'},
   { name: 'Item Menu', icon: FiBookOpen , url: '/AccessTech/AdminOrderpage'},
@@ -43,7 +45,15 @@ const LinkItems = [
   { name: 'Discount', icon: FiPercent , url: '/AccessTech/AdminDiscountpage'},
   { name: 'Ticket', icon: FiCoffee , url: '/AccessTech/AdminTicketingpage'},
 ]
-
+function ColorModeToggle() {
+  const { colorMode, toggleColorMode } = useColorMode();
+  
+  return (
+      <button onClick={toggleColorMode}>
+      Toggle {colorMode === "light" ? "Dark" : "Light"} Mode
+      </button>
+  );
+}
 const SidebarContent = ({ onClose, ...rest }) => {
   return (
     <Box
@@ -174,6 +184,8 @@ const SidebarWithHeader = ({children}) => {
   return (
     <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
       <SidebarContent onClose={() => onClose} display={{ base: 'none', md: 'block' }} />
+      <ColorModeToggle></ColorModeToggle>
+
       <Drawer
         isOpen={isOpen}
         placement="left"
@@ -183,12 +195,14 @@ const SidebarWithHeader = ({children}) => {
         size="full">
         <DrawerContent>
           <SidebarContent onClose={onClose} />
+          
         </DrawerContent>
       </Drawer>
       {/* mobilenav */}
       <MobileNav onOpen={onOpen} />
       <Box ml={{ base: 0, md: 60 }} p="4">
         {/* Content */}
+        
         {children}
       </Box>
     </Box>

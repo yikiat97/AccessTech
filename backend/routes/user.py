@@ -8,6 +8,28 @@ from ..models.user import admin_user
 user = Blueprint('user', __name__)
 # user.secret_key = 'any random string'
 
+
+@user.route('/getAllAdminDetails', methods=['GET'])
+def get_all_user_details():
+    # Query the database to retrieve all user details
+    all_users = admin_user.query.all()
+
+    # Create a list to store user details
+    user_details = []
+
+    # Iterate through the user objects and extract relevant information
+    for user in all_users:
+        user_details.append({
+            'admin_id': user.admin_id,
+            'password': user.password,
+            'name': user.name,
+            'role': user.role,
+        })
+
+    return jsonify({'user_details': user_details})
+
+
+
 ############################## Login function Check Username and password in database ###########################
 @user.route('/userAuth', methods=['POST'])
 def Auth_user():

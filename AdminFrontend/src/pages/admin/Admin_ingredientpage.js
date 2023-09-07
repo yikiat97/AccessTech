@@ -2,7 +2,7 @@ import React from 'react';
 import "./css/admin_login.css";
 import SideNavBar from '../../Components/admin/SideNavBar';
 import AdminAddIngredients from '../../Components/admin/Admin_add_ingredients';
-import AdminUpdateMenu from '../../Components/admin/Admin_update_menu';
+import AdminUpdateIngredients from '../../Components/admin/Admin_update_ingredient';
 
 import { Box, Tabs, TabList, Tab, TabPanels, TabPanel, Icon, VStack, Divider } from '@chakra-ui/react';
 import { AddIcon, EditIcon } from '@chakra-ui/icons';
@@ -31,7 +31,7 @@ const ItemIngredientsForm = () =>{
                 <AdminAddIngredients />
               </TabPanel>
               <TabPanel p={3}>
-                <AdminUpdateMenu />
+                <AdminUpdateIngredients />
               </TabPanel>
             </TabPanels>
           </Tabs>

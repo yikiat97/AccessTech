@@ -177,23 +177,28 @@ def fetch_invoice_parameter():
             }
 
             for transaction in transactions:
-                transaction_data = {
-                    "dish_id": transaction.dish_id,
-                    "with_special_comments": transaction.with_special_comments,
-                    "special_comments": []
-                }
+                dish = dishes.query.get(transaction.dish_id)
+                if dish:
+                    transaction_data = {
+                        "dish_id": dish.dish_id,
+                        "dish_name": dish.dish_name,
+                        "price": dish.price,
+                        "image_url": dish.image_url,
+                        "with_special_comments": transaction.with_special_comments,
+                        "special_comments": []
+                    }
 
-                if transaction.with_special_comments:
-                    comments = TransactionSpecialComments.query.filter_by(dish_id=transaction.dish_id, invoice_id=transaction.invoice_id).all()
-                    for comment_relation in comments:
-                        comment = special_comments.query.get(comment_relation.special_comments_id)
-                        if comment:
-                            transaction_data["special_comments"].append({
-                                "comment_id": comment.special_comments_id,
-                                "text": comment.special_comments
-                            })
+                    if transaction.with_special_comments:
+                        comments = TransactionSpecialComments.query.filter_by(dish_id=transaction.dish_id, invoice_id=transaction.invoice_id).all()
+                        for comment_relation in comments:
+                            comment = special_comments.query.get(comment_relation.special_comments_id)
+                            if comment:
+                                transaction_data["special_comments"].append({
+                                    "comment_id": comment.special_comments_id,
+                                    "text": comment.special_comments
+                                })
 
-                invoice_data["transactions"].append(transaction_data)
+                    invoice_data["transactions"].append(transaction_data)
 
             # Fetch discount-invoice relationships for this invoice
             discount_invoices = DiscountInvoice.query.filter_by(invoice_id=invoice.invoice_id).all()
@@ -208,6 +213,7 @@ def fetch_invoice_parameter():
             results.append(invoice_data)
 
         return jsonify(results)
+
 
     except Exception as e:
         return jsonify({"error": str(e)}), 400
