@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useRef} from 'react';
 import { useLottie } from "lottie-react";
 import { Link, List, ListItem, Box, Button, Text, Modal, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter } from '@chakra-ui/react';
 import paymentGraphic from '../../Components/ordering/OrderConfirmation/lotties/payment.json'
@@ -6,15 +6,55 @@ import { useLocation } from 'react-router-dom';
 import CartContext from "../../Components/ordering/Cart/cart-context";
 
 function OrderConfirmationPage(props) {
+    const isInitialMount = useRef(true); 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const cartCtx = useContext(CartContext);
 
+    const ticketingOrderDetails = {
+      "date_time": "2023-09-02T14:30:00Z",
+      "total_price": cartCtx.totalAmount,
+      "queue_num": 0,
+      "invoice_status": "completed",
+      "discount_id": 0,
+      "transactions": cartCtx.items.map(item => {
+        return {
+          "dish_id": item.dish_id,
+          "unique_id": item.unique_id,
+          "special_comments_id": item.specialInstructions.map(special => special.special_comments_id)
+        };
+      })
+    };
+
+    
+
+
     useEffect(() => {
+      // const apiCalled = sessionStorage.getItem('apiCalled');
       const savedOrderDetails = JSON.parse(sessionStorage.getItem('orderDetails'));
       if (savedOrderDetails) {
-        cartCtx.items = [...savedOrderDetails];
-      }
-    }, []);
+        cartCtx.items = [...savedOrderDetails]; 
+      }})
+      // if (isInitialMount.current) {
+      //   isInitialMount.current = false;
+        
+      //   if (!apiCalled) {
+      //     sessionStorage.setItem('apiCalled', 'true');
+
+      // fetch('http://127.0.0.1:5000/admin/add_invoice', {
+      //     method: 'POST',
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //     },
+      //     body: JSON.stringify(ticketingOrderDetails),
+      //   })
+      //   .then(response => response.json())
+      //   .then(data => {
+      //     console.log('Success:', data);
+      //   })
+      //   .catch((error) => {
+      //     console.error('Error:', error);
+      //   });
+      // }}});
 
 
     const orderAgainHandler = () => {
@@ -22,7 +62,8 @@ function OrderConfirmationPage(props) {
       console.log("Last Order Page:", lastOrderPage); 
       sessionStorage.removeItem('savedOrderDetails');
       sessionStorage.removeItem('lastOrderPage');
-      
+      sessionStorage.removeItem('apiCalled');
+
       if (lastOrderPage === 'student') {  
         console.log("Navigating to student menu");  
         window.location.href = '/AccessTech/studentmenu'; 
@@ -87,7 +128,7 @@ function OrderConfirmationPage(props) {
     
     const lottieOptions = {
         animationData: paymentGraphic,
-        loop: true,
+        loop: false,
         autoplay: true,
         rendererSettings: {
             preserveAspectRatio: "xMidYMid slice",
@@ -99,44 +140,39 @@ function OrderConfirmationPage(props) {
     const LottieAnimation = useLottie(lottieOptions);
 
     return (
-        
-            <Box display='flex' w='100vw' h='100vh' alignItems='center' justifyContent='center'>
-                <Box width='50%' height='50%' position='relative'>
-                    <Box position='absolute' top='-120' left='0' right='0' textAlign='center' p='20px' borderRadius='10px' bg='rgb(242, 242, 242)'>
-                        <Box fontSize='2xl' color='black'>
-                            <span style={{ whiteSpace: 'nowrap' }}>Order Number :</span> 
-                            <strong>
-                            <Box as='span' fontSize='3xl'> 1</Box>
-                            </strong>
-                        </Box>
-                    </Box>
-                    <Box position='absolute' top='-30%' left='50%' transform='translateX(-50%)' width="400px" height="400px">
-                        {LottieAnimation.View}
-                        <Box top='5%'>
-                            <Text fontSize={'xl'} style={{color:'grey'}} textAlign='center'>
-                                <Text fontWeight='bold' fontSize='4xl' style={{color:'green'}}>{totalAmount}</Text>
-                                Payment Confirmed! <br></br>
-                                Please do not leave this page.
-                            </Text>
-                            
-                        </Box>
-                        <Button top='8%' right='1%' size='lg' colorScheme='blue' onClick={handleViewOrderDetails}>
-                            View Order Details
-                        </Button>
-                        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                            {renderModalContent()}
-                        </Modal>
-                    <Link to="/AccessTech/customermenu">
-                        <Button top='8%' left='1%' size='lg' colorScheme='green' onClick={orderAgainHandler}>
-                            Order Again
-                        </Button> 
-                    </Link>
-                    </Box> 
-                </Box>      
-            </Box>
-        
-    );
-}
 
+      <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" w="100vw">
+      <Box w="100%" h="100%" position="relative" maxW="500px" mx="auto">
+        <Box position="absolute" top="50px" left="50%" transform="translate(-50%, 0)" p="20px" borderRadius="10px" bg="gray.200">
+          <Text fontSize="xl" color="black">
+            Order Number : <Box as="span" fontWeight="bold" fontSize="3xl">1</Box>
+          </Text>
+        </Box>
+        <Box position="absolute" top="200px" left="50%" transform="translate(-50%, 0)" width="100px" height="100px">
+          {LottieAnimation.View}
+        </Box>
+        <Box position="absolute" top="300px" left="50%" transform="translate(-50%, 0)">
+          <Text fontSize="xl" color="gray.600" textAlign="center">
+            <Text fontWeight="bold" fontSize="4xl" color="green">{totalAmount}</Text>
+            Payment Confirmed! <br />
+            Don't leave this page.
+          </Text>
+          <Button mt="20px" size="lg" colorScheme="blue" onClick={handleViewOrderDetails}>
+            View Order Details
+          </Button>
+          <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+            {renderModalContent()}
+          </Modal>
+          <Link>
+            <Button mt="20px" size="lg" colorScheme="green" onClick={orderAgainHandler}>
+              Order Again
+            </Button>
+          </Link>
+        </Box>
+      </Box>
+    </Box>
+
+
+)}
+  
 export default OrderConfirmationPage;
-
