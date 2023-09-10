@@ -44,6 +44,7 @@ const LinkItems = [
   { name: 'Transaction', icon: FiStar , url: '/AccessTech/AdminTransactionpage'},
   { name: 'Discount', icon: FiPercent , url: '/AccessTech/AdminDiscountpage'},
   { name: 'Ticket', icon: FiCoffee , url: '/AccessTech/AdminTicketingpage'},
+  { name: 'Customise', icon: FiSettings , url: '/AccessTech/AdminCustomisation'},
 ]
 function ColorModeToggle() {
   const { colorMode, toggleColorMode } = useColorMode();
