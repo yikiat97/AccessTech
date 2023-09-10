@@ -10,6 +10,8 @@ function OrderConfirmationPage(props) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const cartCtx = useContext(CartContext);
 
+    console.log(cartCtx)
+
     const ticketingOrderDetails = {
       "date_time": "2023-09-02T14:30:00Z",
       "total_price": cartCtx.totalAmount,
@@ -25,36 +27,33 @@ function OrderConfirmationPage(props) {
       })
     };
 
-    
-
-
     useEffect(() => {
-      // const apiCalled = sessionStorage.getItem('apiCalled');
+      const apiCalled = sessionStorage.getItem('apiCalled');
       const savedOrderDetails = JSON.parse(sessionStorage.getItem('orderDetails'));
       if (savedOrderDetails) {
         cartCtx.items = [...savedOrderDetails]; 
-      }})
-      // if (isInitialMount.current) {
-      //   isInitialMount.current = false;
+      }
+      if (isInitialMount.current) {
+        isInitialMount.current = false;
         
-      //   if (!apiCalled) {
-      //     sessionStorage.setItem('apiCalled', 'true');
+        if (!apiCalled) {
+          sessionStorage.setItem('apiCalled', 'true');
 
-      // fetch('http://127.0.0.1:5000/admin/add_invoice', {
-      //     method: 'POST',
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //     },
-      //     body: JSON.stringify(ticketingOrderDetails),
-      //   })
-      //   .then(response => response.json())
-      //   .then(data => {
-      //     console.log('Success:', data);
-      //   })
-      //   .catch((error) => {
-      //     console.error('Error:', error);
-      //   });
-      // }}});
+      fetch('http://127.0.0.1:5000/admin/add_invoice', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(ticketingOrderDetails),
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Success:', data);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+      }}});
 
 
     const orderAgainHandler = () => {
