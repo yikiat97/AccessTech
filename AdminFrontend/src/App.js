@@ -10,7 +10,7 @@ import AdminManagementPage from "./pages/admin/Admin_management";
 import AdminTransactionpage from './pages/admin/Admin_transaction';
 import AdminTicketingPage from './pages/admin/Admin_ticketingOverview';
 import AdminDiscountpage from './pages/admin/Admin_discount';
-import AdminSandwichTicketing from './pages/admin/Admin_ticketingSandwich';
+import AdminTicketingOrders from './pages/admin/Admin_ticketingPage';
 
 function App() {
   return (
@@ -33,16 +33,13 @@ function App() {
           <Route path="/AccessTech/AdminTransactionpage" element={<AdminTransactionpage />} />
         </Routes>
         <Routes>
-          <Route path="/AccessTech/AdminTicketingpage" element={<AdminTicketingPage />} />
-        </Routes>
-        <Routes>
           <Route path="/AccessTech/AdminDiscountpage" element={<AdminDiscountpage />} />
         </Routes>
         <Routes>
           <Route path="/AccessTech/AdminManagement" element={<AdminManagementPage />} />
         </Routes>
         <Routes>
-          <Route path="/AccessTech/SandwichTicketingPage" element={<AdminSandwichTicketing />} />
+          <Route path="/AccessTech/TicketingPage" element={<AdminTicketingOrders />} />
         </Routes>
       </Router>
     </div>
