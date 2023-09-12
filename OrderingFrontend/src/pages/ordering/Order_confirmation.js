@@ -21,7 +21,7 @@ function OrderConfirmationPage(props) {
       "transactions": cartCtx.items.map(item => {
         return {
           "dish_id": item.dish_id,
-          "unique_id": item.unique_id,
+          "qty": item.amount,
           "special_comments_id": item.specialInstructions.map(special => special.special_comments_id)
         };
       })
@@ -98,7 +98,7 @@ function OrderConfirmationPage(props) {
                    )}     
                    <List>
                         {item.specialInstructions.map((instruction, i) => (
-                          <ListItem key={i}>{instruction.special_comments}(${instruction.special_comments_price}0)</ListItem>
+                          <ListItem key={i}>{instruction.special_comments}(${instruction.special_comments_price})</ListItem>
                         ))}
                   </List>               
                  </Box>
