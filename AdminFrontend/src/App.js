@@ -11,6 +11,7 @@ import AdminTransactionpage from './pages/admin/Admin_transaction';
 import AdminTicketingPage from './pages/admin/Admin_ticketingOverview';
 import AdminDiscountpage from './pages/admin/Admin_discount';
 import AdminTicketingOrders from './pages/admin/Admin_ticketingPage';
+import AdminCustomisation from './pages/admin/Admin_customisation'
 
 function App() {
   return (
@@ -40,6 +41,9 @@ function App() {
         </Routes>
         <Routes>
           <Route path="/AccessTech/TicketingPage" element={<AdminTicketingOrders />} />
+        </Routes>
+        <Routes>
+          <Route path="/AccessTech/AdminCustomisation" element={<AdminCustomisation />} />
         </Routes>
       </Router>
     </div>
