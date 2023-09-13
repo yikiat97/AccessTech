@@ -110,30 +110,30 @@ function ItemDetails({ isOpen, onClose, itemName, desc, item_id, item_price, ima
  
   
   return (
-      <Modal isOpen={isOpen} onClose={onClose} size="full" initialFocusRef={closeButtonRef}>
+      <Modal isOpen={isOpen} onClose={onClose} size={["full"]} initialFocusRef={closeButtonRef}>
           <ModalOverlay />
           <ModalContent margin={0} rounded="none" position="fixed">
-              <ModalHeader>
                   <Image
                       src={imageURL}
                       align="center"
                       borderRadius="8px"
-                      boxShadow="lg"
-                      height="25vh"
+                      boxShadow="md"
+                      height="150"
                       width="100%"
-                      mb="4"
-                      mt="5"
+                      mb="2%"
+                      mt="-4%"
                       objectFit="cover"
                   />
-                  {itemName}
+              <ModalHeader mb='3%'>
+                  <Text fontSize='md'>{itemName}</Text>
               </ModalHeader>
               <ModalCloseButton ref={closeButtonRef} />
-              <ModalBody>
-                  {desc}
+              <ModalBody  mt='-5%' overflowY="auto" maxH="200">
+                  <Text fontSize='xs'>{desc}</Text>
                   <Divider mt="4" type="gray" />
                   {specialInstructions.length > 0 && (
                       <div style={{ display: "flex", flexDirection: "column", marginTop: "8px" }}>
-                        <Text fontWeight="bold" mt="1" fontSize="lg">
+                        <Text fontWeight="bold" mt="1" fontSize="md">
                           Special Instructions
                         </Text>
                         <CheckboxGroup
@@ -146,8 +146,11 @@ function ItemDetails({ isOpen, onClose, itemName, desc, item_id, item_price, ima
                               key={instruction.special_comments_id}
                               colorScheme="orange"
                               value={instruction.special_comments}
+                              fontSize="xs"
                             >
+                              <Text fontSize='md'>
                               {instruction.special_comments} (${instruction.special_comments_price})
+                              </Text>
                             </Checkbox>
                           ))}
                               </CheckboxGroup>
@@ -180,15 +183,13 @@ function ItemDetails({ isOpen, onClose, itemName, desc, item_id, item_price, ima
     };
 
     const qty = props.item.qty;
-    if (qty === 0) {
-      return null
-    }
+    const isSoldOut = qty === 0;
 
     
     
     return (
-      <Card width="200px" mx="10px" my="20px" >
-        <CardBody height="200px"onClick={handleCardClick}>
+      <Card width="200px" mx="10px" my="20px" style={{ opacity: isSoldOut ? 0.5 : 1 }} >
+        <CardBody height="200px"onClick={handleCardClick} style={{ pointerEvents: isSoldOut ? 'none' : 'auto' }}>
           <Image src={props.item.image_url} align="center" maxH="200px" cover />
           <Box>
             <h1 className="title">
@@ -196,6 +197,7 @@ function ItemDetails({ isOpen, onClose, itemName, desc, item_id, item_price, ima
             </h1>
             <Text mt='1rem' fontSize='xs'>{props.item.small_desc}</Text>
             <Text mt='1rem' color='green'>${props.item.price}0</Text>
+            {isSoldOut && <Text fontWeight="bold" color='red'>Sold Out</Text>}
           </Box>
         </CardBody>
         <ItemDetails isOpen={isOpen} onClose={onClose} imageURL={props.item.image_url} itemName={props.item.dish_name} desc={props.item.description} item_id={props.item.dish_id} item_price={props.item.price} dish_type={props.item.dish_type} />
@@ -220,7 +222,7 @@ function ItemDetails({ isOpen, onClose, itemName, desc, item_id, item_price, ima
     
   
     return (
-      <Flex flexWrap="wrap" justifyContent="center" alignItems="center" m="5">
+      <Flex flexWrap="wrap" justifyContent="center" alignItems="center" m="5" mb="200px">
         <Tabs align="center" variant="enclosed">
           <TabList style={{ position: 'sticky', top: 100, backgroundColor: 'white', zIndex: 1 }}>
             {uniqueDishTypes.map((dishType, index) => (
