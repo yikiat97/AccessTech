@@ -21,7 +21,7 @@ function OrderConfirmationPage(props) {
       "transactions": cartCtx.items.map(item => {
         return {
           "dish_id": item.dish_id,
-          "qty": item.amount,
+          "quantity": item.amount,
           "special_comments_id": item.specialInstructions.map(special => special.special_comments_id)
         };
       })
