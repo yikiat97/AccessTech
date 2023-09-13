@@ -217,7 +217,7 @@ def fetch_invoice_parameter():
 
 
 
-@transaction.route('/ticketing/update_invoice_status/<int:invoice_id>', methods=['PUT'])
+@transaction.route('/ticketing/update_invoice_status_completed/<int:invoice_id>', methods=['PUT'])
 def update_invoice_status(invoice_id):
     try:
         # Fetch the specific invoice using the provided invoice_id
@@ -233,6 +233,27 @@ def update_invoice_status(invoice_id):
         # Commit the changes
         db.session.commit()
 
-        return jsonify({"message": "Invoice status updated successfully!"}), 200
+        return jsonify({"message": "Invoice status completed successfully!"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+    
+
+@transaction.route('/ticketing/update_invoice_status_cancel/<int:invoice_id>', methods=['PUT'])
+def update_invoice_status(invoice_id):
+    try:
+        # Fetch the specific invoice using the provided invoice_id
+        invoice = Invoice.query.get(invoice_id)
+        
+        # Check if the invoice exists
+        if not invoice:
+            return jsonify({"error": "Invoice not found"}), 404
+        
+        # Update the invoice_status
+        invoice.invoice_status = "cancelled"
+        
+        # Commit the changes
+        db.session.commit()
+
+        return jsonify({"message": "Invoice status cancelled successfully!"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
