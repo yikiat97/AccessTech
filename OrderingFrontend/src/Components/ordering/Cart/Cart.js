@@ -127,7 +127,7 @@ const Cart = (props) => {
             )}
             {hasItems && (
             <Link to={{
-              pathname: "/AccessTech/customerorder"
+              pathname: "/AccessTech/payment"
               }}
               onClick={() => { sessionStorage.setItem('orderDetails', JSON.stringify(cartCtx.items)); 
               sessionStorage.setItem('lastOrderPage', props.userType);

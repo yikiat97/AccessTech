@@ -6,7 +6,6 @@ import CartContext from '../../Components/ordering/Cart/cart-context';
 
 import CheckoutForm from "./checkout";
 import "./payment.css";
-import Cart from '../../Components/ordering/Cart/Cart';
 
 // Make sure to call loadStripe outside of a component’s render to avoid
 // recreating the Stripe object on every render.

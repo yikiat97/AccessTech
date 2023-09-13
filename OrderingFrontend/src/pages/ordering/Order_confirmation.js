@@ -80,7 +80,7 @@ function OrderConfirmationPage(props) {
         return (
           <ModalContent width="100%" height="100vh">
             <ModalHeader justifyContent='center' alignItems='center' display='flex'>Order Details</ModalHeader>
-            <ModalCloseButton />
+            <ModalCloseButton style={{ color: 'black' }} />
             <ModalBody>
             {cartCtx.items.map((item, index) => (
                <Box key={item.unique_id} marginBottom="10px">
@@ -141,7 +141,7 @@ function OrderConfirmationPage(props) {
     };
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
-    const totalAmount = searchParams.get('totalAmount');
+    // const totalAmount = searchParams.get('totalAmount');
     const LottieAnimation = useLottie(lottieOptions);
 
     return (
@@ -158,7 +158,7 @@ function OrderConfirmationPage(props) {
         </Box>
         <Box position="absolute" top="300px" left="50%" transform="translate(-50%, 0)">
           <Text fontSize="xl" color="gray.600" textAlign="center">
-            <Text fontWeight="bold" fontSize="4xl" color="green">${cartCtx.totalAmount}0</Text>
+            <Text fontWeight="bold" fontSize="4xl" color="green">${parseFloat(cartCtx.totalAmount).toFixed(2)}</Text>
             Payment Confirmed! <br />
             Cooking in process<LoopingEllipsis/>
           </Text>
