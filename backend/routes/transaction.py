@@ -185,6 +185,13 @@ def fetch_invoice_parameter():
                     "with_special_comments": transaction.with_special_comments,
                     "special_comments": []
                 }
+
+                    # Fetch the dish using the dish_id from the transaction
+                dish = dishes.query.get(transaction.dish_id)
+                if dish:
+                    # Add the dish name to the transaction_data
+                    transaction_data["dish_name"] = dish.dish_name
+
                 if transaction.with_special_comments:
                     comments = TransactionSpecialComments.query.filter_by(dish_id=transaction.dish_id, invoice_id=transaction.invoice_id).all()
                     for comment_relation in comments:
