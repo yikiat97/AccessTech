@@ -49,7 +49,7 @@ def add_invoice():
             
             new_transaction = Transactions(
                 dish_id=trans_data.get('dish_id'),
-                unique_id=trans_data.get('unique_id'),
+                quantity=trans_data.get('quantity'),
                 with_special_comments=bool(special_comments_ids),
                 invoice_id=new_invoice.invoice_id  # Link the transaction to the invoice
             )
@@ -102,7 +102,7 @@ def fetch_invoice_details():
             for transaction in transactions:
                 transaction_data = {
                     "dish_id": transaction.dish_id,
-                    "unique_id": transaction.unique_id,
+                    "quantity": transaction.quantity,
                     "with_special_comments": transaction.with_special_comments,
                     "special_comments": []
                 }
@@ -181,7 +181,7 @@ def fetch_invoice_parameter():
             for transaction in transactions:
                 transaction_data = {
                     "dish_id": transaction.dish_id,
-                    "unique_id": transaction.unique_id,
+                    "quantity": transaction.quantity,
                     "with_special_comments": transaction.with_special_comments,
                     "special_comments": []
                 }
@@ -218,7 +218,7 @@ def fetch_invoice_parameter():
 
 
 @transaction.route('/ticketing/update_invoice_status_completed/<int:invoice_id>', methods=['PUT'])
-def update_invoice_status(invoice_id):
+def update_invoice_status_completed(invoice_id):
     try:
         # Fetch the specific invoice using the provided invoice_id
         invoice = Invoice.query.get(invoice_id)
@@ -239,7 +239,7 @@ def update_invoice_status(invoice_id):
     
 
 @transaction.route('/ticketing/update_invoice_status_cancel/<int:invoice_id>', methods=['PUT'])
-def update_invoice_status(invoice_id):
+def update_invoice_status_cancel(invoice_id):
     try:
         # Fetch the specific invoice using the provided invoice_id
         invoice = Invoice.query.get(invoice_id)
