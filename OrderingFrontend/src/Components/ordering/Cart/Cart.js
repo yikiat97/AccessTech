@@ -127,11 +127,11 @@ const Cart = (props) => {
             )}
             {hasItems && (
             <Link to={{
-              pathname: "/AccessTech/customerorder",
-              search: `?totalAmount=${encodeURIComponent(totalAmount)}`  
+              pathname: "/AccessTech/customerorder"
               }}
               onClick={() => { sessionStorage.setItem('orderDetails', JSON.stringify(cartCtx.items)); 
               sessionStorage.setItem('lastOrderPage', props.userType);
+              sessionStorage.setItem('totalAmount', cartCtx.totalAmount.toString());
               }}>
               <button className={classes["button--alt"]} onClick={props.onClose}>
                 Order
