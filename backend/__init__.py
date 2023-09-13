@@ -7,6 +7,7 @@ from .routes.order import order
 from .routes.user import user
 from .routes.ingredient import ingredient_inventory
 from .routes.transaction import transaction
+from .routes.payment import payment
 
 
 from dotenv import load_dotenv
@@ -28,6 +29,7 @@ def create_app():
     app.register_blueprint(user)
     app.register_blueprint(ingredient_inventory)
     app.register_blueprint(transaction)
+    app.register_blueprint(payment)
     
 
     SWAGGER_URL = '/api/docs'  # URL for exposing Swagger UI (without trailing '/')
