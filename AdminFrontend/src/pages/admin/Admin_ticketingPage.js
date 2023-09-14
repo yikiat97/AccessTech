@@ -13,7 +13,7 @@ import OrderTicket from '../../Components/admin/Admin_order_ticket';
 
 
 const TicketingOrders = () =>{
-    const [sandwichList, setSandwichList] = useState([]); // State to store the fetched data
+    const [orderList, setOrderList] = useState([]); // State to store the fetched data
     const [sortedFoodOrders, setSortedFoodOrders] = useState(null)
     const { colorMode } = useColorMode();
     const [orderDetails, setOrderDetails] = useState(null); // Initialize orderDetails as null
@@ -27,273 +27,8 @@ const TicketingOrders = () =>{
             .then(response => response.json())
             .then(data => {
             // Handle the response data and set it in the state
-                // setSandwichList(data)
-                setSandwichList([
-                    {
-                        "date_time": "Sat, 02 Sep 2023 14:30:00 GMT",
-                        "discounts": [
-                            {
-                                "discount_id": 7,
-                                "discount_percent": 10.0
-                            }
-                        ],
-                        "invoice_id": 22,
-                        "invoice_status": "pending",
-                        "total_price": 250.0,
-                        "transactions": [
-                            {
-                                "dish_id": 1,
-                                "dish_name": "Grilled Chicken Rendang with rice",
-                                "image_url": "https://smuaccesstech.s3.us-east-1.amazonaws.com/Grilled_Chicken_Rendang_rice.JPG",
-                                "price": 6.8,
-                                "unique_key": 1,
-                                "special_comments": [
-                                    {
-                                        "comment_id": 1,
-                                        "text": "more rendang sauce"
-                                    },
-                                    {
-                                        "comment_id": 2,
-                                        "text": "add meat patty"
-                                    },
-                                    {
-                                        "comment_id": 3,
-                                        "text": "less rice"
-                                    }
-                                ],
-                                "with_special_comments": true
-                            },
-                            {
-                                "dish_id": 1,
-                                "dish_name": "Grilled Chicken Rendang with rice",
-                                "image_url": "https://smuaccesstech.s3.us-east-1.amazonaws.com/Grilled_Chicken_Rendang_rice.JPG",
-                                "price": 6.8,
-                                "unique_key": 1,
-                                "special_comments": [
-                                    {
-                                        "comment_id": 1,
-                                        "text": "more rendang sauce"
-                                    },
-                                    {
-                                        "comment_id": 2,
-                                        "text": "add meat patty"
-                                    },
-                                    {
-                                        "comment_id": 3,
-                                        "text": "less rice"
-                                    }
-                                ],
-                                "with_special_comments": true
-                            },
-                            {
-                                "dish_id": 1,
-                                "dish_name": "Grilled Chicken Rendang with rice",
-                                "image_url": "https://smuaccesstech.s3.us-east-1.amazonaws.com/Grilled_Chicken_Rendang_rice.JPG",
-                                "price": 6.8,
-                                "unique_key": 1,
-                                "special_comments": [
-                                    {
-                                        "comment_id": 1,
-                                        "text": "more rendang sauce"
-                                    },
-                                    {
-                                        "comment_id": 2,
-                                        "text": "add meat patty"
-                                    },
-                                    {
-                                        "comment_id": 3,
-                                        "text": "less rice"
-                                    }
-                                ],
-                                "with_special_comments": true
-                            },
-                            {
-                                "dish_id": 1,
-                                "dish_name": "Grilled Chicken Rendang with rice",
-                                "image_url": "https://smuaccesstech.s3.us-east-1.amazonaws.com/Grilled_Chicken_Rendang_rice.JPG",
-                                "price": 6.8,
-                                "unique_key": 1,
-                                "special_comments": [
-                                    {
-                                        "comment_id": 1,
-                                        "text": "more rendang sauce"
-                                    },
-                                    {
-                                        "comment_id": 2,
-                                        "text": "add meat patty"
-                                    },
-                                    {
-                                        "comment_id": 3,
-                                        "text": "less rice"
-                                    }
-                                ],
-                                "with_special_comments": true
-                            },
-                            {
-                                "dish_id": 3,
-                                "dish_name": "Grilled Chicken Rendang with noodle",
-                                "image_url": "https://smuaccesstech.s3.us-east-1.amazonaws.com/Grilled_Chicken_Rendang_noodle.JPG",
-                                "price": 6.8,
-                                "special_comments": [],
-                                "unique_key": 2,
-                                "with_special_comments": false
-                            },
-                            {
-                                "dish_id": 3,
-                                "dish_name": "Grilled Chicken Rendang with noodle",
-                                "image_url": "https://smuaccesstech.s3.us-east-1.amazonaws.com/Grilled_Chicken_Rendang_noodle.JPG",
-                                "price": 6.8,
-                                "special_comments": [],
-                                "unique_key": 2,
-                                "with_special_comments": false
-                            },
-                            {
-                                "dish_id": 3,
-                                "dish_name": "Grilled Chicken Rendang with noodle",
-                                "image_url": "https://smuaccesstech.s3.us-east-1.amazonaws.com/Grilled_Chicken_Rendang_noodle.JPG",
-                                "price": 6.8,
-                                "special_comments": [],
-                                "unique_key": 2,
-                                "with_special_comments": false
-                            },
-                            {
-                                "dish_id": 4,
-                                "dish_name": "Grilled Chicken Rendang with sando bread",
-                                "image_url": "https://smuaccesstech.s3.us-east-1.amazonaws.com/Grilled_Chicken_Rendang_sandwich.JPG",
-                                "price": 6.2,
-                                "special_comments": [],
-                                "unique_key": 3,
-                                "with_special_comments": false
-                            },{
-                                "dish_id": 1,
-                                "dish_name": "Grilled Chicken Rendang with rice",
-                                "image_url": "https://smuaccesstech.s3.us-east-1.amazonaws.com/Grilled_Chicken_Rendang_rice.JPG",
-                                "price": 6.8,
-                                "unique_key": 4,
-                                "special_comments": [
-                                    {
-                                        "comment_id": 1,
-                                        "text": "more rendang sauce"
-                                    },
-                                    {
-                                        "comment_id": 2,
-                                        "text": "add meat patty"
-                                    },
-
-                                ],
-                                "with_special_comments": true
-                            },
-                        ]
-                    },
-                    {
-                        "date_time": "Sat, 02 Sep 2023 14:30:00 GMT",
-                        "discounts": [
-                            {
-                                "discount_id": 7,
-                                "discount_percent": 10.0
-                            }
-                        ],
-                        "invoice_id": 25,
-                        "invoice_status": "pending",
-                        "total_price": 250.0,
-                        "transactions": [
-                            {
-                                "dish_id": 1,
-                                "dish_name": "Grilled Chicken Rendang with rice",
-                                "image_url": "https://smuaccesstech.s3.us-east-1.amazonaws.com/Grilled_Chicken_Rendang_rice.JPG",
-                                "price": 6.8,
-                                "unique_key": 1,
-                                "special_comments": [
-                                    {
-                                        "comment_id": 1,
-                                        "text": "more rendang sauce"
-                                    },
-                                    {
-                                        "comment_id": 2,
-                                        "text": "add meat patty"
-                                    },
-                                    {
-                                        "comment_id": 3,
-                                        "text": "less rice"
-                                    }
-                                ],
-                                "with_special_comments": true
-                            }
-                        ]
-                    },                    {
-                        "date_time": "Sat, 02 Sep 2023 14:30:00 GMT",
-                        "discounts": [
-                            {
-                                "discount_id": 7,
-                                "discount_percent": 10.0
-                            }
-                        ],
-                        "invoice_id": 26,
-                        "invoice_status": "pending",
-                        "total_price": 250.0,
-                        "transactions": [
-                            {
-                                "dish_id": 1,
-                                "dish_name": "Grilled Chicken Rendang with rice",
-                                "image_url": "https://smuaccesstech.s3.us-east-1.amazonaws.com/Grilled_Chicken_Rendang_rice.JPG",
-                                "price": 6.8,
-                                "unique_key": 1,
-                                "special_comments": [
-                                    {
-                                        "comment_id": 1,
-                                        "text": "more rendang sauce"
-                                    },
-                                    {
-                                        "comment_id": 2,
-                                        "text": "add meat patty"
-                                    },
-                                    {
-                                        "comment_id": 3,
-                                        "text": "less rice"
-                                    }
-                                ],
-                                "with_special_comments": true
-                            }
-                        ]
-                    },{
-                        "date_time": "Sat, 02 Sep 2023 14:30:00 GMT",
-                        "discounts": [
-                            {
-                                "discount_id": 7,
-                                "discount_percent": 10.0
-                            }
-                        ],
-                        "invoice_id": 27,
-                        "invoice_status": "pending",
-                        "total_price": 250.0,
-                        "transactions": [
-                            {
-                                "dish_id": 1,
-                                "dish_name": "Grilled Chicken Rendang with rice",
-                                "image_url": "https://smuaccesstech.s3.us-east-1.amazonaws.com/Grilled_Chicken_Rendang_rice.JPG",
-                                "price": 6.8,
-                                "unique_key": 1,
-                                "special_comments": [
-                                    {
-                                        "comment_id": 1,
-                                        "text": "more rendang sauce"
-                                    },
-                                    {
-                                        "comment_id": 2,
-                                        "text": "add meat patty"
-                                    },
-                                    {
-                                        "comment_id": 3,
-                                        "text": "less rice"
-                                    }
-                                ],
-                                "with_special_comments": true
-                            }
-                        ]
-                    }
-                ]);
-
-
+                console.log(data)
+                setOrderList(data)
             })
             .catch(error => {
             // Handle any errors
@@ -301,62 +36,76 @@ const TicketingOrders = () =>{
             });
         }, [])
         useEffect(() => {
-        // When data is fetched, update orderDetails
-        // When data is fetched, update orderDetails with invoice_id as the key
+
         const updatedOrderDetails = {};
-        sandwichList.forEach((individualOrder) => {
-            const invoice_id = individualOrder.invoice_id;
-            individualOrder.transactions.forEach((transaction) => {
-                const { unique_key, dish_name, image_url, price, special_comments } = transaction;
+        console.log(orderList)
+        // orderList.forEach((individualInvoice)=>{
+        //     const invoice_id = individualInvoice.invoice_id
+        //     individualInvoice.transactions.forEach((individualDish)=>{
+        //         console.log(individualDish)
 
-                if (!updatedOrderDetails[invoice_id]) {
-                    updatedOrderDetails[invoice_id] = {};
-                }
 
-                if (!updatedOrderDetails[invoice_id][unique_key]) {
-                    updatedOrderDetails[invoice_id][unique_key] = {
-                        items: [],
-                    };
-                }
+        //     })
+        // })
 
-                updatedOrderDetails[invoice_id][unique_key].items.push({
-                    dish_name,
-                    image_url,
-                    price,
-                    special_comments,
-                });
-            });
-        });
+        // orderList.forEach((individualOrder) => {
+        //     const invoice_id = individualOrder.invoice_id;
+        //     individualOrder.transactions.forEach((transaction) => {
+        //         const { unique_key, dish_name, image_url, price, special_comments } = transaction;
+
+        //         if (!updatedOrderDetails[invoice_id]) {
+        //             updatedOrderDetails[invoice_id] = {};
+        //         }
+
+        //         if (!updatedOrderDetails[invoice_id][unique_key]) {
+        //             updatedOrderDetails[invoice_id][unique_key] = {
+        //                 items: [],
+        //             };
+        //         }
+
+        //         updatedOrderDetails[invoice_id][unique_key].items.push({
+        //             dish_name,
+        //             image_url,
+        //             price,
+        //             special_comments,
+        //         });
+        //     });
+        // });
+
+        console.log(updatedOrderDetails)
         const result = {};
 
-        for (const invoiceId in updatedOrderDetails) {
-            if (updatedOrderDetails.hasOwnProperty(invoiceId)) {
-                result[invoiceId] = {};
-                for (const uniqueKey in updatedOrderDetails[invoiceId]) {
-                    if (updatedOrderDetails[invoiceId].hasOwnProperty(uniqueKey)) {
-                        const innerObj = updatedOrderDetails[invoiceId][uniqueKey];
-                        const itemCounts = innerObj.itemCounts;
-                        const items = innerObj.items;
+        // for (const invoiceId in updatedOrderDetails) {
+        //     if (updatedOrderDetails.hasOwnProperty(invoiceId)) {
+        //         result[invoiceId] = {};
+        //         for (const uniqueKey in updatedOrderDetails[invoiceId]) {
+        //             if (updatedOrderDetails[invoiceId].hasOwnProperty(uniqueKey)) {
+        //                 const innerObj = updatedOrderDetails[invoiceId][uniqueKey];
+        //                 const itemCounts = innerObj.itemCounts;
+        //                 const items = innerObj.items;
     
-                        for (const item of items) {
-                            const dishName = item.dish_name;
-                            result[invoiceId][uniqueKey] = {
-                                ...itemCounts,
-                                dish_name:dishName,
-                                image_url: item.image_url,
-                                special_comments: item.special_comments
-                            };
-                        }
-                    }
-                }
-            }
-        }
+        //                 for (const item of items) {
+        //                     const dishName = item.dish_name;
+        //                     result[invoiceId][uniqueKey] = {
+        //                         ...itemCounts,
+        //                         dish_name:dishName,
+        //                         image_url: item.image_url,
+        //                         special_comments: item.special_comments
+        //                     };
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
     
     
-        setOrderDetails(result);
-    }, [sandwichList]);
+        // setOrderDetails(result);
 
-        console.log(orderDetails)
+
+
+    }, [orderList]);
+
+    console.log(orderDetails)
 
     // Use a separate useEffect to listen for changes in orderDetails
     useEffect(() => {
@@ -368,42 +117,69 @@ const TicketingOrders = () =>{
         // setRenderKey(renderKey + 1);
 
     }, [orderDetails]);
-
     return (
         <div>
             <Heading>Priority Queue</Heading>
 
             {/* Conditional rendering based on orderDetails */}
-            {orderDetails ? (
+            {orderList ? (
                 <SimpleGrid columns={[1, null, 2, 4]} spacing={4}>
-                    {Object.keys(orderDetails).map((invoiceId) => (
-                        <div key={invoiceId}>
-                        <Heading size='md' color={textColor}>Order Number {invoiceId}</Heading>
-                        <Card maxW='sm' borderColor={'borderColor'} border='2px' m={3}>
-                            {Object.keys(orderDetails[invoiceId]).map((itemId) => {
-                            const item = orderDetails[invoiceId][itemId];
-                            return (
-                                <div key={itemId}>
-                                <Heading size='md' color={textColor}>{item.dish_name}</Heading>
-                                <ul>
-                                    {item.special_comments.map((comment) => (
-                                    <Text key={comment.comment_id} size='md' color='white'>- {comment.text}</Text>
+                    {orderList.map((order) => (
+                        <div key={order.invoice_id}>
+                            <Heading size='md' color={textColor}>Order Number {order.invoice_id}</Heading>
+                                <Card maxW='sm' borderColor={'borderColor'} border='2px' m={3}>
+                                {order.transactions.map((transaction, index) => (
+                                    <div key={index}>
+                                    <Heading m={[2, 3]} size='md' color={textColor}>{transaction.quantity}X {transaction.dish_name}</Heading>
+                                    
+                                    {transaction.special_comments.length > 0 && (
+                                            <div>
+                                                <h4>Special Comments:</h4>
+                                                <ul >
+                                                    {transaction.special_comments.map((comment) => (
+                                                        <Text key={comment.comment_id} size='md' color='white'>- {comment.text}</Text>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
+                                        <hr />
+                                    </div>
                                     ))}
-                                </ul>
-                                </div>
-                            );
-                            })}                                                     
-                                <Center>
-                                    <Button background='#71149D' onClick={serveOrder(invoiceId)} textColor={buttonTextColor} variant='solid' colorScheme='purple' w='80%' display='block' mb={2}>
-                                        <CheckIcon style={{ marginRight: '5px' }} />Serve
-                                    </Button>
-                                </Center>
-                                <Center>
-                                    <Button background='#F00' href="#test" textColor={buttonTextColor} variant='solid' colorScheme='red' w='80%' display='block' mb={2}>
-                                        <CloseIcon style={{ marginRight: '5px' }} />Cancel
-                                    </Button>
-                                </Center>
-                        </Card>
+                                    <Center mt={5}>
+                                        <Button
+                                            size='lg'
+                                            background='#71149D'
+                                            onClick={() => serveOrder(order.invoice_id)}
+                                            textColor={buttonTextColor}
+                                            variant='solid'
+                                            colorScheme='purple'
+                                            w='80%'
+                                            display='flex'  // Use flex display to align items horizontally
+                                            alignItems='center'  // Align items vertically in the center
+                                            mb={2}
+                                        >
+                                            <CheckIcon mr={2} fontSize='2xl' style={{ marginRight: '5px' }} />
+                                            <Text fontSize='2xl'>Serve</Text>
+                                        </Button>
+                                    </Center>
+                                    <Center>
+                                        <Button
+                                            size='lg'
+                                            background='#F00'
+                                            onClick={() => cancelOrder(order.invoice_id)}
+                                            textColor={buttonTextColor}
+                                            variant='solid'
+                                            colorScheme='red'
+                                            w='80%'
+                                            display='flex'  // Use flex display to align items horizontally
+                                            alignItems='center'  // Align items vertically in the center
+                                            mb={2}
+                                        >
+                                            <CloseIcon mr={2} fontSize='2xl'/>
+                                            <Text fontSize='2xl'>Cancel</Text>
+                                        </Button>
+                                    </Center>
+                                </Card>
                         </div>
                     ))}
                 </SimpleGrid>
@@ -417,9 +193,85 @@ const TicketingOrders = () =>{
 
 
 function serveOrder(invoice_id){
+      // Define the URL with the invoice_id in the route
+    const url = `http://127.0.0.1:5000/ticketing/update_invoice_status_completed/${invoice_id}`;
 
+    // Define the request headers
+    const headers = {
+        'Content-Type': 'application/json',
+        // You may need to include other headers, such as authentication tokens
+    };
+
+    // Define the request body if needed
+    const requestBody = {
+        // Include any data you want to send in the request body
+    };
+
+    // Define the fetch options
+    const options = {
+        method: 'PUT',  // Use 'PUT' for your specific route
+        headers,
+        body: JSON.stringify(requestBody),
+    };
+
+    // Make the fetch request
+    fetch(url, options)
+        .then((response) => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+        })
+        .then((data) => {
+        // Handle the response data here
+        alert('Response:', data);
+        })
+        .catch((error) => {
+        // Handle any errors here
+        alert('Error:', error);
+        });
 }
 
+
+function cancelOrder(invoice_id){
+         // Define the URL with the invoice_id in the route
+         const url = `http://127.0.0.1:5000/ticketing/update_invoice_status_cancel/${invoice_id}`;
+
+         // Define the request headers
+         const headers = {
+             'Content-Type': 'application/json',
+             // You may need to include other headers, such as authentication tokens
+         };
+     
+         // Define the request body if needed
+         const requestBody = {
+             // Include any data you want to send in the request body
+         };
+     
+         // Define the fetch options
+         const options = {
+             method: 'PUT',  // Use 'PUT' for your specific route
+             headers,
+             body: JSON.stringify(requestBody),
+         };
+     
+         // Make the fetch request
+         fetch(url, options)
+             .then((response) => {
+             if (!response.ok) {
+                 throw new Error('Network response was not ok');
+             }
+             return response.json();
+             })
+             .then((data) => {
+             // Handle the response data here
+             alert('Response:', data);
+             })
+             .catch((error) => {
+             // Handle any errors here
+             alert('Error:', error);
+             }); 
+}
 
 
 function Admin_ticketingOrders() {
@@ -429,7 +281,6 @@ function Admin_ticketingOrders() {
         return (
             <div className='container_order_container'  >
                 <SideNavBar children={<TicketingOrders/>}></SideNavBar>
-
             </div>
         );
 }

@@ -8,6 +8,7 @@ from .routes.user import user
 from .routes.ingredient import ingredient_inventory
 from .routes.transaction import transaction
 
+from flask_sse import sse
 
 from dotenv import load_dotenv
 import os
@@ -17,6 +18,8 @@ load_dotenv()
 
 def create_app():
     app = Flask(__name__)
+    app.register_blueprint(sse, url_prefix='/sse')
+
     CORS(app)
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

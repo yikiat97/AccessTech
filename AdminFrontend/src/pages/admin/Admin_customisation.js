@@ -15,25 +15,24 @@ export default function Admin_customisation() {
     const Customisation = () => {
         return(
             <Flex direction="row" width="100%">
-    
             {/* Colors Section */}
             <Box flex="1" p={6} borderRightWidth="1px" borderColor="gray.200">
-              <Heading size="lg" mb={0}>Colors</Heading>
-              {['Fonts', 'Serve Button', 'Cancel Button'].map((label) => (
-                <Flex key={label} direction="row" mb={4} alignItems="center">
-                  <Heading size="md">{label}</Heading>
-                  <Spacer />
-                  <ColorPicker />
-                </Flex>
-              ))}
-              <Heading size="md" mt={8} >Colour-Coded Orders</Heading>
-              <Flex justifyContent="center" alignItems="center">
-                {Array(4).fill(null).map((_, index) => (
-                    <Box key={index} mr={4} ml={4}>
-                        <ColorPicker />
-                    </Box>
+                <Heading size="lg" mb={0}>Colors</Heading>
+                {['Fonts', 'Serve Button', 'Cancel Button'].map((label) => (
+                    <Flex key={label} direction="row" mb={4} alignItems="center">
+                    <Heading size="md">{label}</Heading>
+                    <Spacer />
+                    <ColorPicker />
+                    </Flex>
                 ))}
-              </Flex>
+                <Heading size="md" mt={8} >Colour-Coded Orders</Heading>
+                <Flex justifyContent="center" alignItems="center">
+                    {Array(4).fill(null).map((_, index) => (
+                        <Box key={index} mr={4} ml={4}>
+                            <ColorPicker />
+                        </Box>
+                    ))}
+                </Flex>
             </Box>
     
             {/* Sizes Section */}
@@ -56,8 +55,7 @@ export default function Admin_customisation() {
                     ))}
                 </Flex>
             </Box>
-
-          </Flex>
+        </Flex>
         );
     }
 
