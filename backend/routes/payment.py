@@ -4,6 +4,8 @@ import stripe
 import json
 import os
 
+from ..services.ticketing.invoice_generator import add_invoice
+
 
 payment = Blueprint('payment', __name__)
 CORS(payment)
@@ -43,6 +45,9 @@ def create_payment():
                 'enabled': True,
             },
         )
+        print(intent['client_secret'])
+        add_invoice(data['ticketingOrderDetails'])
+
         return jsonify({
             'clientSecret': intent['client_secret']
         })
