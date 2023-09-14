@@ -7,25 +7,16 @@ import { useLocation } from 'react-router-dom';
 import CartContext from "../../Components/ordering/Cart/cart-context";
 
 
+
+
 function OrderConfirmationPage(props) {
     const isInitialMount = useRef(true); 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const cartCtx = useContext(CartContext);
-
-    const ticketingOrderDetails = {
-      "date_time": "2023-09-02T14:30:00Z",
-      "total_price": cartCtx.totalAmount,
-      "queue_num": 0,
-      "invoice_status": "completed",
-      "discount_id": 0,
-      "transactions": cartCtx.items.map(item => {
-        return {
-          "dish_id": item.dish_id,
-          "quantity": item.amount,
-          "special_comments_id": item.specialInstructions.map(special => special.special_comments_id)
-        };
-      })
-    };
+    const clientSecret = new URLSearchParams(window.location.search).get(
+      "redirect_status"
+      );
+         
 
     useEffect(() => {
       const apiCalled = sessionStorage.getItem('apiCalled');
@@ -40,8 +31,24 @@ function OrderConfirmationPage(props) {
       if (isInitialMount.current) {
         isInitialMount.current = false;
         
-        if (!apiCalled) {
+        if (clientSecret  ) {
+          
+    const ticketingOrderDetails = {
+      "date_time": "2023-09-02T14:30:00Z",
+      "total_price": cartCtx.totalAmount,
+      "queue_num": 0,
+      "invoice_status": "pending",
+      "discount_id": 0,
+      "transactions": cartCtx.items.map(item => {
+        return {
+          "dish_id": item.dish_id,
+          "quantity": item.amount,
+          "special_comments_id": item.specialInstructions.map(special => special.special_comments_id)
+        };
+      })
+    };
           sessionStorage.setItem('apiCalled', 'true');
+          console.log(ticketingOrderDetails)
 
       fetch('http://127.0.0.1:5000/admin/add_invoice', {
           method: 'POST',

@@ -4,7 +4,6 @@ import stripe
 import json
 import os
 
-from ..services.ticketing.invoice_generator import add_invoice
 
 
 payment = Blueprint('payment', __name__)
@@ -46,13 +45,17 @@ def create_payment():
             },
         )
         print(intent['client_secret'])
-        add_invoice(data['ticketingOrderDetails'])
+        # add_invoice(data['ticketingOrderDetails'])
 
         return jsonify({
             'clientSecret': intent['client_secret']
         })
     except Exception as e:
         return jsonify(error=str(e)), 403
+    
+
+
+
 
 # if __name__ == '__main__':
 #     payment.run(port=4242)
