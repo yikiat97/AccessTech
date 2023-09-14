@@ -218,6 +218,7 @@ def fetch_invoice_parameter():
 
         return jsonify(results)
 
+
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
