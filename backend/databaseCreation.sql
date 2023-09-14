@@ -53,7 +53,9 @@ CREATE TABLE IF NOT EXISTS discount (
     discount_name VARCHAR(50),
     code VARCHAR(50),
     discount_status VARCHAR(50),
-    discount_percent FLOAT
+    discount_percent FLOAT,
+    start_date timestamp,
+    end_date timestamp
 );
 
 DROP TABLE IF EXISTS invoice CASCADE;;
@@ -79,6 +81,7 @@ CREATE TABLE IF NOT EXISTS transactions (
     dish_id INT,
     invoice_id INT,
     with_special_comments boolean,
+    quantity INT,
     PRIMARY KEY (dish_id, invoice_id),
     FOREIGN KEY (dish_id) REFERENCES dishes (dish_id),
     FOREIGN KEY (invoice_id) REFERENCES invoice (invoice_id)
