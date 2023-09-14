@@ -162,7 +162,7 @@ import {
         )}
   
         <TableContainer>
-          <Table variant={"simple"} size="md" {...getTableProps()}>
+          <Table variant={"striped"} size="md" {...getTableProps()}>
             <Thead>
               {headerGroups.map((headerGroup) => (
                 <Tr {...headerGroup.getHeaderGroupProps()}>
