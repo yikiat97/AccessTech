@@ -2,8 +2,10 @@ import React, { useState, useContext, useEffect, useRef} from 'react';
 import { useLottie } from "lottie-react";
 import { Link, List, ListItem, Box, Button, Text, Modal, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter } from '@chakra-ui/react';
 import paymentGraphic from '../../Components/ordering/OrderConfirmation/lotties/payment.json'
+import LoopingEllipsis from '../../Components/ordering/OrderConfirmation/lotties/ellipsis_animation'
 import { useLocation } from 'react-router-dom';
 import CartContext from "../../Components/ordering/Cart/cart-context";
+
 
 function OrderConfirmationPage(props) {
     const isInitialMount = useRef(true); 
@@ -19,42 +21,43 @@ function OrderConfirmationPage(props) {
       "transactions": cartCtx.items.map(item => {
         return {
           "dish_id": item.dish_id,
-          "unique_id": item.unique_id,
+          "quantity": item.amount,
           "special_comments_id": item.specialInstructions.map(special => special.special_comments_id)
         };
       })
     };
 
-    
-
-
     useEffect(() => {
-      // const apiCalled = sessionStorage.getItem('apiCalled');
+      const apiCalled = sessionStorage.getItem('apiCalled');
       const savedOrderDetails = JSON.parse(sessionStorage.getItem('orderDetails'));
       if (savedOrderDetails) {
         cartCtx.items = [...savedOrderDetails]; 
-      }})
-      // if (isInitialMount.current) {
-      //   isInitialMount.current = false;
+      }
+      const savedTotalAmount = sessionStorage.getItem('totalAmount');
+      if (savedTotalAmount) {
+        cartCtx.totalAmount = parseFloat(savedTotalAmount);
+      }
+      if (isInitialMount.current) {
+        isInitialMount.current = false;
         
-      //   if (!apiCalled) {
-      //     sessionStorage.setItem('apiCalled', 'true');
+        if (!apiCalled) {
+          sessionStorage.setItem('apiCalled', 'true');
 
-      // fetch('http://127.0.0.1:5000/admin/add_invoice', {
-      //     method: 'POST',
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //     },
-      //     body: JSON.stringify(ticketingOrderDetails),
-      //   })
-      //   .then(response => response.json())
-      //   .then(data => {
-      //     console.log('Success:', data);
-      //   })
-      //   .catch((error) => {
-      //     console.error('Error:', error);
-      //   });
-      // }}});
+      fetch('http://127.0.0.1:5000/admin/add_invoice', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(ticketingOrderDetails),
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Success:', data);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+      }}});
 
 
     const orderAgainHandler = () => {
@@ -75,7 +78,7 @@ function OrderConfirmationPage(props) {
 
     const renderModalContent = () => {
         return (
-          <ModalContent>
+          <ModalContent width="100%" height="100vh">
             <ModalHeader justifyContent='center' alignItems='center' display='flex'>Order Details</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
@@ -92,19 +95,21 @@ function OrderConfirmationPage(props) {
                >
                  <Box>
                    <Text padding='1' fontSize='lg' fontWeight='bold'>{`${index + 1}. ${item.name}`}</Text>
-                   <Text mt='2'fontWeight='bold'>Price (per item): </Text> 
-                   <Text fontWeight='bold' color='green'> ${item.price}0</Text>
+                   <Box display="flex" flexDirection="row" alignItems="center" mt='5%'>
+                    <Text  fontWeight='bold'>Price (per item): </Text>
+                    <Text fontWeight='bold' color='green'> ${item.price}0</Text>
+                  </Box>
                    {item.specialInstructions && item.specialInstructions.length > 0 && (
                     <Text mt='2' fontWeight='bold'>Special Instructions: </Text>
                    )}     
                    <List>
                         {item.specialInstructions.map((instruction, i) => (
-                          <ListItem key={i}>{instruction.special_comments}(${instruction.special_comments_price}0)</ListItem>
+                          <ListItem key={i}>{instruction.special_comments}(${instruction.special_comments_price})</ListItem>
                         ))}
                   </List>               
                  </Box>
                  <Box as='span' fontSize='2xl' color='teal'>
-                   x {item.amount}
+                   x{item.amount}
                  </Box>
                </Box>
              </Box>
@@ -153,19 +158,19 @@ function OrderConfirmationPage(props) {
         </Box>
         <Box position="absolute" top="300px" left="50%" transform="translate(-50%, 0)">
           <Text fontSize="xl" color="gray.600" textAlign="center">
-            <Text fontWeight="bold" fontSize="4xl" color="green">{totalAmount}</Text>
+            <Text fontWeight="bold" fontSize="4xl" color="green">${cartCtx.totalAmount}0</Text>
             Payment Confirmed! <br />
-            Don't leave this page.
+            Cooking in process<LoopingEllipsis/>
           </Text>
           <Button mt="20px" size="lg" colorScheme="blue" onClick={handleViewOrderDetails}>
             View Order Details
           </Button>
-          <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+          <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} size="full">
             {renderModalContent()}
           </Modal>
           <Link>
-            <Button mt="20px" size="lg" colorScheme="green" onClick={orderAgainHandler}>
-              Order Again
+            <Button mt="10px" size="lg" colorScheme="green" onClick={orderAgainHandler}>
+              End Order Session
             </Button>
           </Link>
         </Box>
