@@ -24,6 +24,17 @@ const Cart = (props) => {
   };
 
   const cartItemAddHandler = (item) => {
+    const existingItemIndex = cartCtx.items.findIndex(
+      (cartItem) => cartItem.unique_id === item.unique_id
+    );
+
+    if (existingItemIndex !== -1) {
+      const existingItem = cartCtx.items[existingItemIndex];
+      if (existingItem.amount >= existingItem.max_quantity) {
+        return;
+      }
+    }
+
     cartCtx.addItem({ ...item, amount: 1 });
   };
 

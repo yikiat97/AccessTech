@@ -48,7 +48,7 @@ function OrderConfirmationPage(props) {
       })
     };
           sessionStorage.setItem('apiCalled', 'true');
-          console.log(ticketingOrderDetails)
+          
 
       fetch('http://127.0.0.1:5000/admin/add_invoice', {
           method: 'POST',

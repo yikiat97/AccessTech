@@ -34,7 +34,7 @@ export async function fetchSpecialInstructions(item_id) {
 }
 
 
-function ItemDetails({ isOpen, onClose, itemName, desc, item_id, item_price, imageURL}) {
+function ItemDetails({ isOpen, onClose, itemName, desc, item_id, item_price, imageURL, qty}) {
   const cartCtx = useContext(CartContext);
   const price = item_price;
   const closeButtonRef = useRef(null); 
@@ -80,6 +80,7 @@ function ItemDetails({ isOpen, onClose, itemName, desc, item_id, item_price, ima
         amount: amount,
         price: updatedPrice,
         specialInstructions: selectedSpecialRequests,
+        max_quantity: qty,
       });
       }
     } 
@@ -165,6 +166,7 @@ function ItemDetails({ isOpen, onClose, itemName, desc, item_id, item_price, ima
                           id={item_id}
                           onAddToCart={addToCartHandler}
                           closeModal={onClose}
+                          qty={qty}
                       />
                   </Flex>
               </ModalFooter>
@@ -200,7 +202,7 @@ function ItemDetails({ isOpen, onClose, itemName, desc, item_id, item_price, ima
             {isSoldOut && <Text fontWeight="bold" color='red'>Sold Out</Text>}
           </Box>
         </CardBody>
-        <ItemDetails isOpen={isOpen} onClose={onClose} imageURL={props.item.image_url} itemName={props.item.dish_name} desc={props.item.description} item_id={props.item.dish_id} item_price={props.item.price} dish_type={props.item.dish_type} />
+        <ItemDetails isOpen={isOpen} onClose={onClose} imageURL={props.item.image_url} itemName={props.item.dish_name} desc={props.item.description} item_id={props.item.dish_id} item_price={props.item.price} dish_type={props.item.dish_type} qty={qty} />
       </Card>
     );
   }
@@ -225,15 +227,15 @@ function ItemDetails({ isOpen, onClose, itemName, desc, item_id, item_price, ima
       <Flex flexWrap="wrap" justifyContent="center" alignItems="center" m="5" mb="200px">
         <Tabs align="center" variant="enclosed">
           <TabList style={{ position: 'sticky', top: 100, backgroundColor: 'white', zIndex: 1 }}>
-            {uniqueDishTypes.map((dishType, index) => (
+          {Array.isArray(uniqueDishTypes) && uniqueDishTypes.map((dishType, index) => (
               <Tab key={index}>{dishType}</Tab>
             ))}
           </TabList>
           <TabPanels>
-            {uniqueDishTypes.map((dishType, index) => (
+          {Array.isArray(uniqueDishTypes) && uniqueDishTypes.map((dishType, index) => (
               <TabPanel key={index}>
                 <Flex justifyContent="center" flexWrap="wrap">
-                  {fetchedMenuItems
+                {Array.isArray(fetchedMenuItems) && fetchedMenuItems
                     .filter((item) => item.dish_type === dishType)
                     .map((item) => (
                       <MenuCards item={item} key={item.dish_id} item_id={item.dish_id} />

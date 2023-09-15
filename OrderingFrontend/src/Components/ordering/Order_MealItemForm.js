@@ -4,9 +4,12 @@ import Input from "./Input";
 import { useToast } from "@chakra-ui/react"; 
 
 const MealItemForm = (props) => {
+
     const [amountIsValid, setAmountIsValid] = useState(true);
     const amountInputRef = useRef();
+    const [showMaxQtyAlert, setShowMaxQtyAlert] = useState(false);
     const toast = useToast();
+    const maxQuantity=props.qty;
 
     const submitHandler = (event) => {
         event.preventDefault();
@@ -17,7 +20,7 @@ const MealItemForm = (props) => {
         if (
             enteredAmount.trim().length === 0 ||
             enteredAmountNumber < 1 ||
-            enteredAmountNumber > 10
+            enteredAmountNumber > maxQuantity
         ) {
             setAmountIsValid(false);
             return;
@@ -37,19 +40,31 @@ const MealItemForm = (props) => {
     };
 
     const handleIncrement = () => {
-        if (+amountInputRef.current.value < 10) {
+        if (+amountInputRef.current.value < maxQuantity) {
             amountInputRef.current.stepUp();
-        }
+            setShowMaxQtyAlert(false);
+        } else {
+            setShowMaxQtyAlert(true);
+            toast({
+                title: "Limited availability",
+                status: "warning",
+                duration: 2000, // 2 seconds
+                isClosable: false,
+                position: "top"
+              });
+          }
     };
 
     const handleDecrement = () => {
         if (+amountInputRef.current.value > 1) {
             amountInputRef.current.stepDown();
+            setShowMaxQtyAlert(false);
         }
     };
 
     return (
         <form className={classes.form} onSubmit={submitHandler}>
+            
             <Input
                 ref={amountInputRef}
                 label="Amount"
@@ -57,7 +72,7 @@ const MealItemForm = (props) => {
                     id: "amount_" + props.id,
                     type: "number",
                     min: "1",
-                    max: "10",
+                    max: maxQuantity.toString(),
                     step: "1",
                     defaultValue: "1",
                     readOnly:true
@@ -69,7 +84,7 @@ const MealItemForm = (props) => {
             </div>
 
             <button className={classes.addToCart}>Add to Cart</button>
-            {!amountIsValid && <p>Please enter a valid amount (1-10).</p>}
+            
         </form>
     );
 };
