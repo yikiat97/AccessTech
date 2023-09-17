@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import { Link } from 'react-router-dom';
 import { Input, Text, Flex } from '@chakra-ui/react';
 import Modal from "./CartModal";
@@ -7,13 +7,56 @@ import CartItem from "./CartItem";
 import CartContext from "./cart-context";
 import { calculateUpdatedPrice } from './cart-utils';
 
+export async function fetchVoucherValidity(voucherCode) {
+  try {
+    const response = await fetch(`http://127.0.0.1:5000/discount/check-voucher?voucher_code=${voucherCode}`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching voucher validity:', error);
+    return [];
+}
+}
+
+const debounce = (func, delay) => {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      func(...args);
+    }, delay);
+  };
+};
 
 const Cart = (props) => {
+  
   const cartCtx = useContext(CartContext);
   const [editedSpecialInstructions, setEditedSpecialInstructions] = useState({});
-
+  
   const [voucherCode, setVoucherCode] = useState(""); 
   const [isVoucherValid, setIsVoucherValid] = useState(null);
+  
+  const latestCall = useRef(null);
+
+  const debouncedVoucherCheck = debounce((code) => {
+    const thisCall = fetchVoucherValidity(code);
+    latestCall.current = thisCall;
+    thisCall.then((data) => {
+      if (thisCall === latestCall.current) {
+        if (data.result === 'Voucher is valid') {
+          setIsVoucherValid(true);
+        } else {
+          setIsVoucherValid(false);
+        }
+      }
+    });
+  }, 700);
+
+  useEffect(() => {
+    if (voucherCode) {
+      debouncedVoucherCheck(voucherCode);
+    }
+  }, [voucherCode]);
 
   const hasItems = Array.isArray(cartCtx.items) && cartCtx.items.length > 0;
   const totalAmount = hasItems ? `$${Number(cartCtx.totalAmount).toFixed(2)}` : '$0.00';
@@ -50,20 +93,12 @@ const Cart = (props) => {
     setEditedSpecialInstructions({ unique_id, specialInstructions });
   };
   
-   
+  
   const voucherCodeChangeHandler = (event) => {
     const newVoucherCode = event.target.value;
     setVoucherCode(newVoucherCode);
-    
-    // Checking voucher validity
-    if (newVoucherCode === "AAAAAA") {
-      setIsVoucherValid(true);
-    } else if (newVoucherCode === "BBBBBB") {
-      setIsVoucherValid(false);
-    } else {
-      setIsVoucherValid(false);
-    }
   };
+    
 
   const cartItems = (
     <ul className={classes["cart-items"]}>
@@ -94,7 +129,7 @@ const Cart = (props) => {
           {cartItems}
           {hasItems && cartCtx.totalAmount > 0 && ( 
            <div className={classes.voucher}>
-           <Flex align="center" justify="space-between">
+           <Flex align="center" justify="space-between" className="voucher-container" height="50px" position="relative">
              <span>Voucher: </span>
              <Flex direction="column">
                <Flex align="center">
@@ -108,7 +143,7 @@ const Cart = (props) => {
                  />
                </Flex>
                {voucherCode !== "" && (
-                 <Flex align="center" mt={0.5} ml={2}>
+                 <Flex align="center" mt={1} ml={2} position="absolute" bottom="-2vh" className="voucher-message">
                    {isVoucherValid === true && (
                      <Text color="green" fontSize="sm">Voucher code is valid!</Text>
                    )}

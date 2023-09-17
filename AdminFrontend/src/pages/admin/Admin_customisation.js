@@ -9,15 +9,29 @@ import {Box,
     FormControl,
     FormLabel,
     Spacer,
-    Button } from '@chakra-ui/react'
+    useColorMode,
+    useColorModeValue,
+    Button } from '@chakra-ui/react';
+     
 export default function Admin_customisation() {
+    const { colorMode } = useColorMode();
+    const bgColor = useColorModeValue('gray.100', 'gray.700');
+    const textColor = useColorModeValue('black', 'white');
 
     const Customisation = () => {
         return(
             <Flex direction="row" width="100%">
             {/* Colors Section */}
-            <Box flex="1" p={6} borderRightWidth="1px" borderColor="gray.200">
-                <Heading size="lg" mb={0}>Colors</Heading>
+            <Box
+                flex="1"
+                p={6}
+                bg={bgColor}
+                color={textColor}
+                borderRadius="md"
+                borderRightWidth="1px"
+                borderColor="gray.200"
+                boxShadow="lg" >
+                <Heading size="lg" mb={4} >Colors</Heading>
                 {['Fonts', 'Serve Button', 'Cancel Button'].map((label) => (
                     <Flex key={label} direction="row" mb={4} alignItems="center">
                     <Heading size="md">{label}</Heading>
@@ -36,7 +50,15 @@ export default function Admin_customisation() {
             </Box>
     
             {/* Sizes Section */}
-            <Box flex="1" p={6}>
+            <Box
+                flex="1"
+                p={6}
+                bg={bgColor}
+                color={textColor}
+                borderRadius="md"
+                borderRightWidth="1px"
+                borderColor="gray.200"
+                boxShadow="lg" >
                 <Heading size="lg" mb={4} textAlign="center">Sizes</Heading>
                 <Flex direction="column" alignItems="center">
                     {['Fonts', 'Buttons'].map((label) => (
@@ -60,9 +82,9 @@ export default function Admin_customisation() {
     }
 
     return (
-        <Box>
-            <SideNavBar children={<Customisation/>}></SideNavBar>
-        </Box>
+        <Box p={4} bg={bgColor} boxShadow="xl" borderRadius="lg">
+      <SideNavBar children={<Customisation />} />
+    </Box>
     );
 
 }

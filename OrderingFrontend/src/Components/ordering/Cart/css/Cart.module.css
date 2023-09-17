@@ -45,5 +45,10 @@
     border: 1px solid #5f8a52;
     color:white;
   }
- 
+
   
+ 
+  .voucher-container {
+    min-height: 50px;
+  }
+
