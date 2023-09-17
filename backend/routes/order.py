@@ -319,7 +319,9 @@ def get_all_discounts():
             "discount_name": discount.discount_name,
             "code": discount.code,
             "discount_status": discount.discount_status,
-            "discount_percent": discount.discount_percent
+            "discount_percent": discount.discount_percent,
+            "start_date": discount.start_date,
+            "end_date": discount.end_date
         } for discount in discounts]
         
         return jsonify(discounts_list)

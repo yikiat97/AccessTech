@@ -40,6 +40,13 @@ def add_invoice():
 
         # Linking the discount to the invoice without modifying the model
         if discount_id:
+            discount = Discount.query.get(discount_id)
+            if not discount:
+                return jsonify({"error": "Discount not found"}), 404
+            
+            # Update discount status to completed
+            discount.discount_status = "completed"
+            
             discount_invoice_entry = DiscountInvoice(discount_id=discount_id, invoice_id=new_invoice.invoice_id)
             db.session.add(discount_invoice_entry)
 
@@ -69,7 +76,7 @@ def add_invoice():
         db.session.commit()
 
         # Return a success message along with the ID of the created invoice
-        return jsonify({"message": "Invoice, transactions, and special comments added successfully!", "invoice_id": new_invoice.invoice_id}), 201
+        return jsonify({"message": "Invoice, transactions, special comments, and discount status updated successfully!", "invoice_id": new_invoice.invoice_id}), 201
 
     except Exception as e:
         return jsonify({"error": str(e)}), 400
@@ -244,6 +251,7 @@ def update_invoice_status_completed(invoice_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 400
     
+    
 
 @transaction.route('/ticketing/update_invoice_status_cancel/<int:invoice_id>', methods=['PUT'])
 def update_invoice_status_cancel(invoice_id):
@@ -264,3 +272,5 @@ def update_invoice_status_cancel(invoice_id):
         return jsonify({"message": "Invoice status cancelled successfully!"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+    
+

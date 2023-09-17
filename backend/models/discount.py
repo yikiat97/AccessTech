@@ -7,3 +7,5 @@ class Discount(db.Model):
     code = db.Column(db.String(50))
     discount_status = db.Column(db.String(50))
     discount_percent = db.Column(db.Float)
+    start_date = db.Column(db.DateTime)
+    end_date = db.Column(db.DateTime)

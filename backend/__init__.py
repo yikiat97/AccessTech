@@ -9,6 +9,7 @@ from .routes.user import user
 from .routes.ingredient import ingredient_inventory
 from .routes.transaction import transaction
 from .routes.payment import payment
+from .routes.discount import discount_blueprint
 
 from flask_sse import sse
 
@@ -37,6 +38,8 @@ def create_app():
     app.register_blueprint(ingredient_inventory)
     app.register_blueprint(transaction)
     app.register_blueprint(payment)
+    app.register_blueprint(discount_blueprint)
+
     
 
     SWAGGER_URL = '/api/docs'  # URL for exposing Swagger UI (without trailing '/')
