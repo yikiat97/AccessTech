@@ -5,6 +5,7 @@ import CartContext from "./cart-context";
 const defaultCartState = {
   items: [],
   totalAmount: 0,
+  isDiscountApplied: false,
 };
 
 const cartReducer = (state, action) => {
@@ -102,13 +103,40 @@ const cartReducer = (state, action) => {
       totalAmount: updatedTotalAmount,
     };
   }
-  
 
+  if (action.type === "APPLY_DISCOUNT") {
+    if (!state.isDiscountApplied) {
+      const currentTotalAmount = parseFloat(state.totalAmount);
+      const discountedTotalAmount = currentTotalAmount * (1 - (action.discountPercent / 100));
+      return {
+        ...state,
+        totalAmount: discountedTotalAmount.toFixed(2),
+        isDiscountApplied: true
+      };
+    }
+    return state;
+  }
+
+  if (action.type === "REMOVE_DISCOUNT") {
+    const currentTotalAmount = parseFloat(state.totalAmount);
+    const originalTotalAmount = currentTotalAmount / (1 - (action.discountPercent / 100));
+    const discountAmount = originalTotalAmount - currentTotalAmount;
+    const newTotalAmount = currentTotalAmount + discountAmount;
+
+    return {
+      ...state,
+      totalAmount: newTotalAmount.toFixed(2),
+      isDiscountApplied: false,
+      discountPercent: 0,
+    };
+}
+  
 
   if (action.type === "CLEARALL") {
     return {
       items: [],
       totalAmount: 0,
+      isDiscountApplied: false
     };
   }
 
@@ -120,6 +148,7 @@ export const CartProvider = (props) => {
     cartReducer,
     defaultCartState
   );
+
 
   const addItemToCartHandler = (item, specialInstructions) => {
     const unique_id = item.unique_id; // assuming unique_id is a property of item
@@ -147,6 +176,14 @@ export const CartProvider = (props) => {
     dispatchCartAction({ type: "CLEARALL" });
   };
 
+  const applyDiscountHandler = (discountPercent) => {
+    dispatchCartAction({ type: "APPLY_DISCOUNT", discountPercent: discountPercent });
+  };
+
+  const removeDiscountHandler = (discountPercent) => {
+    dispatchCartAction({ type: "REMOVE_DISCOUNT", discountPercent: discountPercent });
+  };
+  
   const updateSpecialInstructionsHandler = (unique_id, specialInstructions, updatedPrice) => {
     dispatchCartAction({
       type: "UPDATE_SPECIAL_INSTRUCTIONS",
@@ -162,7 +199,9 @@ export const CartProvider = (props) => {
     addItem: addItemToCartHandler,
     removeItem: removeItemFromCartHandler,
     clearAll: clearAllItemsFromCartHandler,
-    updateSpecialInstructions: updateSpecialInstructionsHandler, 
+    updateSpecialInstructions: updateSpecialInstructionsHandler,
+    applyDiscount: applyDiscountHandler,
+    removeDiscount: removeDiscountHandler,
   
     
   };

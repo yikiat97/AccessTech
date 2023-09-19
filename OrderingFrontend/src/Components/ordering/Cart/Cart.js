@@ -35,6 +35,8 @@ const Cart = (props) => {
   
   const [voucherCode, setVoucherCode] = useState(""); 
   const [isVoucherValid, setIsVoucherValid] = useState(null);
+  const [lastValidDiscount, setLastValidDiscount] = useState(0);
+
   
   const latestCall = useRef(null);
 
@@ -45,8 +47,12 @@ const Cart = (props) => {
       if (thisCall === latestCall.current) {
         if (data.result === 'Voucher is valid') {
           setIsVoucherValid(true);
+          cartCtx.applyDiscount(data.discount_percent);
+          setLastValidDiscount(data.discount_percent);
         } else {
           setIsVoucherValid(false);
+          cartCtx.removeDiscount(lastValidDiscount);
+          setLastValidDiscount(0.0); 
         }
       }
     });
@@ -145,7 +151,7 @@ const Cart = (props) => {
                {voucherCode !== "" && (
                  <Flex align="center" mt={1} ml={2} position="absolute" bottom="-2vh" className="voucher-message">
                    {isVoucherValid === true && (
-                     <Text color="green" fontSize="sm">Voucher code is valid!</Text>
+                     <Text color="green" fontSize="sm">Voucher code applied!</Text>
                    )}
                    {isVoucherValid === false && (
                      <Text color="red" fontSize="sm">Voucher code is invalid.</Text>

@@ -6,9 +6,6 @@ import LoopingEllipsis from '../../Components/ordering/OrderConfirmation/lotties
 import { useLocation } from 'react-router-dom';
 import CartContext from "../../Components/ordering/Cart/cart-context";
 
-
-
-
 function OrderConfirmationPage(props) {
     const isInitialMount = useRef(true); 
     const [isModalOpen, setIsModalOpen] = useState(false);
