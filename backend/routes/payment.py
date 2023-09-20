@@ -5,6 +5,7 @@ import json
 import os
 
 
+
 payment = Blueprint('payment', __name__)
 CORS(payment)
 
@@ -43,11 +44,18 @@ def create_payment():
                 'enabled': True,
             },
         )
+        print(intent['client_secret'])
+        # add_invoice(data['ticketingOrderDetails'])
+
         return jsonify({
             'clientSecret': intent['client_secret']
         })
     except Exception as e:
         return jsonify(error=str(e)), 403
+    
+
+
+
 
 # if __name__ == '__main__':
 #     payment.run(port=4242)

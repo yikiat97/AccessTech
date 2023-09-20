@@ -4,9 +4,11 @@ from ..extensions import db
 from ..models.ingredient import ingredients
 from ..models.recipe import recipes
 from ..models.dish import dishes
+from ..extensions import socketio
+
 
 ingredient_inventory = Blueprint('ingredient_inventory', __name__)
-
+# socketio = SocketIO(cors_allowed_origins="*")
 
 #### Get all Ingredients 
 @ingredient_inventory.route('/ingredient/getAllIngredients', methods=['GET'])
@@ -19,6 +21,9 @@ def get_all_ingredients():
                          'ingredients_type': ingredient.ingredients_type,
                          'ingredients_qty': ingredient.ingredients_qty} 
                         for ingredient in all_ingredients]
+    
+    print("Emitting update event")
+    socketio.emit('update', {'data': 'This is a real-time update'})
     return jsonify(ingredients_list)
 
 

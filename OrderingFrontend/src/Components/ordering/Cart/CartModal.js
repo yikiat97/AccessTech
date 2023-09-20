@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import classes from "./css/CartModal.module.css";
 import { FaTimes } from "react-icons/fa";
 
+
 const portalElement = document.getElementById("overlays");
 
 const ModalOverlay = (props) => {

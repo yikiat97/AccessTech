@@ -58,7 +58,7 @@ const CartItem = (props) => {
         <button onClick={props.onAdd}>+</button>
         <IconButton icon={<EditIcon />} onClick={openEditModal} aria-label="Edit Special Instructions" />
       </div>
-      <div >
+      <div>
         <h2>{props.name}</h2>
         <div className={classes.summary}>
         <div className={classes.specialInstructions}>

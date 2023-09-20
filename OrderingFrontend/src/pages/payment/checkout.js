@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
     PaymentElement,
     LinkAuthenticationElement,
@@ -6,6 +6,7 @@ import {
     useElements,
     // ExpressCheckoutElement
 } from "@stripe/react-stripe-js";
+import CartContext from '../../Components/ordering/Cart/cart-context';
 
 export default function CheckoutForm() {
     const stripe = useStripe();
@@ -14,6 +15,7 @@ export default function CheckoutForm() {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const cartCtx = useContext(CartContext);
 
     useEffect(() => {
         if (!stripe) {
@@ -60,8 +62,10 @@ export default function CheckoutForm() {
         const { error } = await stripe.confirmPayment({
         elements,
         confirmParams: {
+            
             // Make sure to change this to your payment completion page
             return_url: "http://localhost:3000/AccessTech/customerorder",
+            
             // receipt_email: email, //only workable in deployment and not in test
         },
         });

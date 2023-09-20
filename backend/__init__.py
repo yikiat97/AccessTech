@@ -1,6 +1,7 @@
 from flask import Flask 
 from flask_cors import CORS
 from flask_swagger_ui import get_swaggerui_blueprint
+from .extensions import socketio
 
 from .extensions import db, migrate
 from .routes.order import order
@@ -8,7 +9,9 @@ from .routes.user import user
 from .routes.ingredient import ingredient_inventory
 from .routes.transaction import transaction
 from .routes.payment import payment
+from .routes.discount import discount_blueprint
 
+from flask_sse import sse
 
 from dotenv import load_dotenv
 import os
@@ -16,9 +19,14 @@ import os
 # load all environment variables
 load_dotenv()
 
+
+
 def create_app():
     app = Flask(__name__)
+    app.register_blueprint(sse, url_prefix='/sse')
+
     CORS(app)
+
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -30,6 +38,8 @@ def create_app():
     app.register_blueprint(ingredient_inventory)
     app.register_blueprint(transaction)
     app.register_blueprint(payment)
+    app.register_blueprint(discount_blueprint)
+
     
 
     SWAGGER_URL = '/api/docs'  # URL for exposing Swagger UI (without trailing '/')
@@ -54,4 +64,8 @@ def create_app():
 
     app.register_blueprint(swaggerui_blueprint)
 
+
+    socketio.init_app(app)
     return app
+    
+    
