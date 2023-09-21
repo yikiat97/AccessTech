@@ -6,6 +6,7 @@ const defaultCartState = {
   items: [],
   totalAmount: 0,
   isDiscountApplied: false,
+  discountId: null,
 };
 
 const cartReducer = (state, action) => {
@@ -130,6 +131,13 @@ const cartReducer = (state, action) => {
       discountPercent: 0,
     };
 }
+
+if (action.type === "SET_DISCOUNT_ID") {
+  return {
+    ...state,
+    discountId: action.discountId,
+  };
+}
   
 
   if (action.type === "CLEARALL") {
@@ -193,15 +201,21 @@ export const CartProvider = (props) => {
     });
   };
 
+  const setDiscountIdHandler = (discountId) => {
+    dispatchCartAction({ type: "SET_DISCOUNT_ID", discountId: discountId });
+  };  
+
   const cartContext = {
     items: cartState.items,
     totalAmount: cartState.totalAmount,
+    discountId: cartState.discountId,
     addItem: addItemToCartHandler,
     removeItem: removeItemFromCartHandler,
     clearAll: clearAllItemsFromCartHandler,
     updateSpecialInstructions: updateSpecialInstructionsHandler,
     applyDiscount: applyDiscountHandler,
     removeDiscount: removeDiscountHandler,
+    setDiscountId: setDiscountIdHandler, 
   
     
   };

@@ -45,6 +45,7 @@ def add_discount():
 @discount_blueprint.route('/discount/check-voucher', methods=['GET'])
 def check_voucher():
     try:
+        
         voucher_code = request.args.get('voucher_code')
         if not voucher_code:
             return jsonify({'result': 'Please provide a voucher code'}), 400
@@ -66,7 +67,9 @@ def check_voucher():
         if voucher.start_date <= current_time <= voucher.end_date:
             return jsonify({'result': 'Voucher is valid', 
                             'discount_name': voucher.discount_name, 
-                            'discount_percent': voucher.discount_percent}), 200
+                            'discount_percent': voucher.discount_percent,
+                            'discount_id' : voucher.discount_id}), 200,
+            
         else:
             return jsonify({'result': 'Voucher is not valid within the current date range'}), 400
 

@@ -32,7 +32,6 @@ const Cart = (props) => {
   
   const cartCtx = useContext(CartContext);
   const [editedSpecialInstructions, setEditedSpecialInstructions] = useState({});
-  
   const [voucherCode, setVoucherCode] = useState(""); 
   const [isVoucherValid, setIsVoucherValid] = useState(null);
   const [lastValidDiscount, setLastValidDiscount] = useState(0);
@@ -46,10 +45,12 @@ const Cart = (props) => {
     thisCall.then((data) => {
       if (thisCall === latestCall.current) {
         if (data.result === 'Voucher is valid') {
+          cartCtx.setDiscountId(data.discount_id);
           setIsVoucherValid(true);
           cartCtx.applyDiscount(data.discount_percent);
           setLastValidDiscount(data.discount_percent);
         } else {
+          cartCtx.setDiscountId(null);
           setIsVoucherValid(false);
           cartCtx.removeDiscount(lastValidDiscount);
           setLastValidDiscount(0.0); 
@@ -57,7 +58,7 @@ const Cart = (props) => {
       }
     });
   }, 700);
-
+  
   useEffect(() => {
     if (voucherCode) {
       debouncedVoucherCheck(voucherCode);
@@ -184,6 +185,9 @@ const Cart = (props) => {
               onClick={() => { sessionStorage.setItem('orderDetails', JSON.stringify(cartCtx.items)); 
               sessionStorage.setItem('lastOrderPage', props.userType);
               sessionStorage.setItem('totalAmount', cartCtx.totalAmount.toString());
+              if (cartCtx.discountId !== null && cartCtx.discountId !== undefined) {
+                sessionStorage.setItem('discountId', cartCtx.discountId.toString());           
+              }
               }}>
               <button className={classes["button--alt"]} onClick={props.onClose}>
                 Order

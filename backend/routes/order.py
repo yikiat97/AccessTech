@@ -328,10 +328,6 @@ def get_all_discounts():
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
-
-
-
-
 @order.route('/admin/add_discount', methods=['POST'])
 def add_discount():
     try:

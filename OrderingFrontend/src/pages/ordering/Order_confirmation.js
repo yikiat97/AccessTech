@@ -21,6 +21,10 @@ function OrderConfirmationPage(props) {
       if (savedOrderDetails) {
         cartCtx.items = [...savedOrderDetails]; 
       }
+      const savedDiscountId = sessionStorage.getItem('discountId');
+      if (savedDiscountId) {
+        cartCtx.discountId = parseFloat(savedDiscountId)
+      }
       const savedTotalAmount = sessionStorage.getItem('totalAmount');
       if (savedTotalAmount) {
         cartCtx.totalAmount = parseFloat(savedTotalAmount);
@@ -35,7 +39,7 @@ function OrderConfirmationPage(props) {
       "total_price": cartCtx.totalAmount,
       "queue_num": 0,
       "invoice_status": "pending",
-      "discount_id": 0,
+      "discount_id": cartCtx.discountId,
       "transactions": cartCtx.items.map(item => {
         return {
           "dish_id": item.dish_id,
@@ -44,9 +48,9 @@ function OrderConfirmationPage(props) {
         };
       })
     };
+    console.log(ticketingOrderDetails)
           sessionStorage.setItem('apiCalled', 'true');
           
-
       fetch('http://127.0.0.1:5000/admin/add_invoice', {
           method: 'POST',
           headers: {
@@ -62,7 +66,7 @@ function OrderConfirmationPage(props) {
           console.error('Error:', error);
         });
       }}});
-
+      
 
     const orderAgainHandler = () => {
       const lastOrderPage = sessionStorage.getItem('lastOrderPage'); 
@@ -70,6 +74,7 @@ function OrderConfirmationPage(props) {
       sessionStorage.removeItem('savedOrderDetails');
       sessionStorage.removeItem('lastOrderPage');
       sessionStorage.removeItem('apiCalled');
+      sessionStorage.removeItem('discountId')
 
       if (lastOrderPage === 'student') {  
         console.log("Navigating to student menu");  
@@ -85,7 +90,7 @@ function OrderConfirmationPage(props) {
           <ModalContent width="100%" height="100vh">
             <ModalHeader justifyContent='center' alignItems='center' display='flex'>Order Details</ModalHeader>
             <ModalCloseButton style={{ color: 'black' }} />
-            <ModalBody>
+            <ModalBody style={{maxHeight: "calc(100vh - 300px)", overflowY: "auto"}}>
             {cartCtx.items.map((item, index) => (
                <Box key={item.unique_id} marginBottom="10px">
                <Box
@@ -98,13 +103,18 @@ function OrderConfirmationPage(props) {
                  alignItems="center" 
                >
                  <Box>
-                   <Text padding='1' fontSize='lg' fontWeight='bold'>{`${index + 1}. ${item.name}`}</Text>
+                 <Text padding='1' fontSize='md' fontWeight='bold' display="flex" alignItems="center">
+                  {`${index + 1}. ${item.name}`} 
+                  <Box as='span' fontSize='xl' color='teal' marginLeft="auto" ml={5}>
+                    x{item.amount}
+                  </Box>
+                </Text>
                    <Box display="flex" flexDirection="row" alignItems="center" mt='5%'>
-                    <Text  fontWeight='bold'>Price (per item): </Text>
-                    <Text fontWeight='bold' color='green'> ${item.price}0</Text>
+                    <Text fontStyle={'italic'}>Price (per item): </Text> 
+                    <Text ml={2} fontWeight='bold' color='green'> ${item.price}0</Text>
                   </Box>
                    {item.specialInstructions && item.specialInstructions.length > 0 && (
-                    <Text mt='2' fontWeight='bold'>Special Instructions: </Text>
+                    <Text mt='2' fontWeight={'bold'}>Special Instructions: </Text>
                    )}     
                    <List>
                         {item.specialInstructions.map((instruction, i) => (
@@ -112,9 +122,7 @@ function OrderConfirmationPage(props) {
                         ))}
                   </List>               
                  </Box>
-                 <Box as='span' fontSize='2xl' color='teal'>
-                   x{item.amount}
-                 </Box>
+                 
                </Box>
              </Box>
            ))}
