@@ -9,7 +9,7 @@ import { calculateUpdatedPrice } from './cart-utils';
 
 export async function fetchVoucherValidity(voucherCode) {
   try {
-    const response = await fetch(`http://127.0.0.1:5000/discount/check-voucher?voucher_code=${voucherCode}`);
+    const response = await fetch(process.env.REACT_APP_API_URL+`/discount/check-voucher?voucher_code=${voucherCode}`);
     const data = await response.json();
     return data;
   } catch (error) {

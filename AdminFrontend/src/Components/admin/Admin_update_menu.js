@@ -21,7 +21,7 @@ function Admin_update_menu() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch('http://127.0.0.1:5000/userAuth', {
+    const response = await fetch(process.env.REACT_APP_API_URL+'/userAuth', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

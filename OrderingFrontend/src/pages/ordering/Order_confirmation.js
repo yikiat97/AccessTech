@@ -51,7 +51,7 @@ function OrderConfirmationPage(props) {
     console.log(ticketingOrderDetails)
           sessionStorage.setItem('apiCalled', 'true');
           
-      fetch('http://127.0.0.1:5000/admin/add_invoice', {
+      fetch(process.env.REACT_APP_API_URL+'/admin/add_invoice', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

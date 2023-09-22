@@ -21,7 +21,7 @@ function Admin_update_ingredient() {
 
   useEffect(() => {
     // Make a GET request using fetch
-    fetch('http://127.0.0.1:5000/ingredient/getAllIngredients')
+    fetch(process.env.REACT_APP_API_URL+'/ingredient/getAllIngredients')
       .then(response => response.json())
       .then(data => {
         // Handle the response data and set it in the state

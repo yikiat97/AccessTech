@@ -59,7 +59,7 @@ export default function Admin_add_ingredients() {
     console.log(error)
     
     if(Ingredient_Name_value && qty_value && qty_type_value){
-      fetch('http://127.0.0.1:5000/ingredient/addIngredients', {
+      fetch(process.env.REACT_APP_API_URL+'/ingredient/addIngredients', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

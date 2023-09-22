@@ -8,14 +8,16 @@ import { SHA256 } from 'crypto-js';
 
 async function fetchMenuItems(userType) {
   const url = userType === 'student' 
-    ? 'http://127.0.0.1:5000/order/getStudentDishes' 
-    : 'http://127.0.0.1:5000/order/getPublicDishes';
+    ? process.env.REACT_APP_API_URL+'/order/getStudentDishes' 
+    : process.env.REACT_APP_API_URL+'/order/getPublicDishes';
     
   try {
     const response = await fetch(url);
     const data = await response.json();
+    console.log(process.env.REACT_APP_API_URL)
     return data;
   } catch (error) {
+    console.log(process.env.REACT_APP_API_URL)
     console.error('Error fetching menu items:', error);
     return [];
   }
@@ -24,7 +26,7 @@ async function fetchMenuItems(userType) {
 
 export async function fetchSpecialInstructions(item_id) {
   try {
-    const response = await fetch(`http://127.0.0.1:5000/order/get_special_comments/${item_id}`);
+    const response = await fetch(process.env.REACT_APP_API_URL+`/order/get_special_comments/${item_id}`);
     const data = await response.json();
     return  data;
   } catch (error) {

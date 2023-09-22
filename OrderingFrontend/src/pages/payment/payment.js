@@ -20,7 +20,7 @@ export default function Payment() {
         if (cartCtx && cartCtx.items.length > 0) {
         // Create PaymentIntent as soon as the page loads
         // console.log(cartCtx.items)
-        fetch("http://127.0.0.1:5000/payment/create-payment-intent", {
+        fetch(process.env.REACT_APP_API_URL+"/payment/create-payment-intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ items: cartCtx.items }),

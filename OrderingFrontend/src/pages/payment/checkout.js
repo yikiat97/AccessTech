@@ -64,7 +64,7 @@ export default function CheckoutForm() {
         confirmParams: {
             
             // Make sure to change this to your payment completion page
-            return_url: "http://localhost:3000/AccessTech/customerorder",
+            return_url: "https://d1yoopjwqn3bey.cloudfront.net/AccessTech/customerorder",
             
             // receipt_email: email, //only workable in deployment and not in test
         },

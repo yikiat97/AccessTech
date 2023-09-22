@@ -23,7 +23,7 @@ const TicketingOrders = () =>{
     const textColor = colorMode === "dark" ? "#ECC94B" : "#000000"; // Change color based on color mode
     useEffect(() => {
         // Make a GET request using fetch
-        fetch('http://127.0.0.1:5000/admin/fetch_invoice_parameter?invoice_status=pending')
+        fetch(process.env.REACT_APP_API_URL+'/admin/fetch_invoice_parameter?invoice_status=pending')
             .then(response => response.json())
             .then(data => {
             // Handle the response data and set it in the state
@@ -194,7 +194,7 @@ const TicketingOrders = () =>{
 
 function serveOrder(invoice_id){
       // Define the URL with the invoice_id in the route
-    const url = `http://127.0.0.1:5000/ticketing/update_invoice_status_completed/${invoice_id}`;
+    const url = process.env.REACT_APP_API_URL+`/ticketing/update_invoice_status_completed/${invoice_id}`;
 
     // Define the request headers
     const headers = {
@@ -235,7 +235,7 @@ function serveOrder(invoice_id){
 
 function cancelOrder(invoice_id){
          // Define the URL with the invoice_id in the route
-         const url = `http://127.0.0.1:5000/ticketing/update_invoice_status_cancel/${invoice_id}`;
+         const url = process.env.REACT_APP_API_URL+`/ticketing/update_invoice_status_cancel/${invoice_id}`;
 
          // Define the request headers
          const headers = {
