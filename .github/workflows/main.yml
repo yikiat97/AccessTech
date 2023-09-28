@@ -40,7 +40,7 @@ jobs:
     - name: Setup Python Virtual Environment and Initialize Elastic Beanstalk
       run: |
         cd backend/aws_deploy/inner
-        eb init accesstech
+        echo "1`nY`n1`n1" eb init accesstech
 
     - name: Show current directory
       run: echo "Current directory is $PWD"
