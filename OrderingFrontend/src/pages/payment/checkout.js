@@ -7,6 +7,7 @@ import {
     // ExpressCheckoutElement
 } from "@stripe/react-stripe-js";
 import CartContext from '../../Components/ordering/Cart/cart-context';
+import { Button, Spinner, FormControl, FormLabel, Input, Box, Flex } from "@chakra-ui/react";
 
 export default function CheckoutForm() {
     const stripe = useStripe();
@@ -66,7 +67,7 @@ export default function CheckoutForm() {
             // Make sure to change this to your payment completion page
             return_url: "https://d1yoopjwqn3bey.cloudfront.net/AccessTech/customerorder",
             
-            // receipt_email: email, //only workable in deployment and not in test
+            ...(email ? { receipt_email: email } : {}), //only workable in deployment and not in test
         },
         });
 
@@ -98,16 +99,39 @@ export default function CheckoutForm() {
     
 
     return (
-        <form id="payment-form" onSubmit={handleSubmit}>
+        <form id="payment-form" className="payment-form" onSubmit={handleSubmit}>
         {/* <LinkAuthenticationElement
             id="link-authentication-element"
             onChange={(e) => setEmail(e.target.value)}
         /> */}
         {/* <ExpressCheckoutElement onConfirm={handleSubmit}/> */}
-        <PaymentElement id="payment-element" options={paymentElementOptions} />
+        {/* <PaymentElement id="payment-element" options={paymentElementOptions} />
         <button disabled={isLoading || !stripe || !elements} id="submit" style={{ backgroundColor: '#007BFF' }}>
             <span id="button-text" >
             {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
+            </span>
+        </button> */}
+        <Input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Enter your email address"
+        // required
+        />
+        <PaymentElement id="payment-element" options={paymentElementOptions} />
+        <button
+            disabled={isLoading || !stripe || !elements}
+            id="submit"
+            style={{
+                backgroundColor: 'rgb(0, 123, 255)', // Set the background color to Bootstrap's primary color (blue)
+                borderRadius: '10px', // Add a border radius for curved corners
+                color: 'white', // Set text color to white
+                padding: '7px 17px', // Adjust the padding to increase the button size
+                fontSize: '18px', // Adjust the font size to make the text larger
+            }}
+        >
+            <span id="button-text">
+                {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
             </span>
         </button>
         {/* Show any error or success messages */}
