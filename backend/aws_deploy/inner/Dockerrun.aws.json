@@ -1,0 +1,14 @@
+{
+    "AWSEBDockerrunVersion": "1",
+    "Image": {
+      "Name": "802615971270.dkr.ecr.us-east-1.amazonaws.com/accesstech-backend", 
+      "Update": "true"
+    },
+    "Ports": [
+      {
+        "ContainerPort": 8080,
+        "HostPort": 8080
+        
+      }
+    ]
+  }
