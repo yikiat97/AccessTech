@@ -17,7 +17,7 @@ export default function Payment() {
     const cartCtx = useContext(CartContext);
 
     useEffect(() => {
-        if (cartCtx && cartCtx.items.length > 0) {
+        // if (cartCtx && cartCtx.items.length > 0) {
         // Create PaymentIntent as soon as the page loads
         // console.log(cartCtx.items)
         fetch("http://127.0.0.1:5000/payment/create-payment-intent", {
@@ -27,7 +27,7 @@ export default function Payment() {
         })
         .then((res) => res.json())
         .then((data) => setClientSecret(data.clientSecret));
-    }
+    // }
     }, [cartCtx]);
 
     const appearance = {
