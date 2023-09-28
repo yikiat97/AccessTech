@@ -113,3 +113,6 @@ def delete_ingredient(ingredient_id):
     except Exception as e:
         db.session.rollback()  # rollback the changes in case of error
         return jsonify({'result': 'An error occurred while deleting the ingredient: ' + str(e)}), 500
+    
+
+
