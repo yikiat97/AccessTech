@@ -21,6 +21,9 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: '3.x'
+    
+    - name: Install Node.js dependencies
+      run: npm install
 
     - name: Install AWS Elastic Beanstalk CLI
       run: pip install awsebcli --upgrade
