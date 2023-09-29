@@ -1,0 +1,62 @@
+name: Manual CI/CD Pipeline
+
+on:
+  #push:
+    #branches:
+     # - development
+  #pull_request:
+    #branches:
+      # - development
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    
+    - name: Install Node.js dependencies
+      run: |
+        cd OrderingFrontend
+        npm install
+
+    - name: Install AWS Elastic Beanstalk CLI
+      run: pip install awsebcli --upgrade
+
+    - name: Set up AWS CLI
+      run: choco install awscli
+
+    - name: Configure AWS Credentials
+      run: |
+        aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws configure set default.region us-east-1
+        
+    - name: List files in root directory at start
+      run: Get-ChildItem -Path ${{ github.workspace }}
+  
+    - name: Setup Python Virtual Environment and Initialize Elastic Beanstalk
+      run: |
+        cd backend/aws_deploy/inner
+        echo "1`nY`n1`n1" | eb init accesstech
+
+    - name: Show current directory
+      run: echo "Current directory is $PWD"
+
+    - name: List files in current directory
+      run: Get-ChildItem -Path .
+
+    - name: Deploy Backend
+      run: 
+        .\deploy_Backend.bat
+
+    - name: Deploy Ordering Frontend
+      run:
+        .\deploy_OrderingFrontend.bat
