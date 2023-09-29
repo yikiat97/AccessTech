@@ -1,5 +1,5 @@
 @echo off
-echo Deploying Backend...
+echo Deploying Backend running from powershell...
 cd backend
 
 

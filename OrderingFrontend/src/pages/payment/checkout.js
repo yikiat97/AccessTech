@@ -99,43 +99,47 @@ export default function CheckoutForm() {
     
 
     return (
-        <form id="payment-form" className="payment-form" onSubmit={handleSubmit}>
-        {/* <LinkAuthenticationElement
-            id="link-authentication-element"
-            onChange={(e) => setEmail(e.target.value)}
-        /> */}
-        {/* <ExpressCheckoutElement onConfirm={handleSubmit}/> */}
-        {/* <PaymentElement id="payment-element" options={paymentElementOptions} />
-        <button disabled={isLoading || !stripe || !elements} id="submit" style={{ backgroundColor: '#007BFF' }}>
-            <span id="button-text" >
-            {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
-            </span>
-        </button> */}
-        <Input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Enter your email address"
-        // required
-        />
-        <PaymentElement id="payment-element" options={paymentElementOptions} />
-        <button
-            disabled={isLoading || !stripe || !elements}
-            id="submit"
-            style={{
-                backgroundColor: 'rgb(0, 123, 255)', // Set the background color to Bootstrap's primary color (blue)
-                borderRadius: '10px', // Add a border radius for curved corners
-                color: 'white', // Set text color to white
-                padding: '7px 17px', // Adjust the padding to increase the button size
-                fontSize: '18px', // Adjust the font size to make the text larger
-            }}
-        >
-            <span id="button-text">
+        <div className="stripe-checkout-container">
+            <form id="payment-form" className="payment-form" onSubmit={handleSubmit}>
+            {/* <LinkAuthenticationElement
+                id="link-authentication-element"
+                onChange={(e) => setEmail(e.target.value)}
+            /> */}
+            {/* <ExpressCheckoutElement onConfirm={handleSubmit}/> */}
+            {/* <PaymentElement id="payment-element" options={paymentElementOptions} />
+            <button disabled={isLoading || !stripe || !elements} id="submit" style={{ backgroundColor: '#007BFF' }}>
+                <span id="button-text" >
                 {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
-            </span>
-        </button>
-        {/* Show any error or success messages */}
-        {message && <div id="payment-message">{message}</div>}
-        </form>
+                </span>
+            </button> */}
+            <Input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your email address"
+            // required
+            />
+            <PaymentElement id="payment-element" options={paymentElementOptions} />
+            <button
+                disabled={isLoading || !stripe || !elements}
+                id="submit"
+                className="payment-button"
+                style={{
+                    backgroundColor: 'rgb(0, 123, 255)', // Set the background color to Bootstrap's primary color (blue)
+                    borderRadius: '10px', // Add a border radius for curved corners
+                    color: 'white', // Set text color to white
+                    padding: '7px 17px', // Adjust the padding to increase the button size
+                    fontSize: '18px', // Adjust the font size to make the text larger
+                }}
+            >
+                <span id="button-text">
+                    {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
+                </span>
+            </button>
+            {/* Show any error or success messages */}
+            {message && <div id="payment-message">{message}</div>}
+            </form>
+        </div>
+        
     );
 }
