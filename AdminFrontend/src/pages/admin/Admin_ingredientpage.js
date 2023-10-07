@@ -49,7 +49,7 @@ function Admin_orderpage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch(process.env.REACT_APP_API_URL+'/userAuth', {
+    const response = await fetch(process.env.REACT_APP_API_URL+'userAuth', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

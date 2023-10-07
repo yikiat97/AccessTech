@@ -1,5 +1,5 @@
 @echo off
-echo Deploying Backend...
+echo Deploying Backend running from powershell...
 cd backend
 
 
@@ -19,5 +19,4 @@ REM Push the Docker image to ECR
 docker push 802615971270.dkr.ecr.us-east-1.amazonaws.com/accesstech-backend:latest
 
 cd aws_deploy
-cd inner
 eb deploy

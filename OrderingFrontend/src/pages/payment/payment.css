@@ -1,9 +1,9 @@
 /* #root {
     display: flex;
     align-items: center;
-}
+} */
 
-body {
+/* .stripe-checkout-container {
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
@@ -12,9 +12,10 @@ body {
     align-content: center;
     height: 100vh;
     width: 100vw;
-}
+    align-items: center;
+} 
 
-form {
+.payment-form {
     width: 30vw;
     min-width: 500px;
     align-self: center;
@@ -22,10 +23,10 @@ form {
         0px 2px 5px 0px rgba(50, 50, 93, 0.1), 0px 1px 1.5px 0px rgba(0, 0, 0, 0.07);
     border-radius: 7px;
     padding: 40px;
-}
+} */
 
 
- #payment-message {
+#payment-message {
     color: rgb(105, 115, 134);
     font-size: 16px;
     line-height: 20px;
@@ -35,10 +36,10 @@ form {
 
 #payment-element {
     margin-bottom: 24px;
-} */
+} 
 
-/* Buttons and links
-button {
+/* Buttons and links */
+.payment-button {
     background: #5469d4;
     font-family: Arial, sans-serif;
     color: #ffffff;
@@ -54,17 +55,17 @@ button {
     width: 100%;
 }
 
- button:hover {
+payment-button:hover {
     filter: contrast(115%);
 }    
 
-button:disabled {
+payment-button:disabled {
     opacity: 0.5;
     cursor: default;
-}  */ 
+}  
 
 /* spinner/processing state, errors */
-/* .spinner,
+.spinner,
 .spinner:before,
 .spinner:after {
     border-radius: 50%;
@@ -82,9 +83,9 @@ button:disabled {
     -webkit-transform: translateZ(0);
     -ms-transform: translateZ(0);
     transform: translateZ(0);
-} */
+}
 
-/* .spinner:before,
+.spinner:before,
 .spinner:after {
     position: absolute;
     content: '';
@@ -101,9 +102,9 @@ button:disabled {
     transform-origin: 10.4px 10.2px;
     -webkit-animation: loading 2s infinite ease 1.5s;
     animation: loading 2s infinite ease 1.5s;
-} */
+}
 
-/* .spinner:after {
+.spinner:after {
     width: 10.4px;
     height: 10.2px;
     background: #5469d4;
@@ -114,7 +115,38 @@ button:disabled {
     transform-origin: 0px 10.2px;
     -webkit-animation: loading 2s infinite ease;
     animation: loading 2s infinite ease;
-} */
+}
+
+.stripe-checkout-container {
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    height: 100vh;
+    width: 100vw;
+    align-items: center;
+}
+
+.payment-form {
+    width: 90%; /* make it responsive for smaller screens */
+    max-width: 500px; /* set a max-width for larger screens */
+    align-self: center;
+    box-shadow: 0px 0px 0px 0.5px rgba(50, 50, 93, 0.1),
+        0px 2px 5px 0px rgba(50, 50, 93, 0.1), 
+        0px 1px 1.5px 0px rgba(0, 0, 0, 0.07);
+    border-radius: 7px;
+    padding: 40px;
+}
+
+/* Media query for larger screens */
+@media (min-width: 768px) {
+    .payment-form {
+        width: 30vw;
+    }
+}
+
 
 /* @keyframes loading {
 0% {

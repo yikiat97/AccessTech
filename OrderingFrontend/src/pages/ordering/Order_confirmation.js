@@ -10,6 +10,7 @@ function OrderConfirmationPage(props) {
     const isInitialMount = useRef(true); 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const cartCtx = useContext(CartContext);
+    console.log(cartCtx)
     const clientSecret = new URLSearchParams(window.location.search).get(
       "redirect_status"
       );
