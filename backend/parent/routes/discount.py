@@ -66,7 +66,8 @@ def check_voucher():
         if voucher.start_date <= current_time <= voucher.end_date:
             return jsonify({'result': 'Voucher is valid', 
                             'discount_name': voucher.discount_name, 
-                            'discount_percent': voucher.discount_percent}), 200
+                            'discount_percent': voucher.discount_percent,
+                            'discount_id' : voucher.discount_id}), 200,
         else:
             return jsonify({'result': 'Voucher is not valid within the current date range'}), 400
 
