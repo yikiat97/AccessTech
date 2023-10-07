@@ -22,6 +22,7 @@ const TicketingOrders = () =>{
     const buttonTextColor = colorMode === "dark" ? "#FFFFFF" : "#FFFFFF"; // Change color based on color mode
     const textColor = colorMode === "dark" ? "#ECC94B" : "#000000"; // Change color based on color mode
     useEffect(() => {
+<<<<<<< Updated upstream
         // Make a GET request using fetch
         fetch(process.env.REACT_APP_API_URL+'/admin/fetch_invoice_parameter?invoice_status=pending')
             .then(response => response.json())
@@ -29,6 +30,94 @@ const TicketingOrders = () =>{
             // Handle the response data and set it in the state
                 console.log(data)
                 setOrderList(data)
+=======
+
+        
+        
+            // Make a GET request using fetch
+            fetch(process.env.REACT_APP_API_URL+'/admin/fetch_invoice_parameter?invoice_status=pending')
+            .then((response) => response.json())
+            .then((data) => {
+                // Handle the response data and set it in the state
+                console.log('fetching data');
+                console.log(data);
+                setOrderList(data);
+        
+                const updatedColors = {};
+                for (let i = 0; i < Math.min(data.length, 4); i++) {
+                    updatedColors[data[i].invoice_id] = colors[i];
+            
+                    // Check if the 'color' property exists in data and add it to unavailableColors if it does
+                    if (data[i].color) {
+                        unavailableColors.add(data[i].color);
+                        availableColors.delete(data[i].color)
+                    }
+                }
+            
+                // Determine available colors by filtering the colors array
+                // Filter the colors array and add the filtered colors to availableColors Set
+                colors.forEach(color => {
+                    if (!unavailableColors.has(color)) {
+                        availableColors.add(color);
+                    }
+                });
+                
+                setOrderColors(updatedColors);
+                console.log('updatedColors')
+                console.log(updatedColors)
+                // Assuming you have already populated updatedColors as mentioned in your previous code
+                console.log('availableColors')
+                console.log(availableColors)
+                console.log('unavailableColors')
+                console.log(unavailableColors)
+                for (const invoiceId in updatedColors) {
+                    if (updatedColors.hasOwnProperty(invoiceId)) {
+                        const color = updatedColors[invoiceId];
+            
+                        // Define the URL for the PUT request
+                        const url = process.env.REACT_APP_API_URL+`/ticketing/update_invoice_colors/${invoiceId}`;
+                        console.log(url)
+                        // Define the request headers
+                        const headers = {
+                        'Content-Type': 'application/json',
+                        };
+            
+                        // Define the request body
+                        const requestBody = {
+                        color: color, // You may need to adjust the key based on your server's expectations
+                        };
+            
+                        // Define the fetch options
+                        const options = {
+                        method: 'POST',
+                        headers,
+                        body: JSON.stringify(requestBody),
+                        };
+            
+                        // Make the PUT request for each invoice_id
+                        fetch(url, options)
+                        .then((response) => {
+                            if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then((data) => {
+                            // Handle the response data if needed
+                            console.log(`Color updated for invoice_id ${invoiceId}`);
+                            console.log('availableColors');
+                            console.log(availableColors);
+                            console.log('unavailableColors');
+                            console.log(unavailableColors);
+                            console.log('servedOrderColor');
+                        })
+                        .catch((error) => {
+                            // Handle any errors here
+                            console.error(`Error updating color for invoice_id ${invoiceId}:`, error);
+                        });
+                    }
+                }
+>>>>>>> Stashed changes
             })
             .catch(error => {
             // Handle any errors
