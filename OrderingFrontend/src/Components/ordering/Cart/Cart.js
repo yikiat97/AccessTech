@@ -11,6 +11,7 @@ export async function fetchVoucherValidity(voucherCode) {
   try {
     const response = await fetch(process.env.REACT_APP_API_URL+`/discount/check-voucher?voucher_code=${voucherCode}`);
     const data = await response.json();
+    console.log(data)
     return data;
   } catch (error) {
     console.error('Error fetching voucher validity:', error);

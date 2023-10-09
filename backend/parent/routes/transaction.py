@@ -39,9 +39,9 @@ def add_invoice():
             date_time=date_time,
             total_price=total_price,
             queue_num=queue_num,
-            invoice_status=invoice_status
+            invoice_status=invoice_status,
+            color="gray.500"
         )
-
         db.session.add(new_invoice)
         db.session.flush()  # Flush to get the invoice_id
 
@@ -59,8 +59,6 @@ def add_invoice():
 
 
         # Prepare a list to store response data for each transaction
-
-        # Prepare a list to store response data for each transaction
         transactions_response_data = []
 
         # Add transactions to the new invoice
@@ -70,6 +68,7 @@ def add_invoice():
             new_transaction = Transactions(
                 dish_id=trans_data.get('dish_id'),
                 quantity=trans_data.get('quantity'),
+                with_special_comments=bool(special_comments_ids),
                 invoice_id=new_invoice.invoice_id  # Link the transaction to the invoice
             )
 
@@ -112,8 +111,6 @@ def add_invoice():
 
             transactions_response_data.append(transaction_response_data)
 
-        # ... (rest of the code)
-
         # Commit the changes to the database
         db.session.commit()
         print("Emitting update event")
@@ -124,6 +121,7 @@ def add_invoice():
             "date_time": date_time,
             "total_price": total_price,
             "invoice_status": invoice_status,
+            "color": "gray.500",  # Include the color
             "transactions": transactions_response_data,  # Include transactions data with special comments
         }
 
@@ -257,6 +255,7 @@ def fetch_invoice_parameter():
 
                 if transaction.with_special_comments:
                     comments = TransactionSpecialComments.query.filter_by(dish_id=transaction.dish_id, invoice_id=transaction.invoice_id).all()
+                    print(comments)
                     for comment_relation in comments:
                         comment = special_comments.query.get(comment_relation.special_comments_id)
                         if comment:

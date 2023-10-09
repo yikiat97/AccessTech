@@ -4,7 +4,7 @@ import "./css/admin_login.css";
 import SideNavBar from '../../Components/admin/SideNavBar'
 import AdminAddMenu from '../../Components/admin/Admin_add_menu'
 import AdminUpdateMenu from '../../Components/admin/Admin_update_menu'
-import { Tabs, TabList, Tab, TabPanels, TabPanel, Box, IconButton, VStack } from "@chakra-ui/react";
+import { Tabs, TabList, Tab, TabPanels, TabPanel, Box, IconButton, VStack, Grid } from "@chakra-ui/react";
 import { AddIcon, EditIcon,CheckIcon,CloseIcon } from '@chakra-ui/icons'; // Equivalent icons in Chakra
 import {LinkBox,Card,CardBody,Stack,Divider,CardFooter,ButtonGroup,Button,Heading,Center,LinkOverlay,Text,SimpleGrid,Image} from '@chakra-ui/react'
 import { useColorMode } from "@chakra-ui/react";
@@ -28,7 +28,7 @@ const TicketingOrders = () =>{
 
     const borderColor = colorMode === "dark" ? "red.500" : "pink.200"; // Change color based on color mode
     const buttonTextColor = colorMode === "dark" ? "#FFFFFF" : "#FFFFFF"; // Change color based on color mode
-    const textColor = colorMode === "dark" ? "#ECC94B" : "#000000"; // Change color based on color mode
+    const textColor = colorMode === "dark" ? "#FFFFFF" : "#000000"; // Change color based on color mode
     const socket = io.connect('http://localhost:8080');
 
 
@@ -145,6 +145,7 @@ const TicketingOrders = () =>{
             console.log(availableColors)
             console.log('unavailableColors')
             console.log(unavailableColors)
+            console.log(data)
             if (availableColors.size > 0) {
                 // Get an available color (for example, you can use the first one)
                 const colorToUse = availableColors.values().next().value;
@@ -177,9 +178,10 @@ const TicketingOrders = () =>{
             } else {
                 // Handle the case when there are no available colors
                 // Add the color property to the data object
-                const defaultColor = 'gray.500'
-                const dataWithColor = { ...data.data, color: defaultColor };
-
+                // const defaultColor = 'gray.500'
+                const dataWithColor = { ...data.data, color:data.data.color};
+                // const dataWithColor = { ...data.data, color: defaultColor };
+                console.log(dataWithColor)
                 // Append dataWithColor to the existing orderList
                 setOrderList((prevOrderList) => [
                     ...prevOrderList,
@@ -187,15 +189,15 @@ const TicketingOrders = () =>{
                 ]);
                 console.log(data.data.invoice_id)
 
-                updateColorInDatabase(data.data.invoice_id, defaultColor);
+                // updateColorInDatabase(data.data.invoice_id, data.data.color);
     
                 // Change the style of the Heading and Card components
                 const headingElement = document.getElementById('my-heading-' + data.invoice_id);
                 const cardElement = document.getElementById('my-card-' + data.invoice_id);
         
                 if (headingElement && cardElement) {
-                    headingElement.style.color = defaultColor;
-                    cardElement.style.borderColor = defaultColor;
+                    headingElement.style.color = data.data.color;
+                    cardElement.style.borderColor = data.data.color;
                 }
             }
             // Update the color in the database using a POST request
@@ -341,7 +343,8 @@ const TicketingOrders = () =>{
     
             setOrderList(updatedOrderList);
             console.log(updatedOrderList);
-            alert(`Order Number ${invoice_id} completed!`);
+            alert(`Order Number ${invoice_id} served!`);
+
         } catch (error) {
             // Handle any errors here
             console.log(error)
@@ -446,55 +449,79 @@ const TicketingOrders = () =>{
                             <Card maxW='sm' id={'my-card-'+order.invoice_id} style={{ borderColor:order.color}} border='2px' m={3}>     
                                 {order.transactions.map((transaction, index) => (
                                     <div key={index}>
-                                    <Heading m={[2, 3]} size='md' color={textColor}>{transaction.quantity}X {transaction.dish_name}</Heading>
-                                    
-                                    {transaction.special_comments.length > 0 && (
-                                            <div>
-                                                <h4>Special Comments:</h4>
-                                                <ul >
-                                                    {transaction.special_comments.map((comment) => (
-                                                        <Text key={comment.comment_id} size='md' color='white'>- {comment.text}</Text>
-                                                    ))}
-                                                </ul>
-                                            </div>
-                                        )}
-                                        <hr />
+                                        {/* <Heading m={[2, 3]} size='md' color={textColor}>{transaction.quantity}X {transaction.dish_name}</Heading> */}
+                                        <Grid
+                                            templateColumns={['1fr', '1fr 2fr']} // Use responsive column layout
+                                            alignItems='center' // Vertically center the content
+                                            gap={2} // Add some spacing between the columns
+                                            m={[2, 3]}
+                                            fontSize='3xl'
+                                            color={textColor}
+                                        >
+                                            <Box fontWeight='bold'>{transaction.quantity}X</Box>
+                                            <Box>
+                                                <Text as="b">{transaction.dish_name}</Text>
+                                                {transaction.special_comments.length > 0 && (
+                                                    <Grid>
+                                                        <Box borderBottom="1px solid white" pb={2} mb={2}>
+                                                            Special Comments:
+                                                        </Box>
+                                                        <Box>
+                                                        {transaction.special_comments.map((comment) => (
+                                                                <Text key={comment.comment_id} fontSize="xl"  color="white">
+                                                                    - {comment.text}
+                                                                </Text>
+                                                        ))}
+
+                                                        </Box>
+                                                    </Grid>
+
+                                                )}
+                                            
+                                            </Box>
+                                        </Grid>
+
                                     </div>
                                     ))}
                                     <Center mt={5}>
                                         <Button
-                                            size='lg'
+                                            size='xl' // Set your custom button size
+                                            paddingX='6' // Adjust the horizontal padding as needed
+                                            paddingY='4' // Adjust the vertical padding as needed
                                             background='#71149D'
                                             onClick={() => serveOrder(order.invoice_id)}
                                             textColor={buttonTextColor}
                                             variant='solid'
                                             colorScheme='purple'
                                             w='80%'
-                                            display='flex'  // Use flex display to align items horizontally
-                                            alignItems='center'  // Align items vertically in the center
-                                            mb={2}
+                                            display='flex'
+                                            alignItems='center'
+                                            mb={8}
                                         >
                                             <CheckIcon mr={2} fontSize='2xl' style={{ marginRight: '5px' }} />
                                             <Text fontSize='2xl'>Serve</Text>
                                         </Button>
-                                    </Center>
-                                    <Center>
+                                        </Center>
+                                        <Center>
                                         <Button
-                                            size='lg'
+                                            size='xl' // Set your custom button size
+                                            paddingX='6' // Adjust the horizontal padding as needed
+                                            paddingY='4' // Adjust the vertical padding as needed
                                             background='#F00'
                                             onClick={() => cancelOrder(order.invoice_id)}
                                             textColor={buttonTextColor}
                                             variant='solid'
                                             colorScheme='red'
                                             w='80%'
-                                            display='flex'  // Use flex display to align items horizontally
-                                            alignItems='center'  // Align items vertically in the center
-                                            mb={2}
+                                            display='flex'
+                                            alignItems='center'
+                                            mb={8}
                                         >
                                             <CloseIcon mr={2} fontSize='2xl'/>
                                             <Text fontSize='2xl'>Cancel</Text>
                                         </Button>
                                     </Center>
+
                                 </Card>
                         </div>
                     ))}
