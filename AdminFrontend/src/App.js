@@ -8,9 +8,10 @@ import AdminOrderpage from "./pages/admin/Admin_orderpage";
 import AdminIngredientpage from "./pages/admin/Admin_ingredientpage";
 import AdminManagementPage from "./pages/admin/Admin_management";
 import AdminTransactionpage from './pages/admin/Admin_transaction';
-import AdminTicketingPage from './pages/admin/Admin_ticketingOverview';
+import AdminTicketingPage from './pages/admin/Ticketing/Admin_ticketingOverview';
 import AdminDiscountpage from './pages/admin/Admin_discount';
-import AdminTicketingOrders from './pages/admin/Admin_ticketingPage';
+import AdminGeneralTicketingOrders from './pages/admin/Ticketing/Admin_GeneralTicketingOrders';
+import AdminFryingTicketingOrders from './pages/admin/Ticketing/Admin_FryingTicketingOrders';
 import AdminCustomisation from './pages/admin/Admin_customisation'
 
 function App() {
@@ -40,10 +41,16 @@ function App() {
           <Route path="/AccessTech/AdminManagement" element={<AdminManagementPage />} />
         </Routes>
         <Routes>
-          <Route path="/AccessTech/TicketingPage" element={<AdminTicketingOrders />} />
+          <Route path="/AccessTech/TicketingPage" element={<AdminTicketingPage />} />
         </Routes>
         <Routes>
           <Route path="/AccessTech/AdminCustomisation" element={<AdminCustomisation />} />
+        </Routes>
+        <Routes>
+          <Route path="/AccessTech/GeneralTicketingPage" element={<AdminGeneralTicketingOrders/>} />
+        </Routes>
+        <Routes>
+          <Route path="/AccessTech/FryingTicketingPage" element={<AdminFryingTicketingOrders/>} />
         </Routes>
       </Router>
     </div>

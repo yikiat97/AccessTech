@@ -1,22 +1,22 @@
 
 import React, { useState,useEffect } from 'react';
-import "./css/admin_login.css";
-import SideNavBar from '../../Components/admin/SideNavBar'
-import AdminAddMenu from '../../Components/admin/Admin_add_menu'
-import AdminUpdateMenu from '../../Components/admin/Admin_update_menu'
+import "../css/admin_login.css";
+import SideNavBar from '../../../Components/admin/SideNavBar'
+import AdminAddMenu from '../../../Components/admin/Admin_add_menu'
+import AdminUpdateMenu from '../../../Components/admin/Admin_update_menu'
 import { Tabs, TabList, Tab, TabPanels, TabPanel, Box, IconButton, VStack, Grid } from "@chakra-ui/react";
 import { AddIcon, EditIcon,CheckIcon,CloseIcon } from '@chakra-ui/icons'; // Equivalent icons in Chakra
 import {LinkBox,Card,CardBody,Stack,Divider,CardFooter,ButtonGroup,Button,Heading,Center,LinkOverlay,Text,SimpleGrid,Image} from '@chakra-ui/react'
 import { useColorMode } from "@chakra-ui/react";
-import Admin_order_ticket from '../../Components/admin/Admin_order_ticket';
-import OrderTicket from '../../Components/admin/Admin_order_ticket';
+import Admin_order_ticket from '../../../Components/admin/Admin_order_ticket';
+import OrderTicket from '../../../Components/admin/Admin_order_ticket';
 import {io} from 'socket.io-client';
 const colors = ['#FFC107', '#F44336', '#4CAF50', '#2196F3'];
 
 let availableColors = new Set(colors);
 let unavailableColors = new Set();
 
-const TicketingOrders = () =>{
+const FryingTicketingOrders = () =>{
     const [orderList, setOrderList] = useState([]); // State to store the fetched data
     const [sortedFoodOrders, setSortedFoodOrders] = useState(null)
     const { colorMode } = useColorMode();
@@ -432,7 +432,7 @@ const TicketingOrders = () =>{
 
     return (
         <div>
-            <Heading>Queue</Heading>
+            <Heading>Frying Queue</Heading>
 
             {/* Conditional rendering based on orderDetails */}
             {orderList ? (
@@ -538,12 +538,12 @@ const TicketingOrders = () =>{
 
 
 
-function Admin_ticketingOrders() {
+function Admin_FryingTicketingOrders() {
 
         return (
             <div className='container_order_container'  >
-                <SideNavBar children={<TicketingOrders/>}></SideNavBar>
+                <SideNavBar children={<FryingTicketingOrders/>}></SideNavBar>
             </div>
         );
 }
-export default Admin_ticketingOrders;;
+export default Admin_FryingTicketingOrders;
