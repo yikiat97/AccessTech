@@ -16,7 +16,7 @@ const colors = ['#FFC107', '#F44336', '#4CAF50', '#2196F3'];
 let availableColors = new Set(colors);
 let unavailableColors = new Set();
 
-const FryingTicketingOrders = () =>{
+const FryingTicketingOrders= () =>{
     const [orderList, setOrderList] = useState([]); // State to store the fetched data
     const [sortedFoodOrders, setSortedFoodOrders] = useState(null)
     const { colorMode } = useColorMode();
@@ -26,7 +26,6 @@ const FryingTicketingOrders = () =>{
     const [orderColors, setOrderColors] = useState({}); // Track colors by invoice_id
     const [nextColorIndex, setNextColorIndex] = useState(0); // Track the index of the next color to use
 
-    const borderColor = colorMode === "dark" ? "red.500" : "pink.200"; // Change color based on color mode
     const buttonTextColor = colorMode === "dark" ? "#FFFFFF" : "#FFFFFF"; // Change color based on color mode
     const textColor = colorMode === "dark" ? "#FFFFFF" : "#000000"; // Change color based on color mode
     const socket = io.connect('http://localhost:8080');
@@ -45,8 +44,6 @@ const FryingTicketingOrders = () =>{
                 setOrderList(data)
                 // Handle the response data and set it in the state
                 console.log('fetching data');
-                console.log(data);
-                setOrderList(data);
         
                 const updatedColors = {};
                 for (let i = 0; i < Math.min(data.length, 4); i++) {
@@ -68,13 +65,13 @@ const FryingTicketingOrders = () =>{
                 });
                 
                 setOrderColors(updatedColors);
-                console.log('updatedColors')
-                console.log(updatedColors)
-                // Assuming you have already populated updatedColors as mentioned in your previous code
-                console.log('availableColors')
-                console.log(availableColors)
-                console.log('unavailableColors')
-                console.log(unavailableColors)
+                // console.log('updatedColors')
+                // console.log(updatedColors)
+                // // Assuming you have already populated updatedColors as mentioned in your previous code
+                // console.log('availableColors')
+                // console.log(availableColors)
+                // console.log('unavailableColors')
+                // console.log(unavailableColors)
                 for (const invoiceId in updatedColors) {
                     if (updatedColors.hasOwnProperty(invoiceId)) {
                         const color = updatedColors[invoiceId];
@@ -110,11 +107,7 @@ const FryingTicketingOrders = () =>{
                         .then((data) => {
                             // Handle the response data if needed
                             console.log(`Color updated for invoice_id ${invoiceId}`);
-                            console.log('availableColors');
-                            console.log(availableColors);
-                            console.log('unavailableColors');
-                            console.log(unavailableColors);
-                            console.log('servedOrderColor');
+
                         })
                         .catch((error) => {
                             // Handle any errors here
@@ -122,6 +115,11 @@ const FryingTicketingOrders = () =>{
                         });
                     }
                 }
+                console.log('availableColors');
+                console.log(availableColors);
+                console.log('unavailableColors');
+                console.log(unavailableColors);
+                console.log('servedOrderColor');
             })
             .catch((error) => {
                 // Handle any errors
@@ -131,87 +129,73 @@ const FryingTicketingOrders = () =>{
 
     }, []);
     useEffect(() => {
-        socket.on('connect', function() {
-            console.log("Connected to server");
-            
-            // You can send messages to the server
-            socket.emit('message', {data: 'Hello Server'});
-        });
-        socket.on('update', function (data) {
-            // Check if there are available colors
-            console.log('New Incoming Order')
-            console.log("BEFORE___________")
-            console.log('availableColors')
-            console.log(availableColors)
-            console.log('unavailableColors')
-            console.log(unavailableColors)
-            console.log(data)
+        // Define a function to handle the "update" event
+            const handleUpdate = (data) => {
+            console.log('New Incoming Order');
+            console.log('availableColors', availableColors);
+            console.log('unavailableColors', unavailableColors);
+            console.log(data);
+        
             if (availableColors.size > 0) {
-                // Get an available color (for example, you can use the first one)
-                const colorToUse = availableColors.values().next().value;
-                console.log(colorToUse);
-                // Remove the used color from availableColors
-                availableColors.delete(colorToUse);
-
-                // Add the used color to unavailableColors
-                unavailableColors.add(colorToUse);
-
-                // Add the color property to the data object
-                const dataWithColor = { ...data.data, color: colorToUse };
-
-                // Append dataWithColor to the existing orderList
-                setOrderList((prevOrderList) => [
-                    ...prevOrderList,
-                    dataWithColor
-                ]);
-                console.log(data.data.invoice_id)
-                updateColorInDatabase(data.data.invoice_id, colorToUse);
-    
-                // Change the style of the Heading and Card components
-                const headingElement = document.getElementById('my-heading-' + data.invoice_id);
-                const cardElement = document.getElementById('my-card-' + data.invoice_id);
+            const colorToUse = availableColors.values().next().value;
+            availableColors.delete(colorToUse);
+            unavailableColors.add(colorToUse);
         
-                if (headingElement && cardElement) {
-                    headingElement.style.color = colorToUse;
-                    cardElement.style.borderColor = colorToUse;
-                }
+            const dataWithColor = { ...data.data, color: colorToUse };
+            setOrderList((prevOrderList) => [...prevOrderList, dataWithColor]);
+        
+            updateColorInDatabase(data.data.invoice_id, colorToUse);
+        
+            const headingElement = document.getElementById('my-heading-' + data.invoice_id);
+            const cardElement = document.getElementById('my-card-' + data.invoice_id);
+        
+            if (headingElement && cardElement) {
+                headingElement.style.color = colorToUse;
+                cardElement.style.borderColor = colorToUse;
+            }
             } else {
-                // Handle the case when there are no available colors
-                // Add the color property to the data object
-                // const defaultColor = 'gray.500'
-                const dataWithColor = { ...data.data, color:data.data.color};
-                // const dataWithColor = { ...data.data, color: defaultColor };
-                console.log(dataWithColor)
-                // Append dataWithColor to the existing orderList
-                setOrderList((prevOrderList) => [
-                    ...prevOrderList,
-                    dataWithColor
-                ]);
-                console.log(data.data.invoice_id)
-
-                // updateColorInDatabase(data.data.invoice_id, data.data.color);
-    
-                // Change the style of the Heading and Card components
-                const headingElement = document.getElementById('my-heading-' + data.invoice_id);
-                const cardElement = document.getElementById('my-card-' + data.invoice_id);
+            const dataWithColor = { ...data.data, color: data.data.color };
+            setOrderList((prevOrderList) => [...prevOrderList, dataWithColor]);
         
-                if (headingElement && cardElement) {
-                    headingElement.style.color = data.data.color;
-                    cardElement.style.borderColor = data.data.color;
-                }
+            // Update the color in the database if needed
+            // updateColorInDatabase(data.data.invoice_id, data.data.color);
+        
+            const headingElement = document.getElementById('my-heading-' + data.invoice_id);
+            const cardElement = document.getElementById('my-card-' + data.invoice_id);
+        
+            if (headingElement && cardElement) {
+                headingElement.style.color = data.data.color;
+                cardElement.style.borderColor = data.data.color;
+            }
             }
             // Update the color in the database using a POST request
             // updateColorInDatabase(unservedOrder.invoice_id, servedOrderColor);
-
-
-        });
-        
-        // Clean up the event listener when the component unmounts
-        return () => {
-            socket.off('update');
         };
+    
+    // Set up the WebSocket event listeners
+    socket.on('connect', () => {
+        console.log('Connected to server');
+        // You can send messages to the server if needed
+        // socket.emit('message', { data: 'Hello Server' });
+    });
+    
+    socket.on('update', handleUpdate);
+    
+    // Clean up the event listener when the component unmounts
+    return () => {
+        socket.off('update', handleUpdate);
+    };
     }, []);
-
+    const toggleButtonState = (invoiceId) => {
+        // Find the specific buttons by their IDs
+        const serveButton = document.getElementById(`serve-button-${invoiceId}`);
+        const cancelButton = document.getElementById(`cancel-button-${invoiceId}`);
+        console.log(serveButton)
+        if (serveButton && cancelButton) {
+            serveButton.disabled = false;
+            cancelButton.disabled = false;
+        }
+    }
     // Function to cancel an order
     async function cancelOrder(invoice_id) {
         console.log('Cancel Order')
@@ -274,7 +258,12 @@ const FryingTicketingOrders = () =>{
     
             setOrderList(updatedOrderList);
             console.log(updatedOrderList);
-            alert(`Order Number ${invoice_id} Cancelled!`);
+            const cardElement = document.querySelector(`[data-invoice-id="${invoice_id}"]`);
+
+            if (cardElement) {
+              // Hide or remove the card element from the DOM
+              cardElement.style.display = 'none'; // or cardElement.remove();
+            }
         }catch(error) {
             // Handle any errors here
             alert('Error:', error);
@@ -343,8 +332,12 @@ const FryingTicketingOrders = () =>{
     
             setOrderList(updatedOrderList);
             console.log(updatedOrderList);
-            alert(`Order Number ${invoice_id} served!`);
+            const cardElement = document.querySelector(`[data-invoice-id="${invoice_id}"]`);
 
+            if (cardElement) {
+              // Hide or remove the card element from the DOM
+              cardElement.style.display = 'none'; // or cardElement.remove();
+            }
         } catch (error) {
             // Handle any errors here
             console.log(error)
@@ -354,9 +347,10 @@ const FryingTicketingOrders = () =>{
     async function assignColorToUnservedOrder(unservedOrder, servedOrder) {
         // Check if the served order has a color
         console.log('assignColorToUnservedOrder');
-        console.log(servedOrder)
+        console.log(servedOrder);
+    
         // Access the state variables instead of redeclaring them as local variables
-        let servedOrderColor = servedOrder.color
+        let servedOrderColor = servedOrder.color;
         console.log('availableColors');
         console.log(availableColors);
         console.log('unavailableColors');
@@ -365,42 +359,38 @@ const FryingTicketingOrders = () =>{
         console.log(servedOrderColor);
     
         if (servedOrderColor) {
-
-    
-            // Update the color in the database using a POST request
             await updateColorInDatabase(unservedOrder.invoice_id, servedOrderColor);
-            unservedOrder.color = servedOrderColor
-
-            // Change the style of the Heading and Card components
-            const headingElement = document.getElementById('my-heading-' + unservedOrder.invoice_id);
-            const cardElement = document.getElementById('my-card-' + unservedOrder.invoice_id);
+            unservedOrder.color = servedOrderColor;
+    
+            let headingElement = document.getElementById('my-heading-' + unservedOrder.invoice_id);
+            let cardElement = document.getElementById('my-card-' + unservedOrder.invoice_id);
     
             if (headingElement && cardElement) {
                 headingElement.style.color = servedOrderColor;
                 cardElement.style.borderColor = servedOrderColor;
             }
+            console.log(unservedOrder)
+            toggleButtonState(unservedOrder.invoice_id);
+
         }
     }
+    
     
     
 
     async function updateColorInDatabase(invoice_id, color) {
         console.log('updateColorInDatabase')
-        console.log("UPdateing invoice id color"+invoice_id+"with"+color)
-        // Define the URL for the POST request
+        console.log("UPdating invoice id color"+invoice_id+"with"+color)
             const url = process.env.REACT_APP_API_URL+`/ticketing/update_invoice_colors/${invoice_id}`;
         
-            // Define the request headers
             const headers = {
             'Content-Type': 'application/json',
             };
         
-            // Define the request body
             const requestBody = {
-            color: color, // You may need to adjust the key based on your server's expectations
+            color: color, 
             };
         
-            // Define the fetch options
             const options = {
             method: 'POST',
             headers,
@@ -408,14 +398,12 @@ const FryingTicketingOrders = () =>{
             };
         
             try {
-            // Make the POST request to update the color in the database
             const response = await fetch(url, options);
         
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
         
-            // Handle the response data if needed
             const responseData = await response.json();
             
             console.log(`Color updated for invoice_id ${invoice_id}:`, responseData);
@@ -425,7 +413,6 @@ const FryingTicketingOrders = () =>{
             console.log(unavailableColors);
             console.log('servedOrderColor');
             } catch (error) {
-            // Handle any errors related to updating the color in the database
             console.error('Error updating color in the database:', error);
             }
         }
@@ -441,19 +428,18 @@ const FryingTicketingOrders = () =>{
                         <div key={order.invoice_id}>
                             <Heading
                                 size='md'
-                                color={ order.color} // Default to gray if no color assigned
-                                id={'my-heading-' + order.invoice_id} // Concatenate the ID string with order.invoice_id
+                                color={order.color} 
+                                id={'my-heading-' + order.invoice_id} 
                             >
                                 Order Number {order.invoice_id}
                             </Heading>                            
-                            <Card maxW='sm' id={'my-card-'+order.invoice_id} style={{ borderColor:order.color}} border='2px' m={3}>     
+                            <Card maxW='sm' id={'my-card-' + order.invoice_id} style={{ borderColor: order.color }} border='2px' m={3} data-invoice-id={order.invoice_id}>     
                                 {order.transactions.map((transaction, index) => (
                                     <div key={index}>
-                                        {/* <Heading m={[2, 3]} size='md' color={textColor}>{transaction.quantity}X {transaction.dish_name}</Heading> */}
                                         <Grid
-                                            templateColumns={['1fr', '1fr 2fr']} // Use responsive column layout
-                                            alignItems='center' // Vertically center the content
-                                            gap={2} // Add some spacing between the columns
+                                            templateColumns={['1fr', '1fr 2fr']} 
+                                            alignItems='center'
+                                            gap={2} 
                                             m={[2, 3]}
                                             fontSize='3xl'
                                             color={textColor}
@@ -467,62 +453,61 @@ const FryingTicketingOrders = () =>{
                                                             Special Comments:
                                                         </Box>
                                                         <Box>
-                                                        {transaction.special_comments.map((comment) => (
-                                                                <Text key={comment.comment_id} fontSize="xl"  color="white">
+                                                            {transaction.special_comments.map((comment) => (
+                                                                <Text key={comment.comment_id} fontSize="xl" color="white">
                                                                     - {comment.text}
                                                                 </Text>
-                                                        ))}
-
+                                                            ))}
                                                         </Box>
                                                     </Grid>
-
                                                 )}
-                                            
                                             </Box>
                                         </Grid>
-
                                     </div>
-                                    ))}
-                                    <Center mt={5}>
-                                        <Button
-                                            size='xl' // Set your custom button size
-                                            paddingX='6' // Adjust the horizontal padding as needed
-                                            paddingY='4' // Adjust the vertical padding as needed
-                                            background='#71149D'
-                                            onClick={() => serveOrder(order.invoice_id)}
-                                            textColor={buttonTextColor}
-                                            variant='solid'
-                                            colorScheme='purple'
-                                            w='80%'
-                                            display='flex'
-                                            alignItems='center'
-                                            mb={8}
-                                        >
-                                            <CheckIcon mr={2} fontSize='2xl' style={{ marginRight: '5px' }} />
-                                            <Text fontSize='2xl'>Serve</Text>
-                                        </Button>
-                                        </Center>
-                                        <Center>
-                                        <Button
-                                            size='xl' // Set your custom button size
-                                            paddingX='6' // Adjust the horizontal padding as needed
-                                            paddingY='4' // Adjust the vertical padding as needed
-                                            background='#F00'
-                                            onClick={() => cancelOrder(order.invoice_id)}
-                                            textColor={buttonTextColor}
-                                            variant='solid'
-                                            colorScheme='red'
-                                            w='80%'
-                                            display='flex'
-                                            alignItems='center'
-                                            mb={8}
-                                        >
-                                            <CloseIcon mr={2} fontSize='2xl'/>
-                                            <Text fontSize='2xl'>Cancel</Text>
-                                        </Button>
-                                    </Center>
-
-                                </Card>
+                                ))}
+                                <Center mt={5}>
+                                    <Button
+                                        id={'serve-button-'+order.invoice_id}
+                                        size='xl'
+                                        paddingX='6'
+                                        paddingY='4'
+                                        background='#71149D'
+                                        onClick={() => serveOrder(order.invoice_id)}
+                                        textColor={buttonTextColor}
+                                        variant='solid'
+                                        colorScheme='purple'
+                                        w='80%'
+                                        display='flex'
+                                        alignItems='center'
+                                        mb={8}
+                                        isDisabled={order.color === 'gray.500'}
+                                    >
+                                        <CheckIcon mr={2} fontSize='2xl' style={{ marginRight: '5px' }} />
+                                        <Text fontSize='2xl'>Serve</Text>
+                                    </Button>
+                                </Center>
+                                <Center>
+                                    <Button
+                                        id={'cancel-button-'+order.invoice_id}
+                                        size='xl'
+                                        paddingX='6'
+                                        paddingY='4'
+                                        background='#F00'
+                                        onClick={() => cancelOrder(order.invoice_id)}
+                                        textColor={buttonTextColor}
+                                        variant='solid'
+                                        colorScheme='red'
+                                        w='80%'
+                                        display='flex'
+                                        alignItems='center'
+                                        mb={8}
+                                        isDisabled={order.color === 'gray.500'}
+                                    >
+                                        <CloseIcon mr={2} fontSize='2xl'/>
+                                        <Text fontSize='2xl'>Cancel</Text>
+                                    </Button>
+                                </Center>
+                            </Card>
                         </div>
                     ))}
                 </SimpleGrid>
@@ -530,6 +515,7 @@ const FryingTicketingOrders = () =>{
                 // Render a loading message or spinner while data is being fetched
                 <p>Loading...</p>
             )}
+
         </div>
     );
 };
@@ -540,10 +526,10 @@ const FryingTicketingOrders = () =>{
 
 function Admin_FryingTicketingOrders() {
 
-        return (
-            <div className='container_order_container'  >
-                <SideNavBar children={<FryingTicketingOrders/>}></SideNavBar>
-            </div>
-        );
+    return (
+        <div className='container_order_container'  >
+            <SideNavBar children={<FryingTicketingOrders/>}></SideNavBar>
+        </div>
+    );
 }
 export default Admin_FryingTicketingOrders;
