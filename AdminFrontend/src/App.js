@@ -1,6 +1,7 @@
 import * as React from 'react'
 import './App.css';
 import { ChakraProvider } from '@chakra-ui/react'
+import { CustomisationProvider } from './Components/CustomisationContext'; 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import AdminLogin from "./pages/admin/Admin_login";
 import AdminHomepage from "./pages/admin/Admin_homepage";
@@ -14,9 +15,11 @@ import AdminGeneralTicketingOrders from './pages/admin/Ticketing/Admin_GeneralTi
 import AdminFryingTicketingOrders from './pages/admin/Ticketing/Admin_FryingTicketingOrders';
 import AdminCustomisation from './pages/admin/Admin_customisation'
 
+
 function App() {
   return (
     <ChakraProvider>
+      <CustomisationProvider>
     <div className="App">
       <Router>
         <Routes>
@@ -54,6 +57,7 @@ function App() {
         </Routes>
       </Router>
     </div>
+    </CustomisationProvider>
     </ChakraProvider>
   );
 }

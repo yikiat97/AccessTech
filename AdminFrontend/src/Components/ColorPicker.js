@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 
 import {
@@ -34,16 +34,21 @@ const theme = extendTheme({
     }
   });
 
-export default function ColorPicker(){
-    const [color, setColor] = useState("yellow.500");
+export default function ColorPicker({value, onChange}){
+    const [color, setColor] = useState(value);
+
+    useEffect(() => {
+      setColor(value);
+    }, [value]);
 
   const colors = [
-    "gray.100",
-    "red.500",
-    "green.500",
-    "blue.500",
-    "yellow.500",
-    "purple.600"
+    "#EDF2F7",
+    "#E53E3E",
+    "#38A169",
+    "#3182CE",
+    "#D69E2E",
+    "#6B46C1",
+    "#171923"
   ];
 
   return (
@@ -78,7 +83,7 @@ export default function ColorPicker(){
                     borderRadius={3}
                     _hover={{ background: c }}
                     onClick={() => {
-                      setColor(c);
+                      onChange(c);  
                     }}
                   ></Button>
                 ))}
