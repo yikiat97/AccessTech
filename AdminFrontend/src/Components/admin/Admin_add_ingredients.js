@@ -15,12 +15,15 @@ import {
   Grid,
   GridItem
 } from "@chakra-ui/react";
+import TransitionExample from '../../Components/admin/model_box';
 
 
 export default function Admin_add_ingredients() {
   const [qty_type_value, set_qty_type_value] = useState("");
   const [qty_value, set_qty_value] = useState("");
   const [Ingredient_Name_value, set_Ingredient_Name_value] = useState("");
+  const [msg, SetMsg] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState({
     name: false,
     qty: false,
@@ -70,7 +73,9 @@ export default function Admin_add_ingredients() {
       })
       .then(response => response.json())
       .then(data => {
-          alert(data.result)
+        console.log(data.result)
+        SetMsg(data.result)
+        setIsModalOpen(true);
       })
       .catch((error) => {
         console.error('Error:', error);
@@ -85,6 +90,7 @@ export default function Admin_add_ingredients() {
       padding={5} 
       marginX={{base: "2%", md: "15%"}}
     >
+      <TransitionExample isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Adding Ingredients" message={msg} />
       <VStack spacing={5} alignItems="start" size='4150px'>
         <Text fontSize="xl" fontWeight="bold">Add new ingredient</Text>
         
