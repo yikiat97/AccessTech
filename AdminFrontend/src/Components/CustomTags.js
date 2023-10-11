@@ -4,11 +4,11 @@ import { useCustomisation } from './CustomisationContext';
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
 
 export const CustomCancelButton = ({ children, onClick, id, isDisabled }) => {
-  const { color, isDarkMode } = useCustomisation();
-  const backgroundColor = isDarkMode ? 'black' : color;
   const { buttonSize } = useCustomisation();
   const { fontSize } = useCustomisation();
   const { cancelButtonColor } = useCustomisation();
+  const { fontColor } = useCustomisation();
+  
 
 
   return (
@@ -29,7 +29,7 @@ export const CustomCancelButton = ({ children, onClick, id, isDisabled }) => {
     
     >
       {children}
-      <CloseIcon color="white" mr={2} fontSize={fontSize}/>
+      <CloseIcon color={fontColor} mr={2} fontSize={fontSize}/>
        <CustomText>Cancel</CustomText>
     </Button>
   );
@@ -41,6 +41,7 @@ export const CustomServeButton = ({ children, onClick, id, isDisabled }) => {
   const { buttonSize } = useCustomisation();
   const { fontSize } = useCustomisation();
   const { serveButtonColor } = useCustomisation();
+  const { fontColor } = useCustomisation();
 
   return (
     <Button
@@ -60,18 +61,19 @@ export const CustomServeButton = ({ children, onClick, id, isDisabled }) => {
     
     >
       {children}
-      <CheckIcon mr={2} color="white" fontSize={fontSize} style={{ marginRight: '5px' }} />
+      <CheckIcon mr={2} color={fontColor} fontSize={fontSize} style={{ marginRight: '5px' }} />
       <CustomText>Serve</CustomText>
     </Button>
   );
 };
  
-export const CustomText = ({ children, onClick }) => {
+export const CustomText = ({ children }) => {
   const { fontSize } = useCustomisation();
+  const { fontColor } = useCustomisation();
   return (
     <Text
     fontSize={fontSize}
-    color='white'
+    color={fontColor}
     >
       {children}
     </Text>

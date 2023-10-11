@@ -11,6 +11,8 @@ import { useColorMode } from "@chakra-ui/react";
 import Admin_order_ticket from '../../../Components/admin/Admin_order_ticket';
 import OrderTicket from '../../../Components/admin/Admin_order_ticket';
 import {io} from 'socket.io-client';
+import { CustomCancelButton } from '../../../Components/CustomTags';
+import { CustomServeButton } from '../../../Components/CustomTags';
 const colors = ['#FFC107', '#F44336', '#4CAF50', '#2196F3'];
 
 let availableColors = new Set(colors);
@@ -466,46 +468,20 @@ const FryingTicketingOrders= () =>{
                                     </div>
                                 ))}
                                 <Center mt={5}>
-                                    <Button
+                                    <CustomServeButton
                                         id={'serve-button-'+order.invoice_id}
-                                        size='xl'
-                                        paddingX='6'
-                                        paddingY='4'
-                                        background='#71149D'
-                                        onClick={() => serveOrder(order.invoice_id)}
-                                        textColor={buttonTextColor}
-                                        variant='solid'
-                                        colorScheme='purple'
-                                        w='80%'
-                                        display='flex'
-                                        alignItems='center'
-                                        mb={8}
+                                        onClick={() => serveOrder(order.invoice_id)} 
                                         isDisabled={order.color === 'gray.500'}
                                     >
-                                        <CheckIcon mr={2} fontSize='2xl' style={{ marginRight: '5px' }} />
-                                        <Text fontSize='2xl'>Serve</Text>
-                                    </Button>
+                                    </CustomServeButton>
                                 </Center>
                                 <Center>
-                                    <Button
+                                    <CustomCancelButton
                                         id={'cancel-button-'+order.invoice_id}
-                                        size='xl'
-                                        paddingX='6'
-                                        paddingY='4'
-                                        background='#F00'
                                         onClick={() => cancelOrder(order.invoice_id)}
-                                        textColor={buttonTextColor}
-                                        variant='solid'
-                                        colorScheme='red'
-                                        w='80%'
-                                        display='flex'
-                                        alignItems='center'
-                                        mb={8}
                                         isDisabled={order.color === 'gray.500'}
                                     >
-                                        <CloseIcon mr={2} fontSize='2xl'/>
-                                        <Text fontSize='2xl'>Cancel</Text>
-                                    </Button>
+                                    </CustomCancelButton>
                                 </Center>
                             </Card>
                         </div>

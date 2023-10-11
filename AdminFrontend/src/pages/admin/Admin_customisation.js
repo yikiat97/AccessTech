@@ -16,40 +16,41 @@ import { useCustomisation } from '../../Components/CustomisationContext';
 
 function ColorModeToggle() {
     const { colorMode, toggleColorMode } = useColorMode();
+
+    const isChecked = colorMode ==='dark';
         
     return (
-        <Switch size="lg" onClick={toggleColorMode}>
+        <Switch size="lg" onChange={toggleColorMode} isChecked={isChecked} >
         </Switch>
     );
     }
 
 
 export default function Admin_customisation() {
-    const { color, setColor, isDarkMode, setIsDarkMode, buttonSize, setButtonSize, fontSize, setFontSize, serveButtonColor, setServeButtonColor, cancelButtonColor, setCancelButtonColor } = useCustomisation();
+    const { buttonSize, setButtonSize, fontSize, setFontSize, fontColor, setFontColor, serveButtonColor, setServeButtonColor, cancelButtonColor, setCancelButtonColor } = useCustomisation();
 
     const toggleButtonSize = () => {
         const newSize = buttonSize === 'lg' ? 'xl' : 'lg';
         setButtonSize(newSize);
-        console.log("New button size:", newSize); 
     };
 
     const toggleFontSize = () => {
         const newSize = fontSize === '2xl' ? '4xl' : '2xl';
         setFontSize(newSize);
-        console.log("New font size:", newSize); 
+    };
+
+    const handleFontColorChange = (newColor) => {
+        setFontColor(newColor);
     };
 
     const handleServeColorChange = (newColor) => {
         setServeButtonColor(newColor);
-        console.log("New serve color:", newColor); 
       };
 
     const handleCancelColorChange = (newColor) => {
         setCancelButtonColor(newColor);
-        console.log("New cancel color:", newColor); 
       };
 
-    const { colorMode } = useColorMode();
     const bgColor = useColorModeValue('gray.200', 'gray.700');
     const textColor = useColorModeValue('black', 'white');
 
@@ -70,7 +71,7 @@ export default function Admin_customisation() {
                 <Flex p={5} direction="row" mb={4} alignItems="center">
                     <Heading size="md">Dark Mode</Heading>
                     <Spacer />
-                    <ColorModeToggle/>
+                    <ColorModeToggle />
                 </Flex>
                 <Divider borderColor="gray"/>
                 <Flex p={5} direction="row" mb={4} alignItems="center">
@@ -88,7 +89,7 @@ export default function Admin_customisation() {
                 <Flex p={5} direction="row" mb={4} alignItems="center">
                     <Heading size="md">Fonts</Heading>
                     <Spacer />
-                    <ColorPicker></ColorPicker>
+                    <ColorPicker value ={fontColor} onChange={handleFontColorChange}></ColorPicker>
                 </Flex>
                 
                 
