@@ -4,7 +4,7 @@ import "../css/admin_login.css";
 import SideNavBar from '../../../Components/admin/SideNavBar'
 import AdminAddMenu from '../../../Components/admin/Admin_add_menu'
 import AdminUpdateMenu from '../../../Components/admin/Admin_update_menu'
-import { Tabs, TabList, Tab, TabPanels, TabPanel, Box, IconButton, VStack, Grid } from "@chakra-ui/react";
+import { Tabs, TabList, Tab, TabPanels, TabPanel, Box, IconButton, VStack, Grid, border } from "@chakra-ui/react";
 import { AddIcon, EditIcon,CheckIcon,CloseIcon } from '@chakra-ui/icons'; // Equivalent icons in Chakra
 import {LinkBox,Card,CardBody,Stack,Divider,CardFooter,ButtonGroup,Button,Heading,Center,LinkOverlay,Text,SimpleGrid,Image} from '@chakra-ui/react'
 import { useColorMode } from "@chakra-ui/react";
@@ -32,9 +32,9 @@ const TicketingOrders = () =>{
     const [orderColors, setOrderColors] = useState({}); // Track colors by invoice_id
     const [nextColorIndex, setNextColorIndex] = useState(0); // Track the index of the next color to use
 
-    const borderColor = colorMode === "dark" ? "red.500" : "pink.200"; // Change color based on color mode
     const buttonTextColor = colorMode === "dark" ? "#FFFFFF" : "#FFFFFF"; // Change color based on color mode
     const textColor = colorMode === "dark" ? "#FFFFFF" : "#000000"; // Change color based on color mode
+    const borderColor = colorMode === "dark" ? "1px solid white" : "1px solid black";
     const socket = io.connect('http://localhost:8080');
 
 
@@ -449,54 +449,47 @@ const TicketingOrders = () =>{
                             >
                                 Order Number {order.invoice_id}
                             </Heading>                            
-                            <Card maxW='sm' id={'my-card-' + order.invoice_id} style={{ borderColor: order.color }} border='2px' m={3} data-invoice-id={order.invoice_id}>     
+                            <Card maxW='sm' id={'my-card-' + order.invoice_id} style={{ borderColor: order.color }} border='2px' m={3} data-invoice-id={order.invoice_id}>
                                 {order.transactions.map((transaction, index) => (
-                                    <div key={index}>
-                                        <Grid
-                                            templateColumns={['1fr', '1fr 2fr']} 
-                                            alignItems='center'
-                                            gap={2} 
-                                            m={[2, 3]}
-                                            color={textColor}
-                                        >
-                                            <Box fontWeight='bold'>{transaction.quantity}X</Box>
+                                    <div key={index} style={{ backgroundColor: index % 2 === 0 ? '#434654' : '#343541' }}>
+                                    <Box mb={10}>
+                                        <Text fontSize='2xl'>{transaction.quantity}X</Text>
+                                        <Text as="b" fontSize='2xl'>{transaction.dish_name}</Text>
+                                        {transaction.special_comments.length > 0 && (
+                                        <Grid borderTop={borderColor} borderBottom={borderColor}>
+                                            <Box fontSize='lg' mb={2}>
+                                                Special Comments:
+                                            </Box>
                                             <Box>
-                                                <Text as="b" fontSize={['3vh', '3.5vh']} >{transaction.dish_name}</Text>
-                                                {transaction.special_comments.length > 0 && (
-                                                    <Grid>
-                                                        <Box borderBottom="1px solid white" pb={2} mb={2}>
-                                                            Special Comments:
-                                                        </Box>
-                                                        <Box>
-                                                            {transaction.special_comments.map((comment) => (
-                                                                <Text key={comment.comment_id} fontSize={['2vh', '2.5vh']}  color={textColor}>
-                                                                    - {comment.text}
-                                                                </Text>
-                                                            ))}
-                                                        </Box>
-                                                    </Grid>
-                                                )}
+                                            {transaction.special_comments.map((comment) => (
+                                                <Text key={comment.comment_id} fontSize='lg' color={textColor}>
+                                                - {comment.text}
+                                                </Text>
+                                            ))}
                                             </Box>
                                         </Grid>
+                                        )}
+                                    </Box>
                                     </div>
                                 ))}
                                 <Center mt={5}>
                                     <CustomServeButton
-                                        id={'serve-button-'+order.invoice_id}                                    
-                                        onClick={() => serveOrder(order.invoice_id)}
-                                        isDisabled={order.color === 'gray.500'}
+                                    id={'serve-button-' + order.invoice_id}
+                                    onClick={() => serveOrder(order.invoice_id)}
+                                    isDisabled={order.color === 'gray.500'}
                                     >
                                     </CustomServeButton>
                                 </Center>
                                 <Center>
                                     <CustomCancelButton
-                                        id={'cancel-button-'+order.invoice_id}                     
-                                        onClick={() => cancelOrder(order.invoice_id)}                     
-                                        isDisabled={order.color === 'gray.500'}
+                                    id={'cancel-button-' + order.invoice_id}
+                                    onClick={() => cancelOrder(order.invoice_id)}
+                                    isDisabled={order.color === 'gray.500'}
                                     >
                                     </CustomCancelButton>
                                 </Center>
                             </Card>
+
                         </div>
                     ))}
                 </SimpleGrid>
