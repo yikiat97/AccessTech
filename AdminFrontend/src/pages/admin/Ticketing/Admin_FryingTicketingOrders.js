@@ -65,6 +65,7 @@ const FryingTicketingOrders = () =>{
             console.log('Received new order');
 
             fetchAndUpdateOrders(setOrderList);
+            
         });
         socket.on('completeOrder', () => {
             // You should call fetchAndUpdateOrders inside this callback

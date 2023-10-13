@@ -461,7 +461,7 @@ const TicketingOrders = () =>{
                                         >
                                             <Box fontWeight='bold'>{transaction.quantity}X</Box>
                                             <Box>
-                                                <Text as="b" fontSize={['1.5vh', '2.5vh']} >{transaction.dish_name}</Text>
+                                                <Text as="b" fontSize={['3vh', '3.5vh']} >{transaction.dish_name}</Text>
                                                 {transaction.special_comments.length > 0 && (
                                                     <Grid>
                                                         <Box borderBottom="1px solid white" pb={2} mb={2}>
@@ -469,7 +469,7 @@ const TicketingOrders = () =>{
                                                         </Box>
                                                         <Box>
                                                             {transaction.special_comments.map((comment) => (
-                                                                <Text key={comment.comment_id} fontSize={['1vh', '1.5vh']}  color="white">
+                                                                <Text key={comment.comment_id} fontSize={['2vh', '2.5vh']}  color={textColor}>
                                                                     - {comment.text}
                                                                 </Text>
                                                             ))}
