@@ -10,7 +10,7 @@ import "./payment.css";
 // Make sure to call loadStripe outside of a component’s render to avoid
 // recreating the Stripe object on every render.
 // This is your test publishable API key.
-const stripePromise = loadStripe("pk_test_51NgKGJEU8oOZ4Qrt3cn1PGRdEJZ5TlsQfkCGHaZ0sxvPEqkv3zANneT6u4ONqniSu0UqpjR5kp6kWrpuCPMgxByS00Zt7YI0Fm");
+const stripePromise = loadStripe("pk_live_51NgKGJEU8oOZ4QrtGRRe1gzzSjZn6YzqQmpfMTqBkj7qXomgP17DCpxdnqRKfe4UrfDdlLXseUJWVcXg9Z9z8sj100AGJOb1o0");
 
 export default function Payment() {
     const [clientSecret, setClientSecret] = useState("");
