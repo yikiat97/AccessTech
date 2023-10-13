@@ -13,6 +13,10 @@ import OrderTicket from '../../../Components/admin/Admin_order_ticket';
 import {io} from 'socket.io-client';
 import { CustomCancelButton } from '../../../Components/CustomTags';
 import { CustomServeButton } from '../../../Components/CustomTags';
+
+
+import { fetchAndUpdateOrders } from './Admin_FryingTicketingOrders'; 
+
 const colors = ['#FFC107', '#F44336', '#4CAF50', '#2196F3'];
 
 let availableColors = new Set(colors);
@@ -133,7 +137,7 @@ const TicketingOrders = () =>{
     }, []);
     useEffect(() => {
         // Define a function to handle the "update" event
-            const handleUpdate = (data) => {
+            const handleUpdate = async (data) => {
             console.log('New Incoming Order');
             console.log('availableColors', availableColors);
             console.log('unavailableColors', unavailableColors);
@@ -146,7 +150,7 @@ const TicketingOrders = () =>{
         
             const dataWithColor = { ...data.data, color: colorToUse };
             setOrderList((prevOrderList) => [...prevOrderList, dataWithColor]);
-        
+
             updateColorInDatabase(data.data.invoice_id, colorToUse);
         
             const headingElement = document.getElementById('my-heading-' + data.invoice_id);
@@ -158,6 +162,7 @@ const TicketingOrders = () =>{
             }
             } else {
             const dataWithColor = { ...data.data, color: data.data.color };
+
             setOrderList((prevOrderList) => [...prevOrderList, dataWithColor]);
         
             // Update the color in the database if needed
@@ -195,6 +200,14 @@ const TicketingOrders = () =>{
         const cancelButton = document.getElementById(`cancel-button-${invoiceId}`);
         console.log(serveButton)
         if (serveButton && cancelButton) {
+            serveButton.addEventListener('click', () => {
+                // Call the serveOrder function with the invoiceId
+                serveOrder(invoiceId);
+            });
+            cancelButton.addEventListener('click', () => {
+                // Call the serveOrder function with the invoiceId
+                cancelOrder(invoiceId);
+            });            
             serveButton.disabled = false;
             cancelButton.disabled = false;
         }

@@ -14,7 +14,7 @@ import AdminDiscountpage from './pages/admin/Admin_discount';
 import AdminGeneralTicketingOrders from './pages/admin/Ticketing/Admin_GeneralTicketingOrders';
 import AdminFryingTicketingOrders from './pages/admin/Ticketing/Admin_FryingTicketingOrders';
 import AdminCustomisation from './pages/admin/Admin_customisation'
-
+import AdminDrinksTicketingOrders from './pages/admin/Ticketing/Admin_DrinksTicketingOrders';
 
 function App() {
   return (
@@ -54,6 +54,9 @@ function App() {
         </Routes>
         <Routes>
           <Route path="/AccessTech/FryingTicketingPage" element={<AdminFryingTicketingOrders/>} />
+        </Routes>
+        <Routes>
+          <Route path="/AccessTech/DrinksTicketingPage" element={<AdminDrinksTicketingOrders/>} />
         </Routes>
       </Router>
     </div>

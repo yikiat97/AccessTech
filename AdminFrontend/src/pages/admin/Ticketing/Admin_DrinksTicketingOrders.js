@@ -33,7 +33,7 @@ const fetchAndUpdateOrders = async (setOrderList) => {
             console.error('Error:', error);
         });
 };
-const FryingTicketingOrders = () =>{
+const DrinksTicketingOrders = () =>{
     const [orderList, setOrderList] = useState([]); // State to store the fetched data
     const { colorMode } = useColorMode();
 
@@ -97,7 +97,7 @@ const FryingTicketingOrders = () =>{
     
     return (
         <div>
-            <Heading>Frying Queue</Heading>
+            <Heading>Drinks Queue</Heading>
 
             {/* Conditional rendering based on orderDetails */}
             {orderList ? (
@@ -162,14 +162,14 @@ const FryingTicketingOrders = () =>{
 
 
 
-function Admin_FryingTicketingOrders() {
+function Admin_DrinksTicketingOrders() {
 
     return (
         <div className='container_order_container'  >
-            <SideNavBar children={<FryingTicketingOrders/>}></SideNavBar>
+            <SideNavBar children={<DrinksTicketingOrders/>}></SideNavBar>
         </div>
     );
 }
 
 export { fetchAndUpdateOrders };
-export default Admin_FryingTicketingOrders;
+export default Admin_DrinksTicketingOrders;
