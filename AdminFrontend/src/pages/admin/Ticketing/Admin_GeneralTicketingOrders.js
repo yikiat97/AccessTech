@@ -13,6 +13,7 @@ import OrderTicket from '../../../Components/admin/Admin_order_ticket';
 import {io} from 'socket.io-client';
 import { CustomCancelButton } from '../../../Components/CustomTags';
 import { CustomServeButton } from '../../../Components/CustomTags';
+import { CustomText } from '../../../Components/CustomTags';
 
 
 import { fetchAndUpdateOrders } from './Admin_FryingTicketingOrders'; 
@@ -453,18 +454,19 @@ const TicketingOrders = () =>{
                                 {order.transactions.map((transaction, index) => (
                                     <div key={index} style={{ backgroundColor: index % 2 === 0 ? '#434654' : '#343541' }}>
                                     <Box mb={10}>
-                                        <Text fontSize='2xl'>{transaction.quantity}X</Text>
-                                        <Text as="b" fontSize='2xl'>{transaction.dish_name}</Text>
+                                        <CustomText>{transaction.quantity}X</CustomText>
+                                        <CustomText as="b" >{transaction.dish_name}</CustomText>
                                         {transaction.special_comments.length > 0 && (
                                         <Grid borderTop={borderColor} borderBottom={borderColor}>
-                                            <Box fontSize='lg' mb={2}>
-                                                Special Comments:
+                                            <Box >
+                                            <CustomText  mb={2}>Special Comments:  </CustomText> 
+                                                
                                             </Box>
                                             <Box>
                                             {transaction.special_comments.map((comment) => (
-                                                <Text key={comment.comment_id} fontSize='lg' color={textColor}>
+                                                <CustomText key={comment.comment_id}  color={textColor}>
                                                 - {comment.text}
-                                                </Text>
+                                                </CustomText>
                                             ))}
                                             </Box>
                                         </Grid>
