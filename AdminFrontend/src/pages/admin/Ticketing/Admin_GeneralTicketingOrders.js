@@ -50,6 +50,7 @@ const TicketingOrders = () =>{
             // Handle the response data and set it in the state
                 console.log(data)
                 setOrderList(data)
+                console.log(data);
                 // Handle the response data and set it in the state
                 console.log('fetching data');
         

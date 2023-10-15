@@ -50,11 +50,39 @@ def show_image(bucket):
 def get_all_dishes():
     try:
         all_dishes = dishes.query.all()
+        dishes_list = []
 
-        dishes_list = [{"dish_id": dish.dish_id, "dish_name": dish.dish_name, "price": dish.price, "image_url": dish.image_url,
-                        "small_desc": dish.small_desc, "description": dish.description, "dish_type": dish.dish_type, 
-                        "tag": dish.tag, "qty": dish.qty, "placement": dish.placement} for dish in all_dishes]
+        for dish in all_dishes:
+            Listrecipes = recipes.query.filter_by(dish_id=dish.dish_id).all()
+            
+            # Getting the ingredients associated with the dish
+            ingredients_list = []
+            for recipe in Listrecipes:
+                ingredient = ingredients.query.get(recipe.ingredients_id)
+                ingredients_list.append({
+                    "ingredients_name": ingredient.ingredients_name,
+                    "dish_id": recipe.dish_id,
+                    "ingredients_id": recipe.ingredients_id,
+                    "ingredient_qty_needed": recipe.ingredient_qty_needed
+                })
+
+            dish_data = {
+                "dish_id": dish.dish_id,
+                "dish_name": dish.dish_name,
+                "price": dish.price,
+                "image_url": dish.image_url,
+                "small_desc": dish.small_desc,
+                "description": dish.description,
+                "dish_type": dish.dish_type, 
+                "tag": dish.tag,
+                "qty": dish.qty,
+                "placement": dish.placement,
+                "ingredients": ingredients_list
+            }
+            dishes_list.append(dish_data)
+
         return jsonify(dishes_list)
+
     except Exception as e:
         return jsonify({'result': 'An error occurred while fetching the dishes: ' + str(e)}), 500
     
@@ -85,7 +113,54 @@ def get_public_dishes():
         return jsonify(dishes_list)
     except Exception as e:
         return jsonify({'result': 'An error occurred while fetching the student dishes: ' + str(e)}), 500
-  
+
+
+from flask import request
+
+
+#### Update all dishes and ingredients QTY for admin
+@order.route('/api/order/updateDish/<int:dish_id>', methods=['PUT'])
+def update_dish(dish_id):
+    try:
+        # Retrieve the dish you want to update
+        dish_to_update = dishes.query.get_or_404(dish_id)
+        
+        # Update dish fields
+        dish_data = request.json
+        dish_to_update.dish_name = dish_data.get('dish_name', dish_to_update.dish_name)
+        dish_to_update.price = dish_data.get('price', dish_to_update.price)
+        dish_to_update.image_url = dish_data.get('image_url', dish_to_update.image_url)
+        dish_to_update.small_desc = dish_data.get('small_desc', dish_to_update.small_desc)
+        dish_to_update.description = dish_data.get('description', dish_to_update.description)
+        dish_to_update.dish_type = dish_data.get('dish_type', dish_to_update.dish_type)
+        dish_to_update.tag = dish_data.get('tag', dish_to_update.tag)
+        dish_to_update.qty = dish_data.get('qty', dish_to_update.qty)
+        dish_to_update.placement = dish_data.get('placement', dish_to_update.placement)
+        
+        # Update associated recipes
+        for ingredient_data in dish_data.get('ingredients', []):
+            # Check if recipe exists
+            recipe = recipes.query.filter_by(dish_id=dish_id, ingredients_id=ingredient_data['ingredients_id']).first()
+            if recipe:
+                recipe.ingredient_qty_needed = ingredient_data.get('ingredient_qty_needed', recipe.ingredient_qty_needed)
+            else:
+                # If recipe doesn't exist, create a new one
+                new_recipe = recipes(
+                    dish_id=dish_id,
+                    ingredients_id=ingredient_data['ingredients_id'],
+                    ingredient_qty_needed=ingredient_data['ingredient_qty_needed']
+                )
+                db.session.add(new_recipe)
+        
+        # Commit changes
+        db.session.commit()
+        
+        return jsonify({'result': 'Dish and its recipes updated successfully'}), 200
+
+    except Exception as e:
+        return jsonify({'result': 'An error occurred while updating the dish: ' + str(e)}), 500
+
+
 
 #### Insert dishes from admin site and service to calculate Qty and image_URL
 @order.route('/api/order/addDish', methods=['POST'])
@@ -123,6 +198,7 @@ def add_dish():
         while True:
             ingredients_id = request.form.get(f'recipe[{i}][ingredients_id]')
             ingredient_qty_needed = request.form.get(f'recipe[{i}][ingredient_qty_needed]')
+            print(ingredient_qty_needed)
 
             if ingredients_id and ingredient_qty_needed:
                 recipe_list.append({

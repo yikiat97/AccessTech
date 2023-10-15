@@ -32,7 +32,7 @@ DROP TABLE IF EXISTS recipes;
 CREATE TABLE IF NOT EXISTS recipes(
     dish_id INT,
     ingredients_id INT,
-    ingredient_qty_needed INT,
+    ingredient_qty_needed FLOAT,
     PRIMARY KEY (dish_id, ingredients_id),
     FOREIGN KEY (dish_id) REFERENCES dishes (dish_id),
     FOREIGN KEY (ingredients_id) REFERENCES ingredients (ingredients_id)
@@ -64,7 +64,8 @@ CREATE TABLE IF NOT EXISTS invoice (
     date_time timestamp,
     total_price FLOAT,
     queue_num INT,
-    invoice_status VARCHAR(50)
+    invoice_status VARCHAR(50),
+    color VARCHAR(50)
 );
 
 DROP TABLE IF EXISTS discount_invoice CASCADE;;
