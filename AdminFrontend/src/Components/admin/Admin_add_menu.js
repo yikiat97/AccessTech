@@ -19,8 +19,11 @@ export default function Admin_add_menu() {
   const [isLoading, setIsLoading] = useState(false);
   const [msg, SetMsg] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [imageName, setImageName] = useState("");
   const [ingredientOptions, setIngredientOptions] = useState([]);
+  const [specialComments, setSpecialComments] = useState([{ id: Date.now(), comment: "", price: "" }]);
+
   const [formData, setFormData] = useState({
     itemName: "",
     price: "",
@@ -52,6 +55,21 @@ export default function Admin_add_menu() {
     }));
   };
 
+  ////////////////////////////////// Special comments change ///////////////////////////////////////////////////////////
+  const addSpecialCommentField = () => {
+    setSpecialComments(prevData => [...prevData, { id: Date.now(), comment: "", price: "" }]);
+  };
+
+  const removeSpecialCommentField = (id) => {
+      setSpecialComments(prevData => prevData.filter(comment => comment.id !== id));
+  };
+
+  const handleSpecialCommentChange = (id, key, value) => {
+      setSpecialComments(prevData => prevData.map(comment => comment.id === id ? { ...comment, [key]: value } : comment));
+  };
+
+
+    ////////////////////////////////// Ingredient Change ///////////////////////////////////////////////////////////
   const addIngredientField = () => {
     setFormData(prevData => ({
       ...prevData,
@@ -139,10 +157,33 @@ const handleIngredientQtyChange = (id, value) => {
         body: data
       });
 
-      const result = await response.json();
-      console.log(result);
-      SetMsg(result.result)
-      setIsModalOpen(true);
+      const dishResponse = await response.json();  // Assuming this response contains the dish_id.
+      const dishId = dishResponse.dish_id;
+      
+      for (const comment of specialComments) {
+        const commentData = {
+          special_comments: comment.comment,
+          special_comments_price: parseFloat(comment.price),
+          dish_id: dishId
+        };
+      
+        const commentResponse = await fetch(`${process.env.REACT_APP_API_URL}/admin/add_special_comment`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(commentData)
+        });
+      
+        const commentResult = await commentResponse.json();
+        console.log(commentResult);
+        SetMsg(dishResponse.result)
+        setIsModalOpen(true);
+      }
+
+      // const result = await response.json();
+      // console.log(result);
+
 
     } catch (error) {
       console.error('Error:', error);
@@ -150,6 +191,10 @@ const handleIngredientQtyChange = (id, value) => {
     finally {
       setIsLoading(false);  // Stop the loader
     }
+
+
+   
+
 };
 
   const station = [
@@ -177,6 +222,7 @@ const handleIngredientQtyChange = (id, value) => {
           Add new item into menu
         </Text>
         <form onSubmit={handleSubmit}>
+       
           <Grid templateColumns="repeat(12, 1fr)" gap={6}>
             {[
               { label: "Item Name", name: "itemName" },
@@ -187,6 +233,7 @@ const handleIngredientQtyChange = (id, value) => {
               { label: "Dish Type", name: "dishType" },
               { label: "Station Tag", name: "StationTag" },
               { label: "placement", name: "placement" },   
+              { label: "SpecialComments", name: "SpecialComments" }, 
             ].map((field) => (
               <>
                 <GridItem colSpan={2}>
@@ -194,7 +241,7 @@ const handleIngredientQtyChange = (id, value) => {
                     {field.label}
                   </FormLabel>
                 </GridItem>
-                <GridItem colSpan={field.label === "Short content" || field.label === "Content" || field.label === "ingredients" ? 10 : 4}>
+                <GridItem colSpan={field.label === "Short content" || field.label === "Content" || field.label === "ingredients" || field.label === "SpecialComments"? 10 : 4}>
                   {field.label === "Content" ? (
                     <Input
                       as="textarea"
@@ -231,12 +278,51 @@ const handleIngredientQtyChange = (id, value) => {
                           X
                         </Button>
                       </Box>
+                      
                     ))}
                     <Button mt={2} onClick={addIngredientField}>
                       Add Ingredient
                     </Button>
                   </>
-                  ): field.name === "dishType" ? (
+                  ): field.name === "SpecialComments"? ( <> {
+                    specialComments.map((comment, index) => (
+                      <React.Fragment key={comment.id}>
+                        <GridItem colSpan={2}>
+                          <FormLabel fontWeight="bold" textAlign="center">
+                            Special Comment {index + 1}
+                          </FormLabel>
+                        </GridItem>
+                        <GridItem colSpan={4}>
+                          <Input
+                            placeholder="Special Comment"
+                            value={comment.comment}
+                            onChange={(e) => handleSpecialCommentChange(comment.id, 'comment', e.target.value)}
+                          />
+                        </GridItem>
+                        <GridItem colSpan={2}>
+                          <Input
+                            placeholder="Price"
+                            type="number"
+                            step="0.01"
+                            value={comment.price}
+                            onChange={(e) => handleSpecialCommentChange(comment.id, 'price', e.target.value)}
+                          />
+                        </GridItem>
+                        <GridItem colSpan={2}>
+                          <Button onClick={() => removeSpecialCommentField(comment.id)}>
+                            X
+                          </Button>
+                        </GridItem>
+                      </React.Fragment>
+                    ))
+                  }
+                  <GridItem colSpan={4}>
+                    <Button onClick={addSpecialCommentField}>
+                      Add Special Comment
+                    </Button>
+                  </GridItem>
+                  </>):
+                  field.name === "dishType" ? (
                     <Select
                       name={field.name}
                       value={formData[field.name]}
@@ -287,6 +373,8 @@ const handleIngredientQtyChange = (id, value) => {
                 </GridItem>
               </>
             ))}
+
+
            <GridItem colSpan={2}>
             <FormLabel fontWeight="bold" textAlign="center">
             Img Upload

@@ -227,7 +227,7 @@ def add_dish():
         new_dish.qty = calculate_qty(new_dish.dish_id)
         db.session.commit()
         
-        return jsonify({'result': 'Dish added successfully'})
+        return jsonify({'result': 'Dish added successfully', 'dish_id': new_dish.dish_id})
     
     except Exception as e:
         db.session.rollback()  # rollback the changes in case of error
