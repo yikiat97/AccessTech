@@ -10,7 +10,8 @@ function OrderConfirmationPage(props) {
     const isInitialMount = useRef(true); 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const cartCtx = useContext(CartContext);
-    console.log(cartCtx)
+    const [orderNumber, setOrderNumber] = useState(null);
+
     const clientSecret = new URLSearchParams(window.location.search).get(
       "redirect_status"
       );
@@ -63,6 +64,7 @@ function OrderConfirmationPage(props) {
         .then(data => {
           console.log('Success:', data);
           console.log(data.Order_number)
+          setOrderNumber(data.Order_number)
         })
         .catch((error) => {
           console.error('Error:', error);
@@ -164,7 +166,7 @@ function OrderConfirmationPage(props) {
       <Box w="100%" h="100%" position="relative" maxW="500px" mx="auto">
         <Box position="absolute" top="50px" left="50%" transform="translate(-50%, 0)" p="20px" borderRadius="10px" bg="gray.200">
           <Text fontSize="xl" color="black">
-            Order Number : <Box as="span" fontWeight="bold" fontSize="3xl">1</Box>
+            Order Number : <Box as="span" fontWeight="bold" fontSize="3xl">{orderNumber}</Box>
           </Text>
         </Box>
         <Box position="absolute" top="200px" left="50%" transform="translate(-50%, 0)" width="100px" height="100px">
