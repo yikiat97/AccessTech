@@ -62,6 +62,7 @@ function OrderConfirmationPage(props) {
         .then(response => response.json())
         .then(data => {
           console.log('Success:', data);
+          console.log(data.Order_number)
         })
         .catch((error) => {
           console.error('Error:', error);

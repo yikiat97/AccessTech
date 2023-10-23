@@ -6,6 +6,7 @@ import {
   Box,
   CloseButton,
   Flex,
+  Button,
   HStack,
   VStack,
   Icon,
@@ -48,6 +49,8 @@ const LinkItems = [
 ]
 function ColorModeToggle() {
   const { colorMode, toggleColorMode } = useColorMode();
+
+
   
   return (
       <button onClick={toggleColorMode}>
@@ -56,6 +59,22 @@ function ColorModeToggle() {
   );
 }
 const SidebarContent = ({ onClose, ...rest }) => {
+  function handleEndDay(){
+    fetch(process.env.REACT_APP_API_URL+"/admin/reset_order_number", {
+      method: "POST"
+  })
+  .then(response => response.json())
+  .then(data => {
+      if(data.message) {
+          alert(data.message);
+      } else {
+          alert("Error resetting order number");
+      }
+  })
+  .catch(error => {
+      console.error("Error:", error);
+  });
+  }
   return (
     <Box
       transition="3s ease"
@@ -77,11 +96,19 @@ const SidebarContent = ({ onClose, ...rest }) => {
           {link.name}
         </NavItem>
       ))}
+      <Button  
+          variant="outline" 
+          colorScheme="red" 
+          aria-label="Delete"
+          onClick={() => handleEndDay()}
+      > End Day
+      </Button>
     </Box>
   )
 }
 
 const NavItem = ({ icon, children, url, ...rest  }) => {
+  
   return (
     <Box
       as="a"
@@ -112,8 +139,10 @@ const NavItem = ({ icon, children, url, ...rest  }) => {
         )}
         {children}
       </Flex>
+      
     </Box>
   )
+  
 }
 
 // const MobileNav = ({ onOpen, ...rest }) => {

@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS discount (
     end_date timestamp
 );
 
-DROP TABLE IF EXISTS invoice CASCADE;;
+DROP TABLE IF EXISTS invoice CASCADE;
 CREATE TABLE IF NOT EXISTS invoice (
     invoice_id SERIAL PRIMARY KEY,
     date_time timestamp,
@@ -97,3 +97,11 @@ CREATE TABLE IF NOT EXISTS transaction_special_comments (
     FOREIGN KEY (dish_id, invoice_id) REFERENCES transactions (dish_id, invoice_id),
     FOREIGN KEY (special_comments_id) REFERENCES special_comments (special_comments_id)
 );
+
+DROP TABLE IF EXISTS order_number_store CASCADE;
+CREATE TABLE IF NOT EXISTS order_number_store (
+    id INT PRIMARY KEY,
+    current_order_number INT
+);
+
+INSERT INTO order_number_store (id, current_order_number) VALUES (1, 0);

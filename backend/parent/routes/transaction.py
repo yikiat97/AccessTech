@@ -13,6 +13,7 @@ from ..models.dish import dishes
 from ..models.discount_invoice import DiscountInvoice
 from ..models.special_comments import special_comments
 from ..models.transaction_special_comments import TransactionSpecialComments
+from ..models.order_number_store import OrderNumberStore
 from ..extensions import socketio
 
 
@@ -128,8 +129,39 @@ def add_invoice():
         # Emit the response data to connected clients using Socket.io
         socketio.emit('update', {'data': response_data})
 
+        # Fetch and increment the order number
+        order_number_entry = OrderNumberStore.query.first()
+        if not order_number_entry:
+            # First-time setup
+            order_number_entry = OrderNumberStore(current_order_number=1)
+            db.session.add(order_number_entry)
+            current_order_number = 1
+        else:
+            current_order_number = order_number_entry.current_order_number + 1
+            order_number_entry.current_order_number = current_order_number
+        
+        new_invoice.order_number = current_order_number
+
+        db.session.commit() 
+
         # Return a success message along with the ID of the created invoice
-        return jsonify({"message": "Invoice, transactions, special comments, and discount status updated successfully!", "invoice_id": new_invoice.invoice_id}), 201
+        return jsonify({"message": "Invoice, transactions, special comments, and discount status updated successfully!", "invoice_id": new_invoice.invoice_id,"Order_number":current_order_number}), 201
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+    
+
+@transaction.route('/api/admin/reset_order_number', methods=['POST'])
+def reset_order_number():
+    try:
+        order_number_entry = OrderNumberStore.query.first()
+        if not order_number_entry:
+            return jsonify({"message": "Order number not initialized yet"}), 404
+
+        order_number_entry.current_order_number = 0  # Resetting the order number to 0
+        db.session.commit()
+
+        return jsonify({"message": "Order number reset successfully"}), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 400

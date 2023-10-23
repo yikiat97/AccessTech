@@ -22,5 +22,6 @@ cd aws_deploy
 cd inner
 eb deploy
 
-AKIA3VX5DZXDKYEMO6ML
-0Em6ESJCwtwOnDQcWmcozHNV9rgzt2w38FMZtfc7
+REM AKIA3VX5DZXDKYEMO6ML
+rem 0Em6ESJCwtwOnDQcWmcozHNV9rgzt2w38FMZtfc7
+rem docker run -p 8080:8080 -p 5000:5000 accesstech-backend
