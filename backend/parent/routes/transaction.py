@@ -76,12 +76,13 @@ def add_invoice():
             db.session.add(new_transaction)
             db.session.flush()  # Flush to get the transaction IDs
 
-            # If there are special comments, add them to the transaction_special_comments table
+            # If there are special comments, add them to the transaction_special_comments table ############################################
             for comment_id in special_comments_ids:
                 comment_relation = TransactionSpecialComments(
                     special_comments_id=comment_id,
                     dish_id=new_transaction.dish_id,
-                    invoice_id=new_transaction.invoice_id
+                    invoice_id=new_transaction.invoice_id,
+                    transaction_id=new_transaction.transaction_id
                 )
                 db.session.add(comment_relation)
 
@@ -199,13 +200,14 @@ def fetch_invoice_details():
 
                 if transaction.with_special_comments:
                     # Fetch special comments related to this transaction
-                    comments = TransactionSpecialComments.query.filter_by(dish_id=transaction.dish_id, invoice_id=transaction.invoice_id).all()
+                    comments = TransactionSpecialComments.query.filter_by(transaction_id=transaction.transaction_id).all()
                     for comment_relation in comments:
                         comment = special_comments.query.get(comment_relation.special_comments_id)
                         if comment:  # Ensure comment exists
                             transaction_data["special_comments"].append({
                                 "comment_id": comment.special_comments_id,
-                                "text": comment.special_comments
+                                "text": comment.special_comments,
+                                "price":comment.special_comments_price,
                             })
 
                 invoice_data["transactions"].append(transaction_data)
@@ -286,7 +288,7 @@ def fetch_invoice_parameter():
                     transaction_data["dish_name"] = dish.dish_name
 
                 if transaction.with_special_comments:
-                    comments = TransactionSpecialComments.query.filter_by(dish_id=transaction.dish_id, invoice_id=transaction.invoice_id).all()
+                    comments = TransactionSpecialComments.query.filter_by(transaction_id=transaction.transaction_id).all()
                     print(comments)
                     for comment_relation in comments:
                         comment = special_comments.query.get(comment_relation.special_comments_id)
@@ -365,7 +367,7 @@ def fetch_fried_transactions():
                         transaction_data["dish_name"] = dish.dish_name
 
                     if transaction.with_special_comments:
-                        comments = TransactionSpecialComments.query.filter_by(dish_id=transaction.dish_id, invoice_id=transaction.invoice_id).all()
+                        comments = TransactionSpecialComments.query.filter_by(transaction_id=transaction.transaction_id).all()
                         for comment_relation in comments:
                             comment = special_comments.query.get(comment_relation.special_comments_id)
                             if comment:
@@ -452,10 +454,7 @@ def get_invoice_by_id(invoice_id):
                 transaction_data["dish_name"] = dish.dish_name
 
             if transaction.with_special_comments:
-                comments = TransactionSpecialComments.query.filter_by(
-                    dish_id=transaction.dish_id,
-                    invoice_id=transaction.invoice_id
-                ).all()
+                comments = TransactionSpecialComments.query.filter_by(transaction_id=transaction.transaction_id).all()
                 for comment_relation in comments:
                     comment = special_comments.query.get(comment_relation.special_comments_id)
                     if comment:
