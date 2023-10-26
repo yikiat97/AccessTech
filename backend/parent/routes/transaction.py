@@ -14,6 +14,7 @@ from ..models.discount_invoice import DiscountInvoice
 from ..models.special_comments import special_comments
 from ..models.transaction_special_comments import TransactionSpecialComments
 from ..models.order_number_store import OrderNumberStore
+from ..services.admin.inventoryManagement import deductIngredients
 from ..extensions import socketio
 
 
@@ -112,6 +113,8 @@ def add_invoice():
             }
 
             transactions_response_data.append(transaction_response_data)
+            IngredientStatus = deductIngredients(new_transaction.dish_id,new_transaction.quantity)
+
 
         # Commit the changes to the database
         db.session.commit()
@@ -146,7 +149,7 @@ def add_invoice():
         db.session.commit() 
 
         # Return a success message along with the ID of the created invoice
-        return jsonify({"message": "Invoice, transactions, special comments, and discount status updated successfully!", "invoice_id": new_invoice.invoice_id,"Order_number":current_order_number}), 201
+        return jsonify({"message": "Invoice, transactions, special comments, and discount status updated successfully!", "invoice_id": new_invoice.invoice_id,"Order_number":current_order_number, IngredientStatus: IngredientStatus}), 201
 
     except Exception as e:
         return jsonify({"error": str(e)}), 400
