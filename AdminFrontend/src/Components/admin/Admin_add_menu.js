@@ -233,14 +233,17 @@ const handleIngredientQtyChange = (id, value) => {
               { label: "Dish Type", name: "dishType" },
               { label: "Station Tag", name: "StationTag" },
               { label: "placement", name: "placement" },   
-              { label: "SpecialComments", name: "SpecialComments" }, 
             ].map((field) => (
               <>
-                <GridItem colSpan={2}>
-                  <FormLabel fontWeight="bold" textAlign="center">
-                    {field.label}
-                  </FormLabel>
-                </GridItem>
+                <React.Fragment key={field.name}>
+                  <GridItem colSpan={field.labelColSpan}>
+                    <FormLabel fontWeight="bold">
+                      {field.label}
+                    </FormLabel>
+                  </GridItem>
+                  <GridItem colSpan={12 - field.labelColSpan}>
+                  </GridItem>
+                </React.Fragment>
                 <GridItem colSpan={field.label === "Short content" || field.label === "Content" || field.label === "ingredients" || field.label === "SpecialComments"? 10 : 4}>
                   {field.label === "Content" ? (
                     <Input
@@ -274,60 +277,23 @@ const handleIngredientQtyChange = (id, value) => {
                           step="any"
                           ml={2}  // Margin for spacing (adjust as needed)
                         />
-                        <Button ml={2} onClick={() => removeIngredientField(ingredient.id)}>
+                        <Button colorScheme="red" ml={2} onClick={() => removeIngredientField(ingredient.id)}>
                           X
                         </Button>
                       </Box>
                       
                     ))}
-                    <Button mt={2} onClick={addIngredientField}>
+                    <Button colorScheme="blue" mt={2} onClick={addIngredientField}>
                       Add Ingredient
                     </Button>
                   </>
-                  ): field.name === "SpecialComments"? ( <> {
-                    specialComments.map((comment, index) => (
-                      <React.Fragment key={comment.id}>
-                        <GridItem colSpan={2}>
-                          <FormLabel fontWeight="bold" textAlign="center">
-                            Special Comment {index + 1}
-                          </FormLabel>
-                        </GridItem>
-                        <GridItem colSpan={4}>
-                          <Input
-                            placeholder="Special Comment"
-                            value={comment.comment}
-                            onChange={(e) => handleSpecialCommentChange(comment.id, 'comment', e.target.value)}
-                          />
-                        </GridItem>
-                        <GridItem colSpan={2}>
-                          <Input
-                            placeholder="Price"
-                            type="number"
-                            step="0.01"
-                            value={comment.price}
-                            onChange={(e) => handleSpecialCommentChange(comment.id, 'price', e.target.value)}
-                          />
-                        </GridItem>
-                        <GridItem colSpan={2}>
-                          <Button onClick={() => removeSpecialCommentField(comment.id)}>
-                            X
-                          </Button>
-                        </GridItem>
-                      </React.Fragment>
-                    ))
-                  }
-                  <GridItem colSpan={4}>
-                    <Button onClick={addSpecialCommentField}>
-                      Add Special Comment
-                    </Button>
-                  </GridItem>
-                  </>):
+                  ):
                   field.name === "dishType" ? (
                     <Select
                       name={field.name}
                       value={formData[field.name]}
                       onChange={handleChange}
-                      placeholder={field.label}
+                      placeholder={"Select"}
                     >
                       {categories.map(item => (
                         <option key={item} value={item}>
@@ -341,7 +307,7 @@ const handleIngredientQtyChange = (id, value) => {
                       name={field.name}
                       value={formData[field.name]}
                       onChange={handleChange}
-                      placeholder={field.label}
+                      placeholder={"Select"}
                     >
                       {station.map(item => (
                         <option key={item} value={item}>
@@ -354,7 +320,7 @@ const handleIngredientQtyChange = (id, value) => {
                       name={field.name}
                       value={formData[field.name]}
                       onChange={handleChange}
-                      placeholder={field.label}
+                      placeholder={"Select"}
                     >
                       {menu.map(item => (
                         <option key={item} value={item}>
@@ -402,10 +368,52 @@ const handleIngredientQtyChange = (id, value) => {
             </label>
           {imageName && <Text mt={2}>{imageName}</Text>}
           </GridItem>
+          <>
+          {
+                    specialComments.map((comment, index) => (
+                      <React.Fragment key={comment.id}>
+                        <GridItem colSpan={3}>
+                          <FormLabel fontWeight="bold" textAlign="center">
+                            Special Comment {index + 1}
+                            
+                          </FormLabel>
+                          
+                        </GridItem>
+                        <GridItem colSpan={4}>
+                          <Input
+                            placeholder="Special Comment"
+                            value={comment.comment}
+                            onChange={(e) => handleSpecialCommentChange(comment.id, 'comment', e.target.value)}
+                          />
+                        </GridItem>
+                        <GridItem colSpan={4}>
+                          <Input
+                            placeholder="Price"
+                            type="number"
+                            step="0.01"
+                            value={comment.price}
+                            onChange={(e) => handleSpecialCommentChange(comment.id, 'price', e.target.value)}
+                          />
+                        </GridItem>
+                        <GridItem colSpan={1}>
+                          <Button colorScheme="red" ml="5" onClick={() => removeSpecialCommentField(comment.id)}>
+                            X
+                          </Button>
+                        </GridItem>
+                        
+                      </React.Fragment>
+                    ))
+                  }
+                  <GridItem colSpan={12}>
+                    <Button colorScheme="blue" onClick={addSpecialCommentField}>
+                      Add Special Comment
+                    </Button>
+                  </GridItem>
+                  </>
 
-            <GridItem colSpan={4} /> 
-            <GridItem colSpan={1}>
-              <Button type="submit" colorScheme="orange" isDisabled={isLoading}>
+       
+            <GridItem colSpan={12}>
+              <Button mt ={5} type="submit" colorScheme="orange" isDisabled={isLoading}>
                 Save
               </Button>
             </GridItem>
