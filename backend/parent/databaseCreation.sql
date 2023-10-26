@@ -32,7 +32,7 @@ DROP TABLE IF EXISTS recipes;
 CREATE TABLE IF NOT EXISTS recipes(
     dish_id INT,
     ingredients_id INT,
-    ingredient_qty_needed INT,
+    ingredient_qty_needed FLOAT,
     PRIMARY KEY (dish_id, ingredients_id),
     FOREIGN KEY (dish_id) REFERENCES dishes (dish_id),
     FOREIGN KEY (ingredients_id) REFERENCES ingredients (ingredients_id)
@@ -58,13 +58,15 @@ CREATE TABLE IF NOT EXISTS discount (
     end_date timestamp
 );
 
-DROP TABLE IF EXISTS invoice CASCADE;;
+DROP TABLE IF EXISTS invoice CASCADE;
 CREATE TABLE IF NOT EXISTS invoice (
     invoice_id SERIAL PRIMARY KEY,
     date_time timestamp,
     total_price FLOAT,
     queue_num INT,
-    invoice_status VARCHAR(50)
+    invoice_status VARCHAR(50),
+    color VARCHAR(50),
+	order_number INT
 );
 
 DROP TABLE IF EXISTS discount_invoice CASCADE;;
@@ -78,21 +80,32 @@ CREATE TABLE IF NOT EXISTS discount_invoice (
 
 DROP TABLE IF EXISTS transactions CASCADE;
 CREATE TABLE IF NOT EXISTS transactions (
+    transaction_id SERIAL PRIMARY KEY,
     dish_id INT,
     invoice_id INT,
     with_special_comments boolean,
     quantity INT,
-    PRIMARY KEY (dish_id, invoice_id),
     FOREIGN KEY (dish_id) REFERENCES dishes (dish_id),
-    FOREIGN KEY (invoice_id) REFERENCES invoice (invoice_id)
+    FOREIGN KEY (invoice_id) REFERENCES invoice (invoice_id),
+    UNIQUE(dish_id, invoice_id)  -- Add a unique constraint on the combination of dish_id and invoice_id
 );
 
 DROP TABLE IF EXISTS transaction_special_comments CASCADE;
 CREATE TABLE IF NOT EXISTS transaction_special_comments (
-    dish_id INT,           -- Composite keys from transactions table
-    invoice_id INT,        -- Composite keys from transactions table
+    transaction_id INT NOT NULL REFERENCES transactions(transaction_id),
+    dish_id INT NOT NULL,
+    invoice_id INT NOT NULL,
     special_comments_id INT,
-    PRIMARY KEY (dish_id, invoice_id, special_comments_id),
+    PRIMARY KEY (transaction_id, dish_id, invoice_id, special_comments_id),
     FOREIGN KEY (dish_id, invoice_id) REFERENCES transactions (dish_id, invoice_id),
     FOREIGN KEY (special_comments_id) REFERENCES special_comments (special_comments_id)
 );
+
+DROP TABLE IF EXISTS order_number_store CASCADE;
+CREATE TABLE IF NOT EXISTS order_number_store (
+    id INT PRIMARY KEY,
+    current_order_number INT
+);
+
+INSERT INTO order_number_store (id, current_order_number) VALUES (1, 0);
+

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SideNavBar from '../../Components/admin/SideNavBar';
 import ColorPicker from '../../Components/ColorPicker'
 import {Box,
@@ -25,10 +25,9 @@ function ColorModeToggle() {
     );
     }
 
-
 export default function Admin_customisation() {
     const { buttonSize, setButtonSize, fontSize, setFontSize, fontColor, setFontColor, serveButtonColor, setServeButtonColor, cancelButtonColor, setCancelButtonColor } = useCustomisation();
-
+    
     const toggleButtonSize = () => {
         const newSize = buttonSize === 'lg' ? 'xl' : 'lg';
         setButtonSize(newSize);

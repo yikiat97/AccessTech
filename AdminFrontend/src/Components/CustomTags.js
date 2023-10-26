@@ -67,13 +67,16 @@ export const CustomServeButton = ({ children, onClick, id, isDisabled }) => {
   );
 };
  
-export const CustomText = ({ children }) => {
+export const CustomText = ({ children, as, mb, key }) => {
   const { fontSize } = useCustomisation();
   const { fontColor } = useCustomisation();
   return (
     <Text
     fontSize={fontSize}
     color={fontColor}
+    as={as}
+    mb={mb}
+    key={key}
     >
       {children}
     </Text>

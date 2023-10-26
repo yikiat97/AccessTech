@@ -15,410 +15,87 @@ import { CustomCancelButton } from '../../../Components/CustomTags';
 import { CustomServeButton } from '../../../Components/CustomTags';
 const colors = ['#FFC107', '#F44336', '#4CAF50', '#2196F3'];
 
-let availableColors = new Set(colors);
-let unavailableColors = new Set();
+const fetchAndUpdateOrders = async (setOrderList) => {
+    // Make a GET request using fetch
+    fetch(process.env.REACT_APP_API_URL + '/admin/fetch_fried_transactions?invoice_status=pending')
+        .then(response => response.json())
+        .then(data => {
+            // Handle the response data and set it in the state
+            console.log('fetching new transaction')
+            console.log(data);
 
-const FryingTicketingOrders= () =>{
+            setOrderList(data);
+
+
+        })
+        .catch((error) => {
+            // Handle any errors
+            console.error('Error:', error);
+        });
+};
+const FryingTicketingOrders = () =>{
     const [orderList, setOrderList] = useState([]); // State to store the fetched data
-    const [sortedFoodOrders, setSortedFoodOrders] = useState(null)
     const { colorMode } = useColorMode();
-    const [orderDetails, setOrderDetails] = useState(null); // Initialize orderDetails as null
-    const [initialFetchComplete, setInitialFetchComplete] = useState(false); // State to track the initial fetch
 
     const [orderColors, setOrderColors] = useState({}); // Track colors by invoice_id
-    const [nextColorIndex, setNextColorIndex] = useState(0); // Track the index of the next color to use
 
     const buttonTextColor = colorMode === "dark" ? "#FFFFFF" : "#FFFFFF"; // Change color based on color mode
     const textColor = colorMode === "dark" ? "#FFFFFF" : "#000000"; // Change color based on color mode
     const socket = io.connect('http://localhost:8080');
 
 
+    // Define a function to fetch and update order data and colors
 
 
+
+
+
+    // }, []);
     useEffect(() => {
-
-        // Make a GET request using fetch
-        fetch(process.env.REACT_APP_API_URL+'/admin/fetch_invoice_parameter?invoice_status=pending')
-            .then(response => response.json())
-            .then(data => {
-            // Handle the response data and set it in the state
-                console.log(data)
-                setOrderList(data)
-                // Handle the response data and set it in the state
-                console.log('fetching data');
+        // Set up the WebSocket event listeners
+        socket.on('connect', () => {
+            console.log('Connected to server');
+            // You can send messages to the server if needed
+            // socket.emit('message', { data: 'Hello Server' });
+            fetchAndUpdateOrders(setOrderList);
+        });
         
-                const updatedColors = {};
-                for (let i = 0; i < Math.min(data.length, 4); i++) {
-                    updatedColors[data[i].invoice_id] = colors[i];
-            
-                    // Check if the 'color' property exists in data and add it to unavailableColors if it does
-                    if (data[i].color) {
-                        unavailableColors.add(data[i].color);
-                        availableColors.delete(data[i].color)
-                    }
-                }
-            
-                // Determine available colors by filtering the colors array
-                // Filter the colors array and add the filtered colors to availableColors Set
-                colors.forEach(color => {
-                    if (!unavailableColors.has(color)) {
-                        availableColors.add(color);
-                    }
-                });
-                
-                setOrderColors(updatedColors);
-                // console.log('updatedColors')
-                // console.log(updatedColors)
-                // // Assuming you have already populated updatedColors as mentioned in your previous code
-                // console.log('availableColors')
-                // console.log(availableColors)
-                // console.log('unavailableColors')
-                // console.log(unavailableColors)
-                for (const invoiceId in updatedColors) {
-                    if (updatedColors.hasOwnProperty(invoiceId)) {
-                        const color = updatedColors[invoiceId];
-            
-                        // Define the URL for the PUT request
-                        const url = process.env.REACT_APP_API_URL+`/ticketing/update_invoice_colors/${invoiceId}`;
-                        console.log(url)
-                        // Define the request headers
-                        const headers = {
-                        'Content-Type': 'application/json',
-                        };
-            
-                        // Define the request body
-                        const requestBody = {
-                        color: color, // You may need to adjust the key based on your server's expectations
-                        };
-            
-                        // Define the fetch options
-                        const options = {
-                        method: 'POST',
-                        headers,
-                        body: JSON.stringify(requestBody),
-                        };
-            
-                        // Make the PUT request for each invoice_id
-                        fetch(url, options)
-                        .then((response) => {
-                            if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
-                        .then((data) => {
-                            // Handle the response data if needed
-                            console.log(`Color updated for invoice_id ${invoiceId}`);
+        socket.on('update', () => {
+            // You should call fetchAndUpdateOrders inside this callback
+            console.log('Received new order');
 
-                        })
-                        .catch((error) => {
-                            // Handle any errors here
-                            console.error(`Error updating color for invoice_id ${invoiceId}:`, error);
-                        });
-                    }
-                }
-                console.log('availableColors');
-                console.log(availableColors);
-                console.log('unavailableColors');
-                console.log(unavailableColors);
-                console.log('servedOrderColor');
-            })
-            .catch((error) => {
-                // Handle any errors
-                console.error('Error:', error);
-            });
-        
+            fetchAndUpdateOrders(setOrderList);
+            
+        });
+        socket.on('completeOrder', () => {
+            // You should call fetchAndUpdateOrders inside this callback
+            console.log('Completed order');
 
+            fetchAndUpdateOrders(setOrderList);
+        });
+        socket.on('cancelOrder', () => {
+            // You should call fetchAndUpdateOrders inside this callback
+            console.log('Cancel order');
+
+            fetchAndUpdateOrders(setOrderList);
+        });
+        socket.on('updateColor', () => {
+            // You should call fetchAndUpdateOrders inside this callback
+            console.log('Update Color');
+
+            fetchAndUpdateOrders(setOrderList);
+        });                      
+        // Clean up the event listener when the component unmounts
+        return () => {
+            socket.off('update');
+        };
     }, []);
-    useEffect(() => {
-        // Define a function to handle the "update" event
-            const handleUpdate = (data) => {
-            console.log('New Incoming Order');
-            console.log('availableColors', availableColors);
-            console.log('unavailableColors', unavailableColors);
-            console.log(data);
-        
-            if (availableColors.size > 0) {
-            const colorToUse = availableColors.values().next().value;
-            availableColors.delete(colorToUse);
-            unavailableColors.add(colorToUse);
-        
-            const dataWithColor = { ...data.data, color: colorToUse };
-            setOrderList((prevOrderList) => [...prevOrderList, dataWithColor]);
-        
-            updateColorInDatabase(data.data.invoice_id, colorToUse);
-        
-            const headingElement = document.getElementById('my-heading-' + data.invoice_id);
-            const cardElement = document.getElementById('my-card-' + data.invoice_id);
-        
-            if (headingElement && cardElement) {
-                headingElement.style.color = colorToUse;
-                cardElement.style.borderColor = colorToUse;
-            }
-            } else {
-            const dataWithColor = { ...data.data, color: data.data.color };
-            setOrderList((prevOrderList) => [...prevOrderList, dataWithColor]);
-        
-            // Update the color in the database if needed
-            // updateColorInDatabase(data.data.invoice_id, data.data.color);
-        
-            const headingElement = document.getElementById('my-heading-' + data.invoice_id);
-            const cardElement = document.getElementById('my-card-' + data.invoice_id);
-        
-            if (headingElement && cardElement) {
-                headingElement.style.color = data.data.color;
-                cardElement.style.borderColor = data.data.color;
-            }
-            }
-            // Update the color in the database using a POST request
-            // updateColorInDatabase(unservedOrder.invoice_id, servedOrderColor);
-        };
-    
-    // Set up the WebSocket event listeners
-    socket.on('connect', () => {
-        console.log('Connected to server');
-        // You can send messages to the server if needed
-        // socket.emit('message', { data: 'Hello Server' });
-    });
-    
-    socket.on('update', handleUpdate);
-    
-    // Clean up the event listener when the component unmounts
-    return () => {
-        socket.off('update', handleUpdate);
-    };
-    }, []);
-    const toggleButtonState = (invoiceId) => {
-        // Find the specific buttons by their IDs
-        const serveButton = document.getElementById(`serve-button-${invoiceId}`);
-        const cancelButton = document.getElementById(`cancel-button-${invoiceId}`);
-        console.log(serveButton)
-        if (serveButton && cancelButton) {
-            serveButton.disabled = false;
-            cancelButton.disabled = false;
-        }
-    }
-    // Function to cancel an order
-    async function cancelOrder(invoice_id) {
-        console.log('Cancel Order')
-        // Define the URL with the invoice_id in the route
-        const url = process.env.REACT_APP_API_URL+`/ticketing/update_invoice_status_cancel/${invoice_id}`;
-
-        // Define the request headers
-        const headers = {
-        'Content-Type': 'application/json',
-        // You may need to include other headers, such as authentication tokens
-        };
-
-        // Define the request body if needed
-        const requestBody = {
-        // Include any data you want to send in the request body
-        };
-
-        // Define the fetch options
-        const options = {
-        method: 'PUT',  // Use 'PUT' for your specific route
-        headers,
-        body: JSON.stringify(requestBody),
-        };
-
-        try {
-            // Make the fetch request
-            const response = await fetch(url, options);
-    
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-    
-            // Filter out the completed order from the orderList
-            const updatedOrderList = orderList.filter((order) => order.invoice_id !== invoice_id);
-            // Find the first unserved order
-            const targetOrder = orderList.find((order) => order.invoice_id === invoice_id);
-
-            let unservedOrder = orderList.find((order) => {
-                // Replace 'gray.500' with the default color you use for unserved orders
-                return order.color === 'gray.500';
-            });            
-            console.log(unservedOrder)
-            if (unservedOrder) {
-            // Assign color to the unserved order
-                assignColorToUnservedOrder(unservedOrder, targetOrder);
-            }else{
-                var orderColorToRemove = targetOrder.color;
-                console.log('availableColors');
-                console.log(availableColors);
-                console.log('unavailableColors');
-                console.log(unavailableColors);                
-                unavailableColors.delete(orderColorToRemove)
-                availableColors.add(orderColorToRemove)
-                const updatedOrderColors = { ...orderColors };
-                delete updatedOrderColors[invoice_id];
-        
-                // Update the orderColors state with the updated object
-                setOrderColors(updatedOrderColors);
-            }
-    
-            setOrderList(updatedOrderList);
-            console.log(updatedOrderList);
-            const cardElement = document.querySelector(`[data-invoice-id="${invoice_id}"]`);
-
-            if (cardElement) {
-              // Hide or remove the card element from the DOM
-              cardElement.style.display = 'none'; // or cardElement.remove();
-            }
-        }catch(error) {
-            // Handle any errors here
-            alert('Error:', error);
-        };
-    }
-
     
 
-    async function serveOrder(invoice_id) {
-        console.log('Serve Order')
-        // Define the URL with the invoice_id in the route
-        const url = process.env.REACT_APP_API_URL+`/ticketing/update_invoice_status_completed/${invoice_id}`;
-    
-        // Define the request headers
-        const headers = {
-            'Content-Type': 'application/json',
-        };
-    
-        // Define the request body if needed
-        const requestBody = {
-            // Include any data you want to send in the request body
-        };
-    
-        // Define the fetch options
-        const options = {
-            method: 'PUT',
-            headers,
-            body: JSON.stringify(requestBody),
-        };
-    
-        try {
-            // Make the fetch request
-            const response = await fetch(url, options);
-    
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-    
-            // Filter out the completed order from the orderList
-            const updatedOrderList = orderList.filter((order) => order.invoice_id !== invoice_id);
-            // Find the first unserved order
-            const targetOrder = orderList.find((order) => order.invoice_id === invoice_id);
 
-            let unservedOrder = orderList.find((order) => {
-                // Replace 'gray.500' with the default color you use for unserved orders
-                return order.color === 'gray.500';
-            });            
-            console.log(unservedOrder)
-            if (unservedOrder) {
-            // Assign color to the unserved order
-                assignColorToUnservedOrder(unservedOrder, targetOrder);
-            }else{
-                var orderColorToRemove = targetOrder.color;
-                console.log('availableColors');
-                console.log(availableColors);
-                console.log('unavailableColors');
-                console.log(unavailableColors);                
-                unavailableColors.delete(orderColorToRemove)
-                availableColors.add(orderColorToRemove)
-                const updatedOrderColors = { ...orderColors };
-                delete updatedOrderColors[invoice_id];
-        
-                // Update the orderColors state with the updated object
-                setOrderColors(updatedOrderColors);
-            }
-    
-            setOrderList(updatedOrderList);
-            console.log(updatedOrderList);
-            const cardElement = document.querySelector(`[data-invoice-id="${invoice_id}"]`);
 
-            if (cardElement) {
-              // Hide or remove the card element from the DOM
-              cardElement.style.display = 'none'; // or cardElement.remove();
-            }
-        } catch (error) {
-            // Handle any errors here
-            console.log(error)
-            alert('Error:', error);
-        }
-    }
-    async function assignColorToUnservedOrder(unservedOrder, servedOrder) {
-        // Check if the served order has a color
-        console.log('assignColorToUnservedOrder');
-        console.log(servedOrder);
-    
-        // Access the state variables instead of redeclaring them as local variables
-        let servedOrderColor = servedOrder.color;
-        console.log('availableColors');
-        console.log(availableColors);
-        console.log('unavailableColors');
-        console.log(unavailableColors);
-        console.log('servedOrderColor');
-        console.log(servedOrderColor);
-    
-        if (servedOrderColor) {
-            await updateColorInDatabase(unservedOrder.invoice_id, servedOrderColor);
-            unservedOrder.color = servedOrderColor;
-    
-            let headingElement = document.getElementById('my-heading-' + unservedOrder.invoice_id);
-            let cardElement = document.getElementById('my-card-' + unservedOrder.invoice_id);
-    
-            if (headingElement && cardElement) {
-                headingElement.style.color = servedOrderColor;
-                cardElement.style.borderColor = servedOrderColor;
-            }
-            console.log(unservedOrder)
-            toggleButtonState(unservedOrder.invoice_id);
 
-        }
-    }
     
-    
-    
-
-    async function updateColorInDatabase(invoice_id, color) {
-        console.log('updateColorInDatabase')
-        console.log("UPdating invoice id color"+invoice_id+"with"+color)
-            const url = process.env.REACT_APP_API_URL+`/ticketing/update_invoice_colors/${invoice_id}`;
-        
-            const headers = {
-            'Content-Type': 'application/json',
-            };
-        
-            const requestBody = {
-            color: color, 
-            };
-        
-            const options = {
-            method: 'POST',
-            headers,
-            body: JSON.stringify(requestBody),
-            };
-        
-            try {
-            const response = await fetch(url, options);
-        
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-        
-            const responseData = await response.json();
-            
-            console.log(`Color updated for invoice_id ${invoice_id}:`, responseData);
-            console.log('availableColors');
-            console.log(availableColors);
-            console.log('unavailableColors');
-            console.log(unavailableColors);
-            console.log('servedOrderColor');
-            } catch (error) {
-            console.error('Error updating color in the database:', error);
-            }
-        }
-
     return (
         <div>
             <Heading>Frying Queue</Heading>
@@ -443,12 +120,11 @@ const FryingTicketingOrders= () =>{
                                             alignItems='center'
                                             gap={2} 
                                             m={[2, 3]}
-                                            fontSize='3xl'
                                             color={textColor}
                                         >
                                             <Box fontWeight='bold'>{transaction.quantity}X</Box>
                                             <Box>
-                                                <Text as="b">{transaction.dish_name}</Text>
+                                                <Text as="b" fontSize={['1.5vh', '2.5vh']} >{transaction.dish_name}</Text>
                                                 {transaction.special_comments.length > 0 && (
                                                     <Grid>
                                                         <Box borderBottom="1px solid white" pb={2} mb={2}>
@@ -456,7 +132,7 @@ const FryingTicketingOrders= () =>{
                                                         </Box>
                                                         <Box>
                                                             {transaction.special_comments.map((comment) => (
-                                                                <Text key={comment.comment_id} fontSize="xl" color="white">
+                                                                <Text key={comment.comment_id} fontSize={['1vh', '1.5vh']}  color="white">
                                                                     - {comment.text}
                                                                 </Text>
                                                             ))}
@@ -467,22 +143,6 @@ const FryingTicketingOrders= () =>{
                                         </Grid>
                                     </div>
                                 ))}
-                                <Center mt={5}>
-                                    <CustomServeButton
-                                        id={'serve-button-'+order.invoice_id}
-                                        onClick={() => serveOrder(order.invoice_id)} 
-                                        isDisabled={order.color === 'gray.500'}
-                                    >
-                                    </CustomServeButton>
-                                </Center>
-                                <Center>
-                                    <CustomCancelButton
-                                        id={'cancel-button-'+order.invoice_id}
-                                        onClick={() => cancelOrder(order.invoice_id)}
-                                        isDisabled={order.color === 'gray.500'}
-                                    >
-                                    </CustomCancelButton>
-                                </Center>
                             </Card>
                         </div>
                     ))}
@@ -494,7 +154,10 @@ const FryingTicketingOrders= () =>{
 
         </div>
     );
+    
 };
+
+
 
 
 
@@ -508,4 +171,6 @@ function Admin_FryingTicketingOrders() {
         </div>
     );
 }
+
+export { fetchAndUpdateOrders };
 export default Admin_FryingTicketingOrders;

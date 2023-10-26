@@ -4,7 +4,7 @@ import "../css/admin_login.css";
 import SideNavBar from '../../../Components/admin/SideNavBar'
 import AdminAddMenu from '../../../Components/admin/Admin_add_menu'
 import AdminUpdateMenu from '../../../Components/admin/Admin_update_menu'
-import { Tabs, TabList, Tab, TabPanels, TabPanel, Box, IconButton, VStack, Grid } from "@chakra-ui/react";
+import { Tabs, TabList, Tab, TabPanels, TabPanel, Box, IconButton, VStack, Grid, border } from "@chakra-ui/react";
 import { AddIcon, EditIcon,CheckIcon,CloseIcon } from '@chakra-ui/icons'; // Equivalent icons in Chakra
 import {LinkBox,Card,CardBody,Stack,Divider,CardFooter,ButtonGroup,Button,Heading,Center,LinkOverlay,Text,SimpleGrid,Image} from '@chakra-ui/react'
 import { useColorMode } from "@chakra-ui/react";
@@ -13,6 +13,11 @@ import OrderTicket from '../../../Components/admin/Admin_order_ticket';
 import {io} from 'socket.io-client';
 import { CustomCancelButton } from '../../../Components/CustomTags';
 import { CustomServeButton } from '../../../Components/CustomTags';
+import { CustomText } from '../../../Components/CustomTags';
+
+
+import { fetchAndUpdateOrders } from './Admin_FryingTicketingOrders'; 
+
 const colors = ['#FFC107', '#F44336', '#4CAF50', '#2196F3'];
 
 let availableColors = new Set(colors);
@@ -28,9 +33,9 @@ const TicketingOrders = () =>{
     const [orderColors, setOrderColors] = useState({}); // Track colors by invoice_id
     const [nextColorIndex, setNextColorIndex] = useState(0); // Track the index of the next color to use
 
-    const borderColor = colorMode === "dark" ? "red.500" : "pink.200"; // Change color based on color mode
     const buttonTextColor = colorMode === "dark" ? "#FFFFFF" : "#FFFFFF"; // Change color based on color mode
     const textColor = colorMode === "dark" ? "#FFFFFF" : "#000000"; // Change color based on color mode
+    const borderColor = colorMode === "dark" ? "1px solid white" : "1px solid black";
     const socket = io.connect('http://localhost:8080');
 
 
@@ -45,6 +50,7 @@ const TicketingOrders = () =>{
             // Handle the response data and set it in the state
                 console.log(data)
                 setOrderList(data)
+                console.log(data);
                 // Handle the response data and set it in the state
                 console.log('fetching data');
         
@@ -133,7 +139,7 @@ const TicketingOrders = () =>{
     }, []);
     useEffect(() => {
         // Define a function to handle the "update" event
-            const handleUpdate = (data) => {
+            const handleUpdate = async (data) => {
             console.log('New Incoming Order');
             console.log('availableColors', availableColors);
             console.log('unavailableColors', unavailableColors);
@@ -146,7 +152,7 @@ const TicketingOrders = () =>{
         
             const dataWithColor = { ...data.data, color: colorToUse };
             setOrderList((prevOrderList) => [...prevOrderList, dataWithColor]);
-        
+
             updateColorInDatabase(data.data.invoice_id, colorToUse);
         
             const headingElement = document.getElementById('my-heading-' + data.invoice_id);
@@ -158,6 +164,7 @@ const TicketingOrders = () =>{
             }
             } else {
             const dataWithColor = { ...data.data, color: data.data.color };
+
             setOrderList((prevOrderList) => [...prevOrderList, dataWithColor]);
         
             // Update the color in the database if needed
@@ -195,6 +202,14 @@ const TicketingOrders = () =>{
         const cancelButton = document.getElementById(`cancel-button-${invoiceId}`);
         console.log(serveButton)
         if (serveButton && cancelButton) {
+            serveButton.addEventListener('click', () => {
+                // Call the serveOrder function with the invoiceId
+                serveOrder(invoiceId);
+            });
+            cancelButton.addEventListener('click', () => {
+                // Call the serveOrder function with the invoiceId
+                cancelOrder(invoiceId);
+            });            
             serveButton.disabled = false;
             cancelButton.disabled = false;
         }
@@ -436,54 +451,48 @@ const TicketingOrders = () =>{
                             >
                                 Order Number {order.invoice_id}
                             </Heading>                            
-                            <Card maxW='sm' id={'my-card-' + order.invoice_id} style={{ borderColor: order.color }} border='2px' m={3} data-invoice-id={order.invoice_id}>     
+                            <Card maxW='sm' id={'my-card-' + order.invoice_id} style={{ borderColor: order.color }} border='2px' m={3} data-invoice-id={order.invoice_id}>
                                 {order.transactions.map((transaction, index) => (
-                                    <div key={index}>
-                                        <Grid
-                                            templateColumns={['1fr', '1fr 2fr']} 
-                                            alignItems='center'
-                                            gap={2} 
-                                            m={[2, 3]}
-                                            color={textColor}
-                                        >
-                                            <Box fontWeight='bold'>{transaction.quantity}X</Box>
+                                    <div key={index} style={{ backgroundColor: index % 2 === 0 ? '#434654' : '#343541' }}>
+                                    <Box mb={10}>
+                                        <CustomText>{transaction.quantity}X</CustomText>
+                                        <CustomText as="b" >{transaction.dish_name}</CustomText>
+                                        {transaction.special_comments.length > 0 && (
+                                        <Grid borderTop={borderColor} borderBottom={borderColor}>
+                                            <Box >
+                                            <CustomText  mb={2}>Special Comments:  </CustomText> 
+                                                
+                                            </Box>
                                             <Box>
-                                                <Text as="b" fontSize={['1.5vh', '2.5vh']} >{transaction.dish_name}</Text>
-                                                {transaction.special_comments.length > 0 && (
-                                                    <Grid>
-                                                        <Box borderBottom="1px solid white" pb={2} mb={2}>
-                                                            Special Comments:
-                                                        </Box>
-                                                        <Box>
-                                                            {transaction.special_comments.map((comment) => (
-                                                                <Text key={comment.comment_id} fontSize={['1vh', '1.5vh']}  color="white">
-                                                                    - {comment.text}
-                                                                </Text>
-                                                            ))}
-                                                        </Box>
-                                                    </Grid>
-                                                )}
+                                            {transaction.special_comments.map((comment) => (
+                                                <CustomText key={comment.comment_id}  color={textColor}>
+                                                - {comment.text}
+                                                </CustomText>
+                                            ))}
                                             </Box>
                                         </Grid>
+                                        )}
+                                    </Box>
                                     </div>
                                 ))}
                                 <Center mt={5}>
                                     <CustomServeButton
-                                        id={'serve-button-'+order.invoice_id}                                    
-                                        onClick={() => serveOrder(order.invoice_id)}
-                                        isDisabled={order.color === 'gray.500'}
+                                    id={'serve-button-' + order.invoice_id}
+                                    onClick={() => serveOrder(order.invoice_id)}
+                                    isDisabled={order.color === 'gray.500'}
                                     >
                                     </CustomServeButton>
                                 </Center>
                                 <Center>
                                     <CustomCancelButton
-                                        id={'cancel-button-'+order.invoice_id}                     
-                                        onClick={() => cancelOrder(order.invoice_id)}                     
-                                        isDisabled={order.color === 'gray.500'}
+                                    id={'cancel-button-' + order.invoice_id}
+                                    onClick={() => cancelOrder(order.invoice_id)}
+                                    isDisabled={order.color === 'gray.500'}
                                     >
                                     </CustomCancelButton>
                                 </Center>
                             </Card>
+
                         </div>
                     ))}
                 </SimpleGrid>

@@ -13,6 +13,7 @@ from ..models.dish import dishes
 from ..models.discount_invoice import DiscountInvoice
 from ..models.special_comments import special_comments
 from ..models.transaction_special_comments import TransactionSpecialComments
+from ..models.order_number_store import OrderNumberStore
 from ..extensions import socketio
 
 
@@ -75,12 +76,13 @@ def add_invoice():
             db.session.add(new_transaction)
             db.session.flush()  # Flush to get the transaction IDs
 
-            # If there are special comments, add them to the transaction_special_comments table
+            # If there are special comments, add them to the transaction_special_comments table ############################################
             for comment_id in special_comments_ids:
                 comment_relation = TransactionSpecialComments(
                     special_comments_id=comment_id,
                     dish_id=new_transaction.dish_id,
-                    invoice_id=new_transaction.invoice_id
+                    invoice_id=new_transaction.invoice_id,
+                    transaction_id=new_transaction.transaction_id
                 )
                 db.session.add(comment_relation)
 
@@ -128,8 +130,39 @@ def add_invoice():
         # Emit the response data to connected clients using Socket.io
         socketio.emit('update', {'data': response_data})
 
+        # Fetch and increment the order number
+        order_number_entry = OrderNumberStore.query.first()
+        if not order_number_entry:
+            # First-time setup
+            order_number_entry = OrderNumberStore(current_order_number=1)
+            db.session.add(order_number_entry)
+            current_order_number = 1
+        else:
+            current_order_number = order_number_entry.current_order_number + 1
+            order_number_entry.current_order_number = current_order_number
+        
+        new_invoice.order_number = current_order_number
+
+        db.session.commit() 
+
         # Return a success message along with the ID of the created invoice
-        return jsonify({"message": "Invoice, transactions, special comments, and discount status updated successfully!", "invoice_id": new_invoice.invoice_id}), 201
+        return jsonify({"message": "Invoice, transactions, special comments, and discount status updated successfully!", "invoice_id": new_invoice.invoice_id,"Order_number":current_order_number}), 201
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+    
+
+@transaction.route('/api/admin/reset_order_number', methods=['POST'])
+def reset_order_number():
+    try:
+        order_number_entry = OrderNumberStore.query.first()
+        if not order_number_entry:
+            return jsonify({"message": "Order number not initialized yet"}), 404
+
+        order_number_entry.current_order_number = 0  # Resetting the order number to 0
+        db.session.commit()
+
+        return jsonify({"message": "Order number reset successfully"}), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 400
@@ -167,13 +200,14 @@ def fetch_invoice_details():
 
                 if transaction.with_special_comments:
                     # Fetch special comments related to this transaction
-                    comments = TransactionSpecialComments.query.filter_by(dish_id=transaction.dish_id, invoice_id=transaction.invoice_id).all()
+                    comments = TransactionSpecialComments.query.filter_by(transaction_id=transaction.transaction_id).all()
                     for comment_relation in comments:
                         comment = special_comments.query.get(comment_relation.special_comments_id)
                         if comment:  # Ensure comment exists
                             transaction_data["special_comments"].append({
                                 "comment_id": comment.special_comments_id,
-                                "text": comment.special_comments
+                                "text": comment.special_comments,
+                                "price":comment.special_comments_price,
                             })
 
                 invoice_data["transactions"].append(transaction_data)
@@ -254,7 +288,7 @@ def fetch_invoice_parameter():
                     transaction_data["dish_name"] = dish.dish_name
 
                 if transaction.with_special_comments:
-                    comments = TransactionSpecialComments.query.filter_by(dish_id=transaction.dish_id, invoice_id=transaction.invoice_id).all()
+                    comments = TransactionSpecialComments.query.filter_by(transaction_id=transaction.transaction_id).all()
                     print(comments)
                     for comment_relation in comments:
                         comment = special_comments.query.get(comment_relation.special_comments_id)
@@ -282,6 +316,105 @@ def fetch_invoice_parameter():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+
+
+
+@transaction.route('/api/admin/fetch_fried_transactions', methods=['GET'])
+def fetch_fried_transactions():
+    try:
+        # Get parameters from the request
+        invoice_status = request.args.get('invoice_status')
+        dish_type = request.args.get('dish_type')
+
+        # Start by fetching invoices based on the invoice_status
+        query = Invoice.query
+
+        # If invoice_status is provided, filter by it
+        if invoice_status:
+            query = query.filter(Invoice.invoice_status == invoice_status)
+
+        invoices = query.order_by(asc(Invoice.invoice_id)).all()  # Sort by invoice_id in ascending order
+
+        results = []
+
+        for invoice in invoices:
+            # Fetch transactions related to this invoice
+            # Filter transactions using has_fried_dish function
+            if has_fried_dish(invoice.invoice_id):
+                invoice_data = {
+                    "invoice_id": invoice.invoice_id,
+                    "date_time": invoice.date_time,
+                    "total_price": invoice.total_price,
+                    "invoice_status": invoice.invoice_status,
+                    "color": invoice.color,
+                    "transactions": [],
+                    "discounts": []
+                }
+
+                transactions = Transactions.query.filter_by(invoice_id=invoice.invoice_id).all()
+
+                for transaction in transactions:
+                    transaction_data = {
+                        "dish_id": transaction.dish_id,
+                        "quantity": transaction.quantity,
+                        "with_special_comments": transaction.with_special_comments,
+                        "special_comments": []
+                    }
+
+                    # Fetch the dish using the dish_id from the transaction
+                    dish = dishes.query.get(transaction.dish_id)
+                    if dish:
+                        transaction_data["dish_name"] = dish.dish_name
+
+                    if transaction.with_special_comments:
+                        comments = TransactionSpecialComments.query.filter_by(transaction_id=transaction.transaction_id).all()
+                        for comment_relation in comments:
+                            comment = special_comments.query.get(comment_relation.special_comments_id)
+                            if comment:
+                                transaction_data["special_comments"].append({
+                                    "comment_id": comment.special_comments_id,
+                                    "text": comment.special_comments
+                                })
+
+                    invoice_data["transactions"].append(transaction_data)
+
+                # Fetch discount-invoice relationships for this invoice
+                discount_invoices = DiscountInvoice.query.filter_by(invoice_id=invoice.invoice_id).all()
+                for discount_invoice in discount_invoices:
+                    discount = Discount.query.get(discount_invoice.discount_id)
+                    if discount:
+                        invoice_data["discounts"].append({
+                            "discount_id": discount.discount_id,
+                            "discount_percent": discount.discount_percent
+                        })
+
+                results.append(invoice_data)
+
+        return jsonify(results)
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
+def is_fried_dish(dish_id):
+    # Function to check if a dish with the given dish_id is 'fried'
+    dish = dishes.query.get(dish_id)
+    return dish and 'fried' in dish.dish_name.lower()
+
+
+def has_fried_dish(invoice_id):
+    # Fetch all the transactions for the given invoice_id
+    transactions = Transactions.query.filter_by(invoice_id=invoice_id).all()
+
+    # Check if at least one of the transactions has a 'fried' dish
+    for transaction in transactions:
+        if is_fried_dish(transaction.dish_id):
+            return True
+    
+    return False
+
+
+
 
 
 
@@ -321,10 +454,7 @@ def get_invoice_by_id(invoice_id):
                 transaction_data["dish_name"] = dish.dish_name
 
             if transaction.with_special_comments:
-                comments = TransactionSpecialComments.query.filter_by(
-                    dish_id=transaction.dish_id,
-                    invoice_id=transaction.invoice_id
-                ).all()
+                comments = TransactionSpecialComments.query.filter_by(transaction_id=transaction.transaction_id).all()
                 for comment_relation in comments:
                     comment = special_comments.query.get(comment_relation.special_comments_id)
                     if comment:
@@ -366,6 +496,7 @@ def update_invoice_status_completed(invoice_id):
         
         # Commit the changes
         db.session.commit()
+        socketio.emit('completeOrder')
 
         return jsonify({"message": "Invoice status completed successfully!"}), 200
     except Exception as e:
@@ -388,6 +519,7 @@ def update_invoice_status_cancel(invoice_id):
         
         # Commit the changes
         db.session.commit()
+        socketio.emit('cancelOrder')
 
         return jsonify({"message": "Invoice status cancelled successfully!"}), 200
     except Exception as e:
@@ -411,7 +543,8 @@ def update_invoice_colors(invoice_id):
         # Check if the invoice exists
         if not invoice:
             return jsonify({"error": "Invoice not found"}), 404
-        
+        socketio.emit('updateColor')
+
 
         return jsonify({"message": "Invoice "+str(invoice_id)+" assigned color successfully"}), 200
     except Exception as e:
