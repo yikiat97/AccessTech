@@ -147,6 +147,13 @@ payment-button:disabled {
     }
 }
 
+@media (max-width: 600px) {
+    .payment-form {
+        max-height: 80vh; /* Set a maximum height with scrolling */
+        overflow-y: auto; /* Add vertical scrolling if content overflows */
+    }
+}
+
 
 /* @keyframes loading {
 0% {
