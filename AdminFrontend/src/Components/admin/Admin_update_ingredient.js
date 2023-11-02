@@ -13,6 +13,8 @@ import {
   VStack,
   useColorModeValue,
   Heading,
+  Spinner,
+  GridItem,
   Select,FormControl,FormLabel,Input,useDisclosure,Modal,ModalOverlay,ModalContent,ModalHeader,ModalCloseButton,ModalBody,ModalFooter
 } from '@chakra-ui/react';
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
@@ -30,6 +32,7 @@ const columns = [
 
 
 function Admin_update_ingredient() {
+  const [isLoading, setIsLoading] = useState(false);
   const headerBg = useColorModeValue('#4b7fce7f', 'gray.700');
   const [ingredientList, setIngredientList] = useState([]); // State to store the fetched data
 
@@ -72,6 +75,7 @@ function Admin_update_ingredient() {
   };
 
   function handleEdit(ingredientId) {
+    setIsLoading(true);
     const updatedData = {
         ingredients_name: ingredientName,
         ingredients_type: ingredientType,
@@ -85,16 +89,21 @@ function Admin_update_ingredient() {
     })
     .then(response => response.json())
     .then(data => {
+        setIsLoading(false);
         console.log(data);
         SetMsg(data.result)
         setIsModalOpen(true);
     })
-    .catch(error => console.error('Error:', error));
+    .catch((error) => {
+      console.error('Error:', error);
+      setIsLoading(false);
+    });
 }
 
 
 
   function handleDelete(ingredientId) {
+    setIsLoading(true);
     fetch(`${process.env.REACT_APP_API_URL}/ingredient/deleteIngredient/${ingredientId}`, {
         method: 'DELETE'
     })
@@ -107,14 +116,19 @@ function Admin_update_ingredient() {
           setIsModalOpen(true);
           const updatedIngredients = ingredientList.filter(ingredient => ingredient.ingredients_id !== ingredientId);
           setIngredientList(updatedIngredients);
+          setIsLoading(false);
         }
         else{
           SetMsg(data.result)
           setIsModalOpen(true);
+          setIsLoading(false);
         }
 
     })
-    .catch(error => console.error('Error:', error));
+    .catch((error) => {
+      console.error('Error:', error);
+      setIsLoading(false);
+    });
 }
 
 
@@ -204,6 +218,7 @@ function Admin_update_ingredient() {
                         onClick={() => handleDelete(row.ingredients_id)}
                     > Delete
                     </Button>
+                    <GridItem colSpan={1}>{isLoading && <Spinner/>}</GridItem>
                   </Td>
                 </Tr>
               ))}

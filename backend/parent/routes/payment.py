@@ -10,8 +10,8 @@ payment = Blueprint('payment', __name__)
 CORS(payment)
 
 # This is your test secret API key.
-#stripe.api_key = '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'
-stripe.api_key = 'sk_test_51NgKGJEU8oOZ4QrtbIHbBhBWj1cBKoq1cubD5kEvyJgHjvtHHIygFdqrrs3EAKdtrCEjDnkB8ONVUfvBnBRdgmG000YaUghMvE'
+stripe.api_key = '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'
+#stripe.api_key = 'sk_test_51NgKGJEU8oOZ4QrtbIHbBhBWj1cBKoq1cubD5kEvyJgHjvtHHIygFdqrrs3EAKdtrCEjDnkB8ONVUfvBnBRdgmG000YaUghMvE'
 def calculate_order_amount(items):
     # Initialize the totalAmount
     totalAmount = 0
