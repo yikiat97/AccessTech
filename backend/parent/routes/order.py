@@ -22,8 +22,8 @@ order = Blueprint('order', __name__)
 
 s3 = boto3.client(
     "s3",
-    aws_access_key_id=os.getenv('AWS_ACCESS_KEY'),
-    aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
+    ACCESS_KEY_id=os.getenv('ACCESS_KEY'),
+    SECRET_ACCESS_KEY=os.getenv('SECRET_ACCESS_KEY')
 )
 
 def upload_file(file_name, bucket):
@@ -181,13 +181,13 @@ def add_dish():
     filename = secure_filename(img.filename)
     img.save(filename)
     s3.upload_file(
-        Bucket=os.getenv('AWS_BUCKET_NAME'),
+        Bucket=os.getenv('BUCKET_NAME'),
         Filename=filename,
         Key=filename
     )
     # Construct the URL for the uploaded image
     region_name = os.getenv('AWS_REGION_NAME', 'us-east-1')  # default to 'us-west-1' if not set
-    s3_url = f"https://{os.getenv('AWS_BUCKET_NAME')}.s3.{region_name}.amazonaws.com/{filename}"
+    s3_url = f"https://{os.getenv('BUCKET_NAME')}.s3.{region_name}.amazonaws.com/{filename}"
 
     new_dish = dishes(dish_name=dish_name, price=price,image_url=s3_url , small_desc=small_desc, description=description, dish_type=dish_type, tag=tag, qty=qty, placement=placement)
     db.session.add(new_dish)

@@ -17,7 +17,7 @@ const colors = ['#FFC107', '#F44336', '#4CAF50', '#2196F3'];
 
 const fetchAndUpdateOrders = async (setOrderList) => {
     // Make a GET request using fetch
-    fetch(process.env.REACT_APP_API_URL + '/admin/fetch_fried_transactions?invoice_status=pending')
+    fetch(process.env.REACT_APP_API_URL + '/admin/fetch_drink_transactions?invoice_status=pending')
         .then(response => response.json())
         .then(data => {
             // Handle the response data and set it in the state
@@ -41,7 +41,7 @@ const DrinksTicketingOrders = () =>{
 
     const buttonTextColor = colorMode === "dark" ? "#FFFFFF" : "#FFFFFF"; // Change color based on color mode
     const textColor = colorMode === "dark" ? "#FFFFFF" : "#000000"; // Change color based on color mode
-    const socket = io.connect('http://localhost:8080');
+    const socket = io.connect(process.env.REACT_APP_SOCKET_URL);
 
 
     // Define a function to fetch and update order data and colors
@@ -65,7 +65,11 @@ const DrinksTicketingOrders = () =>{
             console.log('Received new order');
 
             fetchAndUpdateOrders(setOrderList);
+            
         });
+        socket.on('message_from_server', (data) => {
+            alert(data);
+          });
         socket.on('completeOrder', () => {
             // You should call fetchAndUpdateOrders inside this callback
             console.log('Completed order');

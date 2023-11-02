@@ -16,6 +16,7 @@ import { CustomServeButton } from '../../../Components/CustomTags';
 const colors = ['#FFC107', '#F44336', '#4CAF50', '#2196F3'];
 
 const fetchAndUpdateOrders = async (setOrderList) => {
+    console.log('fetching orders')
     // Make a GET request using fetch
     fetch(process.env.REACT_APP_API_URL + '/admin/fetch_fried_transactions?invoice_status=pending')
         .then(response => response.json())
@@ -41,8 +42,8 @@ const FryingTicketingOrders = () =>{
 
     const buttonTextColor = colorMode === "dark" ? "#FFFFFF" : "#FFFFFF"; // Change color based on color mode
     const textColor = colorMode === "dark" ? "#FFFFFF" : "#000000"; // Change color based on color mode
-    const socket = io.connect('http://localhost:8080');
-
+    const socket = io.connect(process.env.REACT_APP_SOCKET_URL);
+    console.log(process.env.REACT_APP_SOCKET_URL)
 
     // Define a function to fetch and update order data and colors
 

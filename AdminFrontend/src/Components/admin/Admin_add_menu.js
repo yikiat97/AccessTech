@@ -126,7 +126,9 @@ const handleIngredientQtyChange = (id, value) => {
 
     const url = process.env.REACT_APP_API_URL+'/order/addDish';
     const data = new FormData();
-
+    console.log(formData.itemName); // Log individual value before appending
+    data.append('dish_name', formData.itemName);
+    console.log(data);
     // Mapping form data to the expected API structure
     data.append('dish_name', formData.itemName);
     data.append('price', formData.price);
@@ -135,7 +137,7 @@ const handleIngredientQtyChange = (id, value) => {
     data.append('dish_type', formData.dishType);
     data.append('tag', formData.StationTag);
     data.append('placement', formData.placement);
-
+    console.log(data)
     if (formData.image) {
         data.append('image', formData.image);
     }
@@ -150,7 +152,7 @@ const handleIngredientQtyChange = (id, value) => {
           data.append(`recipe[${index}][ingredient_qty_needed]`, ingredient.ingredient_qty_needed.toString());
       }
     });
-
+    console.log(data)
     try {
       const response = await fetch(url, {
         method: 'POST',

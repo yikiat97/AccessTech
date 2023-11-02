@@ -20,7 +20,11 @@ from ..extensions import socketio
 
 # app = Flask(__name__)
 # socketio = SocketIO(app)
+colors = ['#FFC107', '#F44336', '#4CAF50', '#2196F3']
+available_colors = set(colors)
+unavailable_colors = set()
 
+listOfOrderID={}
 
 transaction = Blueprint('transaction', __name__)
 invoice_details=[]
@@ -35,14 +39,23 @@ def add_invoice():
         invoice_status = data.get('invoice_status')
         discount_id = data.get('discount_id')
         transactions_data = data.get('transactions', [])
-
+        # Check if there are any available colors
+        if available_colors:
+            # Pop a color from the available colors set
+            color = available_colors.pop()
+            # Add the color to the unavailable colors set
+            unavailable_colors.add(color)
+        else:
+            # If there are no available colors, assign a default color
+            color = "gray.500"
+            
         # Create a new Invoice instance
         new_invoice = Invoice(
             date_time=date_time,
             total_price=total_price,
             queue_num=queue_num,
             invoice_status=invoice_status,
-            color="gray.500"
+            color=color
         )
         db.session.add(new_invoice)
         db.session.flush()  # Flush to get the invoice_id
@@ -126,10 +139,17 @@ def add_invoice():
             "date_time": date_time,
             "total_price": total_price,
             "invoice_status": invoice_status,
-            "color": "gray.500",  # Include the color
+            "color": color,  # Include the color
             "transactions": transactions_response_data,  # Include transactions data with special comments
         }
-
+        listOfOrderID[new_invoice.invoice_id]=color
+        print("ListOfOrderID")
+        print(listOfOrderID)
+        print("AvaiableCOlors")
+        print(available_colors)
+        print("UnavaiableCOlors")
+        print(unavailable_colors)
+        
         # Emit the response data to connected clients using Socket.io
         socketio.emit('update', {'data': response_data})
 
@@ -164,7 +184,8 @@ def reset_order_number():
 
         order_number_entry.current_order_number = 0  # Resetting the order number to 0
         db.session.commit()
-
+        available_colors.update(unavailable_colors)
+        unavailable_colors.clear()
         return jsonify({"message": "Order number reset successfully"}), 200
 
     except Exception as e:
@@ -227,7 +248,6 @@ def fetch_invoice_details():
 
             results.append(invoice_data)
 
-            print(results)
         return jsonify(results)
 
     except Exception as e:
@@ -289,10 +309,11 @@ def fetch_invoice_parameter():
                 if dish:
                     # Add the dish name to the transaction_data
                     transaction_data["dish_name"] = dish.dish_name
+                    transaction_data["dish_type"] = dish.dish_type
+                    transaction_data["tag"] = dish.tag
 
                 if transaction.with_special_comments:
-                    comments = TransactionSpecialComments.query.filter_by(transaction_id=transaction.transaction_id).all()
-                    print(comments)
+                    comments = TransactionSpecialComments.query.filter_by(dish_id=transaction.dish_id, invoice_id=transaction.invoice_id).all()
                     for comment_relation in comments:
                         comment = special_comments.query.get(comment_relation.special_comments_id)
                         if comment:
@@ -343,6 +364,86 @@ def fetch_fried_transactions():
         for invoice in invoices:
             # Fetch transactions related to this invoice
             # Filter transactions using has_fried_dish function
+                invoice_data = {
+                    "invoice_id": invoice.invoice_id,
+                    "date_time": invoice.date_time,
+                    "total_price": invoice.total_price,
+                    "invoice_status": invoice.invoice_status,
+                    "color": invoice.color,
+                    "transactions": [],
+                    "discounts": []
+                }
+
+                transactions = Transactions.query.filter_by(invoice_id=invoice.invoice_id).all()
+                for transaction in transactions:
+                    # Fetch the dish using the dish_id from the transaction
+                    dish = dishes.query.get(transaction.dish_id)
+                    
+                    if dish:
+                        transaction_data = {
+                            "dish_id": transaction.dish_id,
+                            "quantity": transaction.quantity,
+                            "with_special_comments": transaction.with_special_comments,
+                            "special_comments": []
+                        }
+
+                        transaction_data["dish_name"] = dish.dish_name
+                        transaction_data["dish_type"] = dish.dish_type
+                        transaction_data["tag"] = dish.tag
+
+                        if transaction.with_special_comments:
+                            comments = TransactionSpecialComments.query.filter_by(dish_id=transaction.dish_id, invoice_id=transaction.invoice_id).all()
+                            for comment_relation in comments:
+                                comment = special_comments.query.get(comment_relation.special_comments_id)
+                                if comment:
+                                    transaction_data["special_comments"].append({
+                                        "comment_id": comment.special_comments_id,
+                                        "text": comment.special_comments
+                                    })
+
+                        invoice_data["transactions"].append(transaction_data)
+
+                # Fetch discount-invoice relationships for this invoice
+                discount_invoices = DiscountInvoice.query.filter_by(invoice_id=invoice.invoice_id).all()
+                for discount_invoice in discount_invoices:
+                    discount = Discount.query.get(discount_invoice.discount_id)
+                    if discount:
+                        invoice_data["discounts"].append({
+                            "discount_id": discount.discount_id,
+                            "discount_percent": discount.discount_percent
+                        })
+                # Include this invoice in results only if it has at least one 'Fried' tag transaction
+                if any(transaction_data["tag"] == "Fried" for transaction_data in invoice_data["transactions"]):
+                    results.append(invoice_data)
+
+        return jsonify(results)
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
+
+@transaction.route('/api/admin/fetch_drink_transactions', methods=['GET'])
+def fetch_drink_transactions():
+    try:
+        # Get parameters from the request
+        invoice_status = request.args.get('invoice_status')
+        dish_type = request.args.get('dish_type')
+
+        # Start by fetching invoices based on the invoice_status
+        query = Invoice.query
+
+        # If invoice_status is provided, filter by it
+        if invoice_status:
+            query = query.filter(Invoice.invoice_status == invoice_status)
+
+        invoices = query.order_by(asc(Invoice.invoice_id)).all()  # Sort by invoice_id in ascending order
+
+        results = []
+
+        for invoice in invoices:
+            # Fetch transactions related to this invoice
+            # Filter transactions using has_fried_dish function
             if has_fried_dish(invoice.invoice_id):
                 invoice_data = {
                     "invoice_id": invoice.invoice_id,
@@ -357,29 +458,32 @@ def fetch_fried_transactions():
                 transactions = Transactions.query.filter_by(invoice_id=invoice.invoice_id).all()
 
                 for transaction in transactions:
-                    transaction_data = {
-                        "dish_id": transaction.dish_id,
-                        "quantity": transaction.quantity,
-                        "with_special_comments": transaction.with_special_comments,
-                        "special_comments": []
-                    }
-
                     # Fetch the dish using the dish_id from the transaction
                     dish = dishes.query.get(transaction.dish_id)
+                    
                     if dish:
+                        transaction_data = {
+                            "dish_id": transaction.dish_id,
+                            "quantity": transaction.quantity,
+                            "with_special_comments": transaction.with_special_comments,
+                            "special_comments": []
+                        }
+
                         transaction_data["dish_name"] = dish.dish_name
+                        transaction_data["dish_type"] = dish.dish_type
+                        transaction_data["tag"] = dish.tag
 
-                    if transaction.with_special_comments:
-                        comments = TransactionSpecialComments.query.filter_by(transaction_id=transaction.transaction_id).all()
-                        for comment_relation in comments:
-                            comment = special_comments.query.get(comment_relation.special_comments_id)
-                            if comment:
-                                transaction_data["special_comments"].append({
-                                    "comment_id": comment.special_comments_id,
-                                    "text": comment.special_comments
-                                })
+                        if transaction.with_special_comments:
+                            comments = TransactionSpecialComments.query.filter_by(dish_id=transaction.dish_id, invoice_id=transaction.invoice_id).all()
+                            for comment_relation in comments:
+                                comment = special_comments.query.get(comment_relation.special_comments_id)
+                                if comment:
+                                    transaction_data["special_comments"].append({
+                                        "comment_id": comment.special_comments_id,
+                                        "text": comment.special_comments
+                                    })
 
-                    invoice_data["transactions"].append(transaction_data)
+                        invoice_data["transactions"].append(transaction_data)
 
                 # Fetch discount-invoice relationships for this invoice
                 discount_invoices = DiscountInvoice.query.filter_by(invoice_id=invoice.invoice_id).all()
@@ -391,12 +495,16 @@ def fetch_fried_transactions():
                             "discount_percent": discount.discount_percent
                         })
 
-                results.append(invoice_data)
+                # Include this invoice in results only if it has at least one 'Fried' tag transaction
+                if any(transaction_data["tag"] == "Drink" for transaction_data in invoice_data["transactions"]):
+                    results.append(invoice_data)
 
         return jsonify(results)
 
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+
+
 
 
 def is_fried_dish(dish_id):
@@ -494,6 +602,12 @@ def update_invoice_status_completed(invoice_id):
         if not invoice:
             return jsonify({"error": "Invoice not found"}), 404
         
+        completed_invoice_color = listOfOrderID.get(invoice_id)
+        for order_id, color in listOfOrderID.items():
+            if color == "gray.500":
+                # Assign the color of the completed invoice to this invoice
+                listOfOrderID[order_id] = completed_invoice_color
+                break
         # Update the invoice_status
         invoice.invoice_status = "completed"
         
@@ -535,9 +649,7 @@ def update_invoice_colors(invoice_id):
         # Fetch the specific invoice using the provided invoice_id
         invoice = Invoice.query.get(invoice_id)
         # Update the invoice_status
-        print(invoice)
         request_data = request.get_json()
-        print(request_data)
         # Extract the 'color' value from the request data
         color = request_data.get('color')    
         invoice.color=str(color)

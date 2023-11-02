@@ -36,14 +36,10 @@ const TicketingOrders = () =>{
     const buttonTextColor = colorMode === "dark" ? "#FFFFFF" : "#FFFFFF"; // Change color based on color mode
     const textColor = colorMode === "dark" ? "#FFFFFF" : "#000000"; // Change color based on color mode
     const borderColor = colorMode === "dark" ? "1px solid white" : "1px solid black";
-    const socket = io.connect('http://localhost:8080');
+    const socket = io.connect(process.env.REACT_APP_SOCKET_URL);
 
 
-
-
-    useEffect(() => {
-
-        // Make a GET request using fetch
+    const fetchOrders =() =>{
         fetch(process.env.REACT_APP_API_URL+'/admin/fetch_invoice_parameter?invoice_status=pending')
             .then(response => response.json())
             .then(data => {
@@ -74,38 +70,26 @@ const TicketingOrders = () =>{
                 });
                 
                 setOrderColors(updatedColors);
-                // console.log('updatedColors')
-                // console.log(updatedColors)
-                // // Assuming you have already populated updatedColors as mentioned in your previous code
-                // console.log('availableColors')
-                // console.log(availableColors)
-                // console.log('unavailableColors')
-                // console.log(unavailableColors)
                 for (const invoiceId in updatedColors) {
                     if (updatedColors.hasOwnProperty(invoiceId)) {
                         const color = updatedColors[invoiceId];
             
-                        // Define the URL for the PUT request
                         const url = process.env.REACT_APP_API_URL+`/ticketing/update_invoice_colors/${invoiceId}`;
                         console.log(url)
-                        // Define the request headers
                         const headers = {
                         'Content-Type': 'application/json',
                         };
             
-                        // Define the request body
                         const requestBody = {
-                        color: color, // You may need to adjust the key based on your server's expectations
+                        color: color, 
                         };
             
-                        // Define the fetch options
                         const options = {
                         method: 'POST',
                         headers,
                         body: JSON.stringify(requestBody),
                         };
             
-                        // Make the PUT request for each invoice_id
                         fetch(url, options)
                         .then((response) => {
                             if (!response.ok) {
@@ -114,12 +98,10 @@ const TicketingOrders = () =>{
                             return response.json();
                         })
                         .then((data) => {
-                            // Handle the response data if needed
                             console.log(`Color updated for invoice_id ${invoiceId}`);
 
                         })
                         .catch((error) => {
-                            // Handle any errors here
                             console.error(`Error updating color for invoice_id ${invoiceId}:`, error);
                         });
                     }
@@ -131,45 +113,46 @@ const TicketingOrders = () =>{
                 console.log('servedOrderColor');
             })
             .catch((error) => {
-                // Handle any errors
                 console.error('Error:', error);
-            });
+            });        
+    }
+
         
+
+    useEffect(() => {
+        fetchOrders();
 
     }, []);
     useEffect(() => {
-        // Define a function to handle the "update" event
             const handleUpdate = async (data) => {
             console.log('New Incoming Order');
             console.log('availableColors', availableColors);
             console.log('unavailableColors', unavailableColors);
             console.log(data);
         
-            if (availableColors.size > 0) {
-            const colorToUse = availableColors.values().next().value;
-            availableColors.delete(colorToUse);
-            unavailableColors.add(colorToUse);
+            // if (availableColors.size > 0) {
+            // const colorToUse = availableColors.values().next().value;
+            // availableColors.delete(colorToUse);
+            // unavailableColors.add(colorToUse);
         
-            const dataWithColor = { ...data.data, color: colorToUse };
-            setOrderList((prevOrderList) => [...prevOrderList, dataWithColor]);
+            // const dataWithColor = { ...data.data, color: colorToUse };
+            // setOrderList((prevOrderList) => [...prevOrderList, dataWithColor]);
 
-            updateColorInDatabase(data.data.invoice_id, colorToUse);
+            // updateColorInDatabase(data.data.invoice_id, colorToUse);
         
-            const headingElement = document.getElementById('my-heading-' + data.invoice_id);
-            const cardElement = document.getElementById('my-card-' + data.invoice_id);
+            // const headingElement = document.getElementById('my-heading-' + data.invoice_id);
+            // const cardElement = document.getElementById('my-card-' + data.invoice_id);
         
-            if (headingElement && cardElement) {
-                headingElement.style.color = colorToUse;
-                cardElement.style.borderColor = colorToUse;
-            }
-            } else {
+            // if (headingElement && cardElement) {
+            //     headingElement.style.color = colorToUse;
+            //     cardElement.style.borderColor = colorToUse;
+            // }
+            // } else {
             const dataWithColor = { ...data.data, color: data.data.color };
 
             setOrderList((prevOrderList) => [...prevOrderList, dataWithColor]);
         
-            // Update the color in the database if needed
-            // updateColorInDatabase(data.data.invoice_id, data.data.color);
-        
+
             const headingElement = document.getElementById('my-heading-' + data.invoice_id);
             const cardElement = document.getElementById('my-card-' + data.invoice_id);
         
@@ -177,9 +160,8 @@ const TicketingOrders = () =>{
                 headingElement.style.color = data.data.color;
                 cardElement.style.borderColor = data.data.color;
             }
-            }
-            // Update the color in the database using a POST request
-            // updateColorInDatabase(unservedOrder.invoice_id, servedOrderColor);
+            // }
+
         };
     
     // Set up the WebSocket event listeners
@@ -282,6 +264,8 @@ const TicketingOrders = () =>{
               // Hide or remove the card element from the DOM
               cardElement.style.display = 'none'; // or cardElement.remove();
             }
+            socket.emit('update', { invoice_id, status: 'cancelled' });
+
         }catch(error) {
             // Handle any errors here
             alert('Error:', error);
@@ -356,6 +340,8 @@ const TicketingOrders = () =>{
               // Hide or remove the card element from the DOM
               cardElement.style.display = 'none'; // or cardElement.remove();
             }
+            socket.emit('update', { invoice_id, status: 'served' });
+
         } catch (error) {
             // Handle any errors here
             console.log(error)

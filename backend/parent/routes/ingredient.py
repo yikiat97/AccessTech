@@ -23,8 +23,7 @@ def get_all_ingredients():
                          'ingredients_qty': ingredient.ingredients_qty} 
                         for ingredient in all_ingredients]
     
-    print("Emitting update event")
-    socketio.emit('update', {'data': 'This is a real-time update'})
+
     return jsonify(ingredients_list)
 
 

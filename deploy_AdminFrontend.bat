@@ -12,7 +12,7 @@ aws configure
 REM Set the environment variable
 echo Setting Environment Variable...
 set REACT_APP_API_URL=/api
-set SOCKET_URL=/
+set REACT_APP_SOCKET_URL=/
 
 echo Running npm build...
 npm run build

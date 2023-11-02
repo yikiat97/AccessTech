@@ -15,6 +15,7 @@ async function fetchMenuItems(userType) {
     const response = await fetch(url);
     const data = await response.json();
     console.log(process.env.REACT_APP_API_URL)
+    console.log(data)
     return data;
   } catch (error) {
     console.log(process.env.REACT_APP_API_URL)
