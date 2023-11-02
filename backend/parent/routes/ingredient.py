@@ -5,6 +5,7 @@ from ..models.ingredient import ingredients
 from ..models.recipe import recipes
 from ..models.dish import dishes
 from ..extensions import socketio
+from ..services.admin.inventoryManagement import calculate_qty_database
 
 
 ingredient_inventory = Blueprint('ingredient_inventory', __name__)
@@ -73,6 +74,11 @@ def update_ingredient(ingredient_id):
     updateIngredient.ingredients_type = ingredients_type
     updateIngredient.ingredients_qty = ingredients_qty
 
+    update_dish_qty = calculate_qty_database(ingredient_id)
+    if update_dish_qty == "successful":
+        pass
+    else:
+        return jsonify({'result': 'An error occurred in updating update_dish_qty '}), 500
     try:
         db.session.commit()
         return jsonify({'result': 'Ingredient updated successfully'})

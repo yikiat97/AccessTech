@@ -8,6 +8,7 @@ from ..models.special_comments import special_comments
 from ..models.discount import Discount
 
 from ..services.admin.inventoryManagement import calculate_qty
+from ..services.admin.inventoryManagement import calculate_qty_database
 from dotenv import load_dotenv
 import os
 import boto3
@@ -154,6 +155,8 @@ def update_dish(dish_id):
         
         # Commit changes
         db.session.commit()
+        for ingredient_data in dish_data.get('ingredients', []):
+            calculate_qty_database(ingredient_data['ingredients_id'])
         
         return jsonify({'result': 'Dish and its recipes updated successfully'}), 200
 
