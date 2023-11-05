@@ -45,7 +45,6 @@ const FryingTicketingOrders = () =>{
     const socket = io.connect(process.env.REACT_APP_SOCKET_URL);
     console.log(process.env.REACT_APP_SOCKET_URL)
 
-    // Define a function to fetch and update order data and colors
 
 
 
@@ -54,11 +53,12 @@ const FryingTicketingOrders = () =>{
     // }, []);
     useEffect(() => {
         // Set up the WebSocket event listeners
+        fetchAndUpdateOrders(setOrderList);
+
         socket.on('connect', () => {
             console.log('Connected to server');
             // You can send messages to the server if needed
             // socket.emit('message', { data: 'Hello Server' });
-            fetchAndUpdateOrders(setOrderList);
         });
         
         socket.on('update', () => {

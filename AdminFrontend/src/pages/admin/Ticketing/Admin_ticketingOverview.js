@@ -35,7 +35,7 @@ const TicketingCategories = () =>{
                             <Image boxSize='200px' src={RiceIcon}></Image>                              
                         </Center>
                         <Heading size='md' my='2'>
-                            <LinkOverlay href='/AccessTech/RiceTicketingPage'>
+                            <LinkOverlay href='/AccessTech/GeneralTicketingPage'>
                                 Rice Station
                             </LinkOverlay>
                         </Heading>

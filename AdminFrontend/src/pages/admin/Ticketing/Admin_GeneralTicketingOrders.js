@@ -6,7 +6,7 @@ import AdminAddMenu from '../../../Components/admin/Admin_add_menu'
 import AdminUpdateMenu from '../../../Components/admin/Admin_update_menu'
 import { Tabs, TabList, Tab, TabPanels, TabPanel, Box, IconButton, VStack, Grid, border } from "@chakra-ui/react";
 import { AddIcon, EditIcon,CheckIcon,CloseIcon } from '@chakra-ui/icons'; // Equivalent icons in Chakra
-import {LinkBox,Card,CardBody,Stack,Divider,CardFooter,ButtonGroup,Button,Heading,Center,LinkOverlay,Text,SimpleGrid,Image} from '@chakra-ui/react'
+import {LinkBox,Card,CardBody,Stack,Divider,CardFooter,ButtonGroup,Button,Heading,Center,LinkOverlay,Text,useToast,SimpleGrid,Image} from '@chakra-ui/react'
 import { useColorMode } from "@chakra-ui/react";
 import Admin_order_ticket from '../../../Components/admin/Admin_order_ticket';
 import OrderTicket from '../../../Components/admin/Admin_order_ticket';
@@ -14,7 +14,7 @@ import {io} from 'socket.io-client';
 import { CustomCancelButton } from '../../../Components/CustomTags';
 import { CustomServeButton } from '../../../Components/CustomTags';
 import { CustomText } from '../../../Components/CustomTags';
-
+import '../css/toast.css'
 
 import { fetchAndUpdateOrders } from './Admin_FryingTicketingOrders'; 
 
@@ -37,6 +37,7 @@ const TicketingOrders = () =>{
     const textColor = colorMode === "dark" ? "#FFFFFF" : "#000000"; // Change color based on color mode
     const borderColor = colorMode === "dark" ? "1px solid white" : "1px solid black";
     const socket = io.connect(process.env.REACT_APP_SOCKET_URL);
+    const toast = useToast()
 
 
     const fetchOrders =() =>{
@@ -50,67 +51,63 @@ const TicketingOrders = () =>{
                 // Handle the response data and set it in the state
                 console.log('fetching data');
         
-                const updatedColors = {};
-                for (let i = 0; i < Math.min(data.length, 4); i++) {
-                    updatedColors[data[i].invoice_id] = colors[i];
+                // const updatedColors = {};
+                // for (let i = 0; i < Math.min(data.length, 4); i++) {
+                //     updatedColors[data[i].invoice_id] = colors[i];
             
-                    // Check if the 'color' property exists in data and add it to unavailableColors if it does
-                    if (data[i].color) {
-                        unavailableColors.add(data[i].color);
-                        availableColors.delete(data[i].color)
-                    }
-                }
+                //     // Check if the 'color' property exists in data and add it to unavailableColors if it does
+                //     if (data[i].color) {
+                //         unavailableColors.add(data[i].color);
+                //         availableColors.delete(data[i].color)
+                //     }
+                // }
             
-                // Determine available colors by filtering the colors array
-                // Filter the colors array and add the filtered colors to availableColors Set
-                colors.forEach(color => {
-                    if (!unavailableColors.has(color)) {
-                        availableColors.add(color);
-                    }
-                });
+                // // Determine available colors by filtering the colors array
+                // // Filter the colors array and add the filtered colors to availableColors Set
+                // colors.forEach(color => {
+                //     if (!unavailableColors.has(color)) {
+                //         availableColors.add(color);
+                //     }
+                // });
                 
-                setOrderColors(updatedColors);
-                for (const invoiceId in updatedColors) {
-                    if (updatedColors.hasOwnProperty(invoiceId)) {
-                        const color = updatedColors[invoiceId];
+                // setOrderColors(updatedColors);
+                // for (const invoiceId in updatedColors) {
+                //     if (updatedColors.hasOwnProperty(invoiceId)) {
+                //         const color = updatedColors[invoiceId];
             
-                        const url = process.env.REACT_APP_API_URL+`/ticketing/update_invoice_colors/${invoiceId}`;
-                        console.log(url)
-                        const headers = {
-                        'Content-Type': 'application/json',
-                        };
+                //         const url = process.env.REACT_APP_API_URL+`/ticketing/update_invoice_colors/${invoiceId}`;
+                //         console.log(url)
+                //         const headers = {
+                //         'Content-Type': 'application/json',
+                //         };
             
-                        const requestBody = {
-                        color: color, 
-                        };
+                //         const requestBody = {
+                //         color: color, 
+                //         };
             
-                        const options = {
-                        method: 'POST',
-                        headers,
-                        body: JSON.stringify(requestBody),
-                        };
+                //         const options = {
+                //         method: 'POST',
+                //         headers,
+                //         body: JSON.stringify(requestBody),
+                //         };
             
-                        fetch(url, options)
-                        .then((response) => {
-                            if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
-                        .then((data) => {
-                            console.log(`Color updated for invoice_id ${invoiceId}`);
+                //         fetch(url, options)
+                //         .then((response) => {
+                //             if (!response.ok) {
+                //             throw new Error('Network response was not ok');
+                //             }
+                //             return response.json();
+                //         })
+                //         .then((data) => {
+                //             console.log(`Color updated for invoice_id ${invoiceId}`);
 
-                        })
-                        .catch((error) => {
-                            console.error(`Error updating color for invoice_id ${invoiceId}:`, error);
-                        });
-                    }
-                }
-                console.log('availableColors');
-                console.log(availableColors);
-                console.log('unavailableColors');
-                console.log(unavailableColors);
-                console.log('servedOrderColor');
+                //         })
+                //         .catch((error) => {
+                //             console.error(`Error updating color for invoice_id ${invoiceId}:`, error);
+                //         });
+                //     }
+                // }
+
             })
             .catch((error) => {
                 console.error('Error:', error);
@@ -126,9 +123,7 @@ const TicketingOrders = () =>{
     useEffect(() => {
             const handleUpdate = async (data) => {
             console.log('New Incoming Order');
-            console.log('availableColors', availableColors);
-            console.log('unavailableColors', unavailableColors);
-            console.log(data);
+
         
             // if (availableColors.size > 0) {
             // const colorToUse = availableColors.values().next().value;
@@ -464,7 +459,16 @@ const TicketingOrders = () =>{
                                 <Center mt={5}>
                                     <CustomServeButton
                                     id={'serve-button-' + order.invoice_id}
-                                    onClick={() => serveOrder(order.invoice_id)}
+                                    onClick={() => {
+                                        serveOrder(order.invoice_id);
+                                        toast({
+                                            position: 'topright',
+                                            title: 'Order Number '+order.invoice_id+" Served!",
+                                            status: 'success',
+                                            duration: 9000,
+                                            isClosable: true,
+                                        })
+                                    }}
                                     isDisabled={order.color === 'gray.500'}
                                     >
                                     </CustomServeButton>
@@ -472,7 +476,16 @@ const TicketingOrders = () =>{
                                 <Center>
                                     <CustomCancelButton
                                     id={'cancel-button-' + order.invoice_id}
-                                    onClick={() => cancelOrder(order.invoice_id)}
+                                    onClick={() => {
+                                        cancelOrder(order.invoice_id);
+                                        toast({
+                                            position: 'topright',
+                                            title: 'Order Number '+order.invoice_id+" Cancelled!",
+                                            status: 'error',
+                                            duration: 9000,
+                                            isClosable: true,
+                                        })
+                                    }}
                                     isDisabled={order.color === 'gray.500'}
                                     >
                                     </CustomCancelButton>

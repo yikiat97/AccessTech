@@ -602,19 +602,37 @@ def update_invoice_status_completed(invoice_id):
         if not invoice:
             return jsonify({"error": "Invoice not found"}), 404
         
-        completed_invoice_color = listOfOrderID.get(invoice_id)
-        for order_id, color in listOfOrderID.items():
-            if color == "gray.500":
-                # Assign the color of the completed invoice to this invoice
-                listOfOrderID[order_id] = completed_invoice_color
-                break
+        print("Before pop:", invoice_id, listOfOrderID)
+        completed_invoice_color = listOfOrderID.get(invoice_id, None)
+        listOfOrderID.pop(invoice_id, None)
+        print("After pop:", invoice_id, listOfOrderID)
+        found_gray_500 = False
+        print(completed_invoice_color)        
         # Update the invoice_status
         invoice.invoice_status = "completed"
         
         # Commit the changes
         db.session.commit()
+        for order_id, color in listOfOrderID.items():
+            if color == "gray.500":
+                found_gray_500 = True
+                listOfOrderID[order_id]=completed_invoice_color
+                socketio.emit('updateColor', {'invoice_id': order_id, 'color': completed_invoice_color})
+                break
+
+        if not found_gray_500:
+            available_colors.add(completed_invoice_color)
+            unavailable_colors.discard(completed_invoice_color)
+            print("No backlog orders")
+
         socketio.emit('completeOrder')
 
+        print("ListOfOrderID")
+        print(listOfOrderID)
+        print("AvaiableCOlors")
+        print(available_colors)
+        print("UnavaiableCOlors")
+        print(unavailable_colors)    
         return jsonify({"message": "Invoice status completed successfully!"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
@@ -631,13 +649,33 @@ def update_invoice_status_cancel(invoice_id):
         if not invoice:
             return jsonify({"error": "Invoice not found"}), 404
         
+        print("Before pop:", invoice_id, listOfOrderID)
+        completed_invoice_color = listOfOrderID.get(invoice_id)
+        listOfOrderID.pop(invoice_id, None)
+        print("After pop:", invoice_id, listOfOrderID)
         # Update the invoice_status
         invoice.invoice_status = "cancelled"
-        
-        # Commit the changes
+        found_gray_500 = False
         db.session.commit()
-        socketio.emit('cancelOrder')
+        for order_id, color in listOfOrderID.items():
+            if color == "gray.500":
+                found_gray_500 = True
+                listOfOrderID[order_id]=completed_invoice_color
+                socketio.emit('updateColor', {'invoice_id': order_id, 'color': completed_invoice_color})
+                break
+        
+        if not found_gray_500:
+            available_colors.add(completed_invoice_color)
+            unavailable_colors.discard(completed_invoice_color)
+            print("No backlog orders")
 
+        socketio.emit('cancelOrder')
+        print("ListOfOrderID")
+        print(listOfOrderID)
+        print("AvaiableCOlors")
+        print(available_colors)
+        print("UnavaiableCOlors")
+        print(unavailable_colors)
         return jsonify({"message": "Invoice status cancelled successfully!"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
@@ -658,9 +696,47 @@ def update_invoice_colors(invoice_id):
         # Check if the invoice exists
         if not invoice:
             return jsonify({"error": "Invoice not found"}), 404
-        socketio.emit('updateColor')
+            # socketio.emit('updateColor')
 
 
         return jsonify({"message": "Invoice "+str(invoice_id)+" assigned color successfully"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+
+
+@transaction.route('/api/ticketing/fetch_all_transactions', methods=['GET'])
+def fetch_all_transactions():
+    transactions = db.session.query(Transactions, dishes, Invoice).join(dishes, Transactions.dish_id == dishes.dish_id).join(Invoice, Transactions.invoice_id == Invoice.invoice_id).all()
+
+    response = []
+    for transaction in transactions:
+        if not response or response[-1]['transaction']['invoice']['invoice_id'] != transaction.Invoice.invoice_id:
+            invoice = {
+                'invoice_id': transaction.Invoice.invoice_id,
+                'invoice_status': transaction.Invoice.invoice_status,
+                'total_price': transaction.Invoice.total_price,
+                'date_time': transaction.Invoice.date_time
+            }
+            dishesList = [
+                {
+                    'dish_id': transaction.dishes.dish_id,
+                    'dish_name': transaction.dishes.dish_name,
+                    'dish_qty': transaction.Transactions.quantity
+                }
+            ]
+            response.append({
+                'transaction': {
+                    'transaction_id': transaction.Transactions.transaction_id,
+                    'dish': dishesList,
+                    'invoice': invoice
+                }
+            })
+        else:
+            response[-1]['transaction']['dish'].append({
+                'dish_id': transaction.dishes.dish_id,
+                'dish_name': transaction.dishes.dish_name,
+                'dish_qty': transaction.Transactions.quantity
+            })
+
+    return jsonify(response)
+
