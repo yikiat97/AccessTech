@@ -115,7 +115,7 @@ const Cart = (props) => {
         <CartItem
           name={<strong>{item.name}</strong>}
           amount={item.amount}
-          price={`${item.price}0`}
+          price={`${item.price}`}
           cartItems={cartCtx.items}
           dish_id={item.dish_id}
           unique_id={item.unique_id}

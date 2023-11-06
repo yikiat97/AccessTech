@@ -201,7 +201,7 @@ function ItemDetails({ isOpen, onClose, itemName, desc, item_id, item_price, ima
               <Text fontSize='m' fontWeight='bold'>{props.item.dish_name}</Text>
             </h1>
             <Text mt='1rem' fontSize='xs'>{props.item.small_desc}</Text>
-            <Text mt='1rem' color='green'>${props.item.price}0</Text>
+            <Text mt='1rem' color='green'>${props.item.price.toFixed(2)}</Text>
             {isSoldOut && <Text fontWeight="bold" color='red'>Sold Out</Text>}
           </Box>
         </CardBody>
