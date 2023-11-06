@@ -66,8 +66,8 @@ export default function CheckoutForm() {
             
             // Make sure to change this to your payment completion page
            // return_url: "https://d1yoopjwqn3bey.cloudfront.net/AccessTech/customerorder",
-            //return_url: "http://localhost:3000/AccessTech/customerorder",
-            return_url: "https://development.d26dx5d6t48iwd.amplifyapp.com/AccessTech/customerorder",
+            return_url: "http://localhost:3000/AccessTech/customerorder",
+            //return_url: "https://development.d26dx5d6t48iwd.amplifyapp.com/AccessTech/customerorder",
             
             ...(email ? { receipt_email: email } : {}), //only workable in deployment and not in test
         },
