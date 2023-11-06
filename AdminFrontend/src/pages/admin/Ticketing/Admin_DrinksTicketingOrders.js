@@ -121,7 +121,7 @@ const DrinksTicketingOrders = () =>{
                                     <CustomText>{transaction.quantity}X</CustomText>
                                     <CustomText as="b" >{transaction.dish_name}</CustomText>
                                     {transaction.special_comments.length > 0 && (
-                                    <Grid borderTop={borderColor} borderBottom={borderColor}>
+                                    <Grid>
                                         <Box >
                                         <CustomText  mb={2}>Special Comments:  </CustomText> 
                                             
