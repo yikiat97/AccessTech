@@ -434,7 +434,7 @@ const TicketingOrders = () =>{
                             </Heading>                            
                             <Card maxW='sm' id={'my-card-' + order.invoice_id} style={{ borderColor: order.color }} border='2px' m={3} data-invoice-id={order.invoice_id}>
                                 {order.transactions.map((transaction, index) => (
-                                    <div key={index} style={{ backgroundColor: index % 2 === 0 ? '#434654' : '#343541' }}>
+                                    <div key={index}>
                                     <Box mb={10}>
                                         <CustomText>{transaction.quantity}X</CustomText>
                                         <CustomText as="b" >{transaction.dish_name}</CustomText>

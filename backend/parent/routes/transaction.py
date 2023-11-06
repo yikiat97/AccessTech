@@ -369,7 +369,8 @@ def fetch_fried_transactions():
                     "invoice_id": invoice.invoice_id,
                     "date_time": invoice.date_time,
                     "total_price": invoice.total_price,
-                    "invoice_status": invoice.invoice_status,
+                    "invoice_status": invoice.invoice_status,\
+                    "order_number": invoice.order_number,
                     "color": invoice.color,
                     "transactions": [],
                     "discounts": []
@@ -451,6 +452,7 @@ def fetch_drink_transactions():
                     "date_time": invoice.date_time,
                     "total_price": invoice.total_price,
                     "invoice_status": invoice.invoice_status,
+                    "order_number": invoice.order_number,
                     "color": invoice.color,
                     "transactions": [],
                     "discounts": []
