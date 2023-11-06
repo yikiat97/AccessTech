@@ -12,9 +12,9 @@ function OrderConfirmationPage(props) {
     const cartCtx = useContext(CartContext);
     const [orderNumber, setOrderNumber] = useState(null);
 
-    const clientSecret = new URLSearchParams(window.location.search).get(
-      "redirect_status"
-      );
+    // const clientSecret = new URLSearchParams(window.location.search).get(
+    //   "redirect_status"
+    //   );
          
 
     useEffect(() => {
@@ -34,7 +34,7 @@ function OrderConfirmationPage(props) {
       if (isInitialMount.current) {
         isInitialMount.current = false;
         
-        if (clientSecret  ) {
+        if (true  ) {
           
     const ticketingOrderDetails = {
       "date_time": "2023-09-02T14:30:00Z",
