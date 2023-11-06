@@ -111,7 +111,7 @@ const FryingTicketingOrders = () =>{
                                 color={order.color} 
                                 id={'my-heading-' + order.invoice_id} 
                             >
-                                Order Number {order.invoice_id}
+                                Order Number {order.order_number}
                             </Heading>                            
                             <Card maxW='sm' id={'my-card-' + order.invoice_id} style={{ borderColor: order.color }} border='2px' m={3} data-invoice-id={order.invoice_id}>     
                                 {order.transactions.map((transaction, index) => (

@@ -430,7 +430,7 @@ const TicketingOrders = () =>{
                                 color={order.color} 
                                 id={'my-heading-' + order.invoice_id} 
                             >
-                                Order Number {order.invoice_id}
+                                Order Number {order.order_number}
                             </Heading>                            
                             <Card maxW='sm' id={'my-card-' + order.invoice_id} style={{ borderColor: order.color }} border='2px' m={3} data-invoice-id={order.invoice_id}>
                                 {order.transactions.map((transaction, index) => (
@@ -463,7 +463,7 @@ const TicketingOrders = () =>{
                                         serveOrder(order.invoice_id);
                                         toast({
                                             position: 'topright',
-                                            title: 'Order Number '+order.invoice_id+" Served!",
+                                            title: 'Order Number '+order.order_number+" Served!",
                                             status: 'success',
                                             duration: 9000,
                                             isClosable: true,
@@ -480,7 +480,7 @@ const TicketingOrders = () =>{
                                         cancelOrder(order.invoice_id);
                                         toast({
                                             position: 'topright',
-                                            title: 'Order Number '+order.invoice_id+" Cancelled!",
+                                            title: 'Order Number '+order.order_number+" Cancelled!",
                                             status: 'error',
                                             duration: 9000,
                                             isClosable: true,

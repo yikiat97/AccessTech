@@ -292,6 +292,7 @@ def fetch_invoice_parameter():
                 "total_price": invoice.total_price,
                 "invoice_status": invoice.invoice_status,
                 "color": invoice.color,
+                "order_number": invoice.order_number,
                 "transactions": [],
                 "discounts": []
             }
