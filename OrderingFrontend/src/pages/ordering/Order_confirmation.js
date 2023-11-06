@@ -115,7 +115,7 @@ function OrderConfirmationPage(props) {
                 </Text>
                    <Box display="flex" flexDirection="row" alignItems="center" mt='5%'>
                     <Text fontStyle={'italic'}>Price (per item): </Text> 
-                    <Text ml={2} fontWeight='bold' color='green'> ${item.price}0</Text>
+                    <Text ml={2} fontWeight='bold' color='green'> ${item.price.toFixed(2)}</Text>
                   </Box>
                    {item.specialInstructions && item.specialInstructions.length > 0 && (
                     <Text mt='2' fontWeight={'bold'}>Special Instructions: </Text>
