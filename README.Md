@@ -27,21 +27,22 @@ For the application to function correctly, you must set up environment variables
 
 Create a `.env` file in the root of the frontend project with the following structure:
 
-\```plaintext
+```plaintext
 REACT_APP_API_URL=<backend-api-url>
-SOCKET_URL=<socket-server-url>/```
+SOCKET_URL=<socket-server-url>
+```
 
 #### Backend
 
 Create a `.env` file in the root of the Backend project with the following structure:
 
-\```plaintext
+```plaintext
 DATABASE_URI=<your-database-uri>
 AWS_ACCESS_KEY=<your-aws-access-key>
 AWS_SECRET_ACCESS_KEY=<your-aws-secret-key>
 AWS_BUCKET_NAME=<your-aws-bucket-name>
 WDS_SOCKET_PORT=<your-wds-socket-port>
-\```
+```
 
 
 ## Setting Up the Development Environment
