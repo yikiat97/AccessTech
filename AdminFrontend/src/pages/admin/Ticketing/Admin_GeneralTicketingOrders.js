@@ -148,8 +148,8 @@ const TicketingOrders = () =>{
             setOrderList((prevOrderList) => [...prevOrderList, dataWithColor]);
         
 
-            const headingElement = document.getElementById('my-heading-' + data.invoice_id);
-            const cardElement = document.getElementById('my-card-' + data.invoice_id);
+            const headingElement = document.getElementById('my-heading-' + data.order_number);
+            const cardElement = document.getElementById('my-card-' + data.order_number);
         
             if (headingElement && cardElement) {
                 headingElement.style.color = data.data.color;
