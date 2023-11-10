@@ -133,15 +133,7 @@ def add_invoice():
         db.session.commit()
         print("Emitting update event")
 
-        # Prepare the overall response data
-        response_data = {
-            "invoice_id": new_invoice.invoice_id,
-            "date_time": date_time,
-            "total_price": total_price,
-            "invoice_status": invoice_status,
-            "color": color,  # Include the color
-            "transactions": transactions_response_data,  # Include transactions data with special comments
-        }
+
         listOfOrderID[new_invoice.invoice_id]=color
         print("ListOfOrderID")
         print(listOfOrderID)
@@ -150,8 +142,7 @@ def add_invoice():
         print("UnavaiableCOlors")
         print(unavailable_colors)
         
-        # Emit the response data to connected clients using Socket.io
-        socketio.emit('update', {'data': response_data})
+
 
         # Fetch and increment the order number
         order_number_entry = OrderNumberStore.query.first()
@@ -165,7 +156,18 @@ def add_invoice():
             order_number_entry.current_order_number = current_order_number
         
         new_invoice.order_number = current_order_number
-
+        # Prepare the overall response data
+        response_data = {
+            "invoice_id": new_invoice.invoice_id,
+            "date_time": date_time,
+            "total_price": total_price,
+            "invoice_status": invoice_status,
+            "color": color,  # Include the color
+            "transactions": transactions_response_data,  # Include transactions data with special comments
+            "order_number": new_invoice.order_number
+        }
+        # Emit the response data to connected clients using Socket.io
+        socketio.emit('update', {'data': response_data})
         db.session.commit() 
 
         # Return a success message along with the ID of the created invoice

@@ -93,6 +93,7 @@ function Admin_update_ingredient() {
         console.log(data);
         SetMsg(data.result)
         setIsModalOpen(true);
+        window.location.reload();
     })
     .catch((error) => {
       console.error('Error:', error);
@@ -198,7 +199,7 @@ function Admin_update_ingredient() {
                 <Tr key={row.ingredients_id}>
                   <Td>{row.ingredients_id}</Td>
                   <Td>{row.ingredients_name}</Td>
-                  <Td>{row.ingredients_qty}{row.ingredients_type}</Td>
+                  <Td>{row.ingredients_qty} {row.ingredients_type}</Td>
                   <Td>
                     <Button 
                       leftIcon={<EditIcon />} 

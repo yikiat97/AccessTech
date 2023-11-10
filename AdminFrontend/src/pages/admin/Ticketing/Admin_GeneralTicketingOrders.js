@@ -123,7 +123,7 @@ const TicketingOrders = () =>{
     useEffect(() => {
             const handleUpdate = async (data) => {
             console.log('New Incoming Order');
-
+            console.log(data)
         
             // if (availableColors.size > 0) {
             // const colorToUse = availableColors.values().next().value;
