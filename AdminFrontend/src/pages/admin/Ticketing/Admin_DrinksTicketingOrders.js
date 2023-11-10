@@ -68,6 +68,7 @@ const DrinksTicketingOrders = () =>{
             console.log('Received new order');
 
             fetchAndUpdateOrders(setOrderList);
+            fetchAndUpdateOrders(setOrderList);
             
         });
         socket.on('completeOrder', () => {
@@ -75,17 +76,20 @@ const DrinksTicketingOrders = () =>{
             console.log('Completed order');
 
             fetchAndUpdateOrders(setOrderList);
+            fetchAndUpdateOrders(setOrderList);
         });
         socket.on('cancelOrder', () => {
             // You should call fetchAndUpdateOrders inside this callback
             console.log('Cancel order');
 
             fetchAndUpdateOrders(setOrderList);
+            fetchAndUpdateOrders(setOrderList);
         });
         socket.on('updateColor', () => {
             // You should call fetchAndUpdateOrders inside this callback
             console.log('Update Color');
 
+            fetchAndUpdateOrders(setOrderList);
             fetchAndUpdateOrders(setOrderList);
         });                      
         // Clean up the event listener when the component unmounts
