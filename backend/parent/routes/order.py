@@ -6,6 +6,8 @@ from ..models.recipe import recipes
 from ..models.ingredient import ingredients
 from ..models.special_comments import special_comments
 from ..models.discount import Discount
+from ..models.transaction import Transactions
+from ..models.transaction_special_comments import TransactionSpecialComments
 
 from ..services.admin.inventoryManagement import calculate_qty
 from ..services.admin.inventoryManagement import calculate_qty_database
@@ -246,10 +248,24 @@ def delete_dish(dish_id):
         return jsonify({'message' : 'Dish not found'}), 404
 
     try:
+        # Find all transactions related to the dish
+        related_transactions = Transactions.query.filter_by(dish_id=dish_id).all()
+
+        for transaction in related_transactions:
+            # Delete related entries in transaction_special_comments
+            TransactionSpecialComments.query.filter_by(transaction_id=transaction.transaction_id).delete()
+
+            # Delete the transaction itself
+            db.session.delete(transaction)
+
+        # Delete related entries in special_comments
+        special_comments.query.filter_by(dish_id=dish_id).delete()
+
         # Delete the recipes associated with the dish
         recipes.query.filter_by(dish_id=dish_id).delete()
 
         # Delete the dish from the database
+        db.session.delete(dish)
         db.session.delete(dish)
         
         db.session.commit()

@@ -9,6 +9,7 @@ This project is split into two main components:
 1. **Frontend**: 2 frontend server for Ordering and Admin. Managed and hosted using AWS Amplify.
 2. **Backend**: Hosted on an AWS EC2 instance.
 
+
 ## Prerequisites
 
 Before you begin, ensure you have met the following requirements:
@@ -18,6 +19,8 @@ Before you begin, ensure you have met the following requirements:
 - You have installed `scp` for file transfer.
 - You have the private key (`elmeryeo.pem`) for the EC2 instance. (create your own .pem in EC2)
 - You have created `.env` files for both the frontend and backend with the necessary environment variables.
+- **Storage**: Hosted on an AWS S3 Bucket. (refer to AWS configuration documentation)
+- **Database**: Hosted on an AWS RDS. (refer to AWS configuration documentation)
 
 ### Environment Variables
 
