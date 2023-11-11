@@ -131,7 +131,10 @@ function Admin_update_ingredient() {
       setIsLoading(false);
     });
 }
-
+const scrollableTableStyle = {
+  maxHeight: '900px', // Adjust this value as needed
+  overflowY: 'auto'
+};
 
 
   return (
@@ -185,7 +188,7 @@ function Admin_update_ingredient() {
         <TransitionExample isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Ingredients" message={msg} />
         <VStack spacing={4} p={5} position="absolute" width="60%" marginTop="3%">
         <Heading>Ingredients Management</Heading>
-        <Box boxShadow="xl" p={5} bg={useColorModeValue('white', 'gray.700')} w="full">
+        <Box boxShadow="xl" p={5} bg={useColorModeValue('white', 'gray.700')} w="full" style={scrollableTableStyle}>
           <Table size="md">
             <Thead bg={headerBg}>
               <Tr>
