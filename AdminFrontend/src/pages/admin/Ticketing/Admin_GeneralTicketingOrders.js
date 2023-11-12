@@ -193,28 +193,27 @@ const TicketingOrders = () =>{
     }
     // Function to cancel an order
     async function cancelOrder(invoice_id) {
-        console.log('Cancel Order')
+        console.log('Serve Order')
         // Define the URL with the invoice_id in the route
         const url = process.env.REACT_APP_API_URL+`/ticketing/update_invoice_status_cancel/${invoice_id}`;
-
+    
         // Define the request headers
         const headers = {
-        'Content-Type': 'application/json',
-        // You may need to include other headers, such as authentication tokens
+            'Content-Type': 'application/json',
         };
-
+    
         // Define the request body if needed
         const requestBody = {
-        // Include any data you want to send in the request body
+            // Include any data you want to send in the request body
         };
-
+    
         // Define the fetch options
         const options = {
-        method: 'PUT',  // Use 'PUT' for your specific route
-        headers,
-        body: JSON.stringify(requestBody),
+            method: 'PUT',
+            headers,
+            body: JSON.stringify(requestBody),
         };
-
+    
         try {
             // Make the fetch request
             const response = await fetch(url, options);
@@ -237,18 +236,18 @@ const TicketingOrders = () =>{
             // Assign color to the unserved order
                 assignColorToUnservedOrder(unservedOrder, targetOrder);
             }else{
-                var orderColorToRemove = targetOrder.color;
-                console.log('availableColors');
-                console.log(availableColors);
-                console.log('unavailableColors');
-                console.log(unavailableColors);                
-                unavailableColors.delete(orderColorToRemove)
-                availableColors.add(orderColorToRemove)
-                const updatedOrderColors = { ...orderColors };
-                delete updatedOrderColors[invoice_id];
+                // var orderColorToRemove = targetOrder.color;
+                // console.log('availableColors');
+                // console.log(availableColors);
+                // console.log('unavailableColors');
+                // console.log(unavailableColors);                
+                // unavailableColors.delete(orderColorToRemove)
+                // availableColors.add(orderColorToRemove)
+                // const updatedOrderColors = { ...orderColors };
+                // delete updatedOrderColors[invoice_id];
         
-                // Update the orderColors state with the updated object
-                setOrderColors(updatedOrderColors);
+                // // Update the orderColors state with the updated object
+                // setOrderColors(updatedOrderColors);
             }
     
             setOrderList(updatedOrderList);
@@ -259,12 +258,13 @@ const TicketingOrders = () =>{
               // Hide or remove the card element from the DOM
               cardElement.style.display = 'none'; // or cardElement.remove();
             }
-            socket.emit('update', { invoice_id, status: 'cancelled' });
+            socket.emit('update', { invoice_id, status: 'served' });
 
-        }catch(error) {
+        } catch (error) {
             // Handle any errors here
+            console.log(error)
             alert('Error:', error);
-        };
+        }
     }
 
     
@@ -313,18 +313,18 @@ const TicketingOrders = () =>{
             // Assign color to the unserved order
                 assignColorToUnservedOrder(unservedOrder, targetOrder);
             }else{
-                var orderColorToRemove = targetOrder.color;
-                console.log('availableColors');
-                console.log(availableColors);
-                console.log('unavailableColors');
-                console.log(unavailableColors);                
-                unavailableColors.delete(orderColorToRemove)
-                availableColors.add(orderColorToRemove)
-                const updatedOrderColors = { ...orderColors };
-                delete updatedOrderColors[invoice_id];
+                // var orderColorToRemove = targetOrder.color;
+                // console.log('availableColors');
+                // console.log(availableColors);
+                // console.log('unavailableColors');
+                // console.log(unavailableColors);                
+                // unavailableColors.delete(orderColorToRemove)
+                // availableColors.add(orderColorToRemove)
+                // const updatedOrderColors = { ...orderColors };
+                // delete updatedOrderColors[invoice_id];
         
-                // Update the orderColors state with the updated object
-                setOrderColors(updatedOrderColors);
+                // // Update the orderColors state with the updated object
+                // setOrderColors(updatedOrderColors);
             }
     
             setOrderList(updatedOrderList);
@@ -463,7 +463,7 @@ const TicketingOrders = () =>{
                                         serveOrder(order.invoice_id);
                                         toast({
                                             position: 'topright',
-                                            title: 'Order Number '+order.order_number+" Served!",
+                                            title: 'Order '+order.order_number+" Served!",
                                             status: 'success',
                                             duration: 9000,
                                             isClosable: true,
@@ -480,7 +480,7 @@ const TicketingOrders = () =>{
                                         cancelOrder(order.invoice_id);
                                         toast({
                                             position: 'topright',
-                                            title: 'Order Number '+order.order_number+" Cancelled!",
+                                            title: 'Order '+order.order_number+" Cancelled!",
                                             status: 'error',
                                             duration: 9000,
                                             isClosable: true,

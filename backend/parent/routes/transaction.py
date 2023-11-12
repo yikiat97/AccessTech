@@ -188,6 +188,12 @@ def reset_order_number():
         db.session.commit()
         available_colors.update(unavailable_colors)
         unavailable_colors.clear()
+        ("ListOfOrderID")
+        print(listOfOrderID)
+        print("AvaiableCOlors")
+        print(available_colors)
+        print("UnavaiableCOlors")
+        print(unavailable_colors)
         return jsonify({"message": "Order number reset successfully"}), 200
 
     except Exception as e:
@@ -608,7 +614,7 @@ def update_invoice_status_completed(invoice_id):
             return jsonify({"error": "Invoice not found"}), 404
         
         print("Before pop:", invoice_id, listOfOrderID)
-        completed_invoice_color = listOfOrderID.get(invoice_id, None)
+        completed_invoice_color = listOfOrderID.get(invoice_id)
         listOfOrderID.pop(invoice_id, None)
         print("After pop:", invoice_id, listOfOrderID)
         found_gray_500 = False

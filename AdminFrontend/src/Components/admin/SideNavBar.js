@@ -22,6 +22,7 @@ import {
   MenuDivider,
   MenuItem,
   MenuList,
+  useToast,
 } from '@chakra-ui/react'
 import {
   FiUser,
@@ -37,6 +38,7 @@ import {
 } from 'react-icons/fi'
 import { IconType } from 'react-icons'
 import { useColorMode } from '@chakra-ui/react';
+import '../../pages/admin/css/toast.css';
 
 const LinkItems = [
   { name: 'User Management', icon: FiUser, url: '/AccessTech/AdminManagement'},
@@ -59,6 +61,8 @@ function ColorModeToggle() {
   );
 }
 const SidebarContent = ({ onClose, ...rest }) => {
+  const toast = useToast()
+
   function handleEndDay(){
     fetch(process.env.REACT_APP_API_URL+"/admin/reset_order_number", {
       method: "POST"
@@ -66,9 +70,9 @@ const SidebarContent = ({ onClose, ...rest }) => {
   .then(response => response.json())
   .then(data => {
       if(data.message) {
-          alert(data.message);
+          console.log(data.message);
       } else {
-          alert("Error resetting order number");
+          console.log("Error resetting order number");
       }
   })
   .catch(error => {
@@ -106,7 +110,15 @@ const SidebarContent = ({ onClose, ...rest }) => {
           variant="outline" 
           colorScheme="red" 
           aria-label="Delete"
-          onClick={() => handleEndDay()}
+          onClick={() => {
+            handleEndDay();
+            toast({
+                position: 'topright',
+                title: 'Day Ended!',
+                duration: 9000,
+                isClosable: true,
+            })
+        }}
           m={4}
         > 
           End Day
