@@ -624,6 +624,7 @@ def update_invoice_status_completed(invoice_id):
         
         # Commit the changes
         db.session.commit()
+        
         for order_id, color in listOfOrderID.items():
             if color == "gray.500":
                 found_gray_500 = True
@@ -631,7 +632,7 @@ def update_invoice_status_completed(invoice_id):
                 socketio.emit('updateColor', {'invoice_id': order_id, 'color': completed_invoice_color})
                 break
 
-        if not found_gray_500:
+        if not found_gray_500 and completed_invoice_color is not None:
             available_colors.add(completed_invoice_color)
             unavailable_colors.discard(completed_invoice_color)
             print("No backlog orders")
@@ -675,7 +676,7 @@ def update_invoice_status_cancel(invoice_id):
                 socketio.emit('updateColor', {'invoice_id': order_id, 'color': completed_invoice_color})
                 break
         
-        if not found_gray_500:
+        if not found_gray_500 and completed_invoice_color is not None:
             available_colors.add(completed_invoice_color)
             unavailable_colors.discard(completed_invoice_color)
             print("No backlog orders")
