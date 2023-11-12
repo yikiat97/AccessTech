@@ -473,7 +473,7 @@ const TicketingOrders = () =>{
                                     >
                                     </CustomServeButton>
                                 </Center>
-                                <Center>
+                                <Center style={{ marginTop: '50px' }}>
                                     <CustomCancelButton
                                     id={'cancel-button-' + order.invoice_id}
                                     onClick={() => {

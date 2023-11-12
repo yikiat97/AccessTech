@@ -5,5 +5,8 @@
     height:200px;
     font-size:46px;
     color:white;
-    
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    align-items: center;
 }
